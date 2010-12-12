@@ -16,12 +16,77 @@ require_once(__DIR__.'/../Tests.php');
  */
 final class DBTest extends \go\Tests\DB\Base
 {
-    public function testCreate() {
-        $this->markTestSkipped();
+    /**
+     * @covers create
+     * @dataProvider providerCreate
+     */
+    public function testCreate($params, $adapter) {
+        $db = \go\DB\DB::create($params, $adapter);
+        $this->assertInstanceOf('go\DB\DB', $db);
+    }
+    public function providerCreate() {
+        return array(
+            array( // адаптер отдельно
+                array(
+                    'host' => 'localhost',
+                ),
+                'test',
+            ),
+            array( // адаптер регистронезависим
+                array(
+                    'host' => 'localhost',
+                ),
+                'Test',
+            ),
+            array( // адаптер в параметрах
+                array(
+                    '_adapter' => 'test',
+                    'host'     => 'localhost',
+                ),
+                null,
+            ),
+            array( // адаптер в параметрах также регистронезависим и перекрывает указанный отдельно
+                array(
+                    '_adapter' => 'Test',
+                    'host'     => 'localhost',
+                ),
+                'unknown',
+            ),
+        );
     }
 
-    public function testExceptionUnknownAdapter() {
-        $this->markTestSkipped();
+    /**
+     * @covers create
+     * @dataProvider providerExceptionUnknownAdapter
+     * @expectedException go\DB\Exceptions\UnknownAdapter
+     */
+    public function testExceptionUnknownAdapter($params, $adapter) {
+        $db = \go\DB\DB::create($params, $adapter);
+        $this->assertInstanceOf('go\DB\DB', $db);
+    }
+    public function providerExceptionUnknownAdapter() {
+        return array(
+            array(
+                array(
+                    'host' => 'localhost',
+                ),
+                'unknown',
+            ),
+            array(
+                array(
+                    '_adapter' => 'unknown',
+                    'host'     => 'localhost',
+                ),
+                null,
+            ),
+            array(
+                array(
+                    '_adapter' => 'unknown',
+                    'host'     => 'localhost',
+                ),
+                'test',
+            ),
+        );
     }
 
     public function testExceptionConfigSys() {
@@ -36,12 +101,24 @@ final class DBTest extends \go\Tests\DB\Base
         $this->markTestSkipped();
     }
 
+    /**
+     * @covers \go\DB\create()
+     */
     public function testAliasCreate() {
-        $this->markTestSkipped();
+        $db = \go\DB\create(array('host' => 'localhost'), 'test');
+        $this->assertInstanceOf('go\DB\DB', $db);
+
+        $this->setExpectedException('go\DB\Exceptions\UnknownAdapter');
+        $db = \go\DB\create(array('host' => 'localhost'), 'unknown');
     }
 
+    /**
+     * @covers getAvailableAdapters
+     */
     public function testGetAvailableAdapters() {
-        $this->markTestSkipped();
+        $adapters = \go\DB\DB::getAvailableAdapters();
+        $this->assertType('array', $adapters);
+        $this->assertContains('test', $adapters);
     }
 
     public function testQuery() {
