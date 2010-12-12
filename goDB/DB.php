@@ -188,3 +188,31 @@ abstract class DB
 
 
 }
+
+/**
+ * Создать объект для доступа к базе
+ * (алиас DB::create)
+ *
+ * @param array $params
+ *        параметры подключения к базе
+ * @param string $adapter [optional]
+ *        адаптер базы (если не указан в $params)
+ * @return \go\DB\DB
+ *         объект для доступа к базе
+ */
+function create(array $params, $adapter = null) {
+    
+}
+
+/**
+ * Запрос к центральной базе центрального хранилища
+ * (алиас Storage::query)
+ *
+ * @param string $pattern
+ * @param array $data [optional]
+ * @param string $fetch [optional]
+ * @param string $prefix [optional]
+ */
+function query($pattern, $data = null, $fetch = null, $prefix = null) {
+
+}
