@@ -1,4 +1,15 @@
 <?php
+/**
+ * goDB2: библиотека для работы с реляционными базами данных из PHP
+ *
+ * @package go\DB
+ * @link    http://code.google.com/p/go-db/
+ * @version 2.0.0 alfa
+ * @author  Григорьев Олег aka vasa_c (http://blgo.ru/)
+ * @license MIT (http://www.opensource.org/licenses/mit-license.php)
+ * @uses    PHP >= 5.3
+ * @uses    для каждого адаптера свои расширения
+ */
 
 namespace go\DB;
 
