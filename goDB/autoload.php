@@ -39,5 +39,5 @@ function autoload($classname) {
  * Зарегистрировать автозагрузчик для goDB
  */
 function autoloadRegister() {
-    spl_autoload_register('\go\DB\autoload');
+    \spl_autoload_register('\go\DB\autoload');
 }

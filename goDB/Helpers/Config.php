@@ -24,7 +24,7 @@ final class Config
     public static function get($name) {
         if (!isset(self::$config[$name])) {
             $filename = __DIR__.'/../_config/'.$name.'.php';
-            if (!file_exists($filename)) {
+            if (!\file_exists($filename)) {
                 throw new \RuntimeException('Error go\\DB config "'.$name.'"');
             }
             self::$config[$name] = include($filename);
