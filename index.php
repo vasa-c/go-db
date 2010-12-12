@@ -8,5 +8,4 @@ header('Content-Type: text/html; charset=utf-8');
 echo '<h1>go\DB 2</h1>';
 
 require(__DIR__.'/goDB/autoload.php');
-
-spl_autoload_register('\go\DB\autoload');
+\go\DB\autoloadRegister();
