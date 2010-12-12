@@ -100,7 +100,7 @@ final class StorageTest extends \go\Tests\DB\Base
         $this->assertSame($db, $storage->name2);
 
         $this->setExpectedException('go\DB\Exceptions\StorageEngaged');
-        $storage->set('name1', $db);
+        $storage->set($db, 'name1');
     }
 
     /**
@@ -159,9 +159,9 @@ final class StorageTest extends \go\Tests\DB\Base
         $storage = new Storage();
 
         $this->assertFalse($storage->exists());
-        $this->set($db);
+        $storage->set($db);
         $this->assertTrue($storage->exists());
-        $this->assertSame($db, $this->get());
+        $this->assertSame($db, $storage->get());
 
         $storage2 = new Storage();
         $this->setExpectedException('go\DB\Exceptions\StorageDBCentral');
