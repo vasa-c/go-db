@@ -36,7 +36,14 @@ abstract class DB
      *         объект для доступа к базе
      */
     final public static function create(array $params, $adapter = null) {
-
+        $adapter = isset($params['_adapter']) ? $params['_adapter'] : $adapter;
+        $adapter = \strtolower($adapter);
+        $classname = __NAMESPACE__.'\\Adapters\\'.$adapter;
+        if (!\class_exists($classname, true)) {
+            throw new Exceptions\UnknownAdapter($adapter);
+        }
+        $params['_adapter'] = $adapter;
+        return (new $classname($params));
     }
 
     /**
@@ -45,7 +52,16 @@ abstract class DB
      * @return array
      */
     final public static function getAvailableAdapters() {
-        
+        if (!self::$availableAdapters) {
+            $A = array();
+            foreach (glob(__DIR__.'/Adapters/*.php') as $filename) {
+                if (preg_match('~([a-z0-9]*)\.php$~s', $filename, $matches)) {
+                    $A[] = $matches[1];
+                }
+            }
+            self::$availableAdapters = $A;
+        }
+        return self::$availableAdapters;
     }
 
 /*** PUBLIC: ***/
@@ -221,6 +237,12 @@ abstract class DB
 
 /*** VARS: ***/
 
+    /**
+     * Кэш списка доступных адаптеров
+     * 
+     * @var array
+     */
+    private static $availableAdapters;
 
 }
 
@@ -239,7 +261,7 @@ abstract class DB
  *         объект для доступа к базе
  */
 function create(array $params, $adapter = null) {
-    
+    return DB::create($params, $adapter);
 }
 
 /**
