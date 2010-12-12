@@ -37,6 +37,14 @@ final class Storage
     /**
      * Запрос к центральной базе центрального хранилища
      * 
+     * @throws \go\DB\Exceptions\StorageDBCentral
+     *         нет центральной базы
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Templater
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
+     *
      * @param string $pattern
      * @param array $data [optional]
      * @param string $fetch [optional]
@@ -50,6 +58,9 @@ final class Storage
 
     /**
      * Конструктор хранилища
+     *
+     * @throws \go\DB\Exceptions\StorageAssoc
+     *         ошибка ассоциации при заполнении
      * 
      * @param array $mparams [optional]
      *        параметры для заполнения (не указаны - пустое хранилище)
@@ -61,6 +72,9 @@ final class Storage
     /**
      * Получить объект базы по имени
      *
+     * @throws \go\DB\Exceptions\StorageNotFound
+     *         нет такой базы
+     *
      * @param string $name [optional]
      * @return \go\DB\DB
      */
@@ -70,6 +84,11 @@ final class Storage
 
     /**
      * Создать объект базы и сохранить в хранилище
+     *
+     * @throws \go\DB\Exceptions\StorageEngaged
+     *         данное имя уже занято
+     * @throws \go\DB\Exceptions\Config
+     * @throws \go\DB\Exceptions\Connect
      *
      * @param array $params
      *        параметры подключения
@@ -85,6 +104,9 @@ final class Storage
     /**
      * Записать базу в хранилище
      *
+     * @throws \go\DB\Exceptions\StorageEngaged
+     *         данное имя уже занято
+     *
      * @param \go\DB\DB $db
      *        объект базы
      * @param string $name
@@ -96,6 +118,11 @@ final class Storage
 
     /**
      * Заполнить хранилище создаваемыми базами
+     *
+     * @throws \go\DB\Exceptions\StorageAssoc
+     *         ошибка ассоциации при заполнении
+     * @throws \go\DB\Exceptions\StorageEngaged
+     *         одно из имён уже занято
      *
      * @param array $mparams
      *        параметры баз данных
@@ -117,6 +144,13 @@ final class Storage
     /**
      * Вызов хранилища, как функции - запрос к центральной базе хранилища
      * 
+     * @throws \go\DB\Exceptions\StorageDBCentral
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Templater
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
+     *
      * @param string $pattern [optional]
      * @param array $data [optional]
      * @param string $fetch [optional]
@@ -131,6 +165,8 @@ final class Storage
      *
      * @example $db = $storage->dbname
      *
+     * @throws \go\DB\Exceptions\StorageNotFound
+     *
      * @param string $name
      * @return \go\DB\DB
      */
@@ -142,6 +178,8 @@ final class Storage
      * @override magic method
      *
      * @example $storage->dbname = $db
+     *
+     * @throws \go\DB\Exceptions\StorageEngaged
      *
      * @param string $name
      * @param \go\DB\DB $value

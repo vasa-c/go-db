@@ -23,6 +23,11 @@ abstract class DB
     /**
      * Создать объект для доступа к базе
      *
+     * @throws \go\DB\Exceptions\Config
+     *         неверные конфигурационные параметры
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка подключения
+     *
      * @param array $params
      *        параметры подключения к базе
      * @param string $adapter [optional]
@@ -46,7 +51,18 @@ abstract class DB
 /*** PUBLIC: ***/
 
     /**
-     * Выполнить запрос
+     * Выполнить запрос к базе данных
+     *
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка при отложенном подключении
+     * @throws \go\DB\Exceptions\Closed
+     *         подключение закрыто
+     * @throws \go\DB\Exceptions\Templater
+     *         ошибка шаблонизатора запроса
+     * @throws \go\DB\Exceptions\Query
+     *         ошибка в запросе
+     * @throws \go\DB\Exceptions\Fetch
+     *         ошибка при разборе результата
      *
      * @param string $pattern
      *        шаблон запроса
@@ -66,6 +82,11 @@ abstract class DB
     /**
      * Выполнение "чистого" запроса
      *
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
+     *
      * @param string $query
      *        SQL-запрос
      * @param string $fetch [optional]
@@ -83,6 +104,12 @@ abstract class DB
      * Следующие два примера идентичны:
      * @example $db->query('SELECT * FROM `table`');
      * @example $db('SELECT * FROM `table`');
+     *
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Templater
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
      * 
      * @param string $pattern
      * @param array $data [optional]
@@ -105,6 +132,11 @@ abstract class DB
 
     /**
      * Принудительно установить соединение, если оно ещё не установлено
+     *
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка подключения
+     * @throws \go\DB\Exceptions\Closed
+     *         подключение закрыто "жестким" образом
      */
     final public function forcedConnect() {
 
@@ -176,6 +208,9 @@ abstract class DB
     /**
      * Получить внутреннюю реализацию подключения к базе
      *
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     *
      * @return mixed
      */
     final public function getImplementationConnection() {
@@ -193,6 +228,9 @@ abstract class DB
  * Создать объект для доступа к базе
  * (алиас DB::create)
  *
+ * @throws \go\DB\Exceptions\Config
+ * @throws \go\DB\Exceptions\Connect
+ *
  * @param array $params
  *        параметры подключения к базе
  * @param string $adapter [optional]
@@ -207,6 +245,14 @@ function create(array $params, $adapter = null) {
 /**
  * Запрос к центральной базе центрального хранилища
  * (алиас Storage::query)
+ *
+ * @throws \go\DB\Exceptions\StorageDBCentral
+ *         нет центральной базы
+ * @throws \go\DB\Exceptions\Connect
+ * @throws \go\DB\Exceptions\Closed
+ * @throws \go\DB\Exceptions\Templater
+ * @throws \go\DB\Exceptions\Query
+ * @throws \go\DB\Exceptions\Fetch
  *
  * @param string $pattern
  * @param array $data [optional]
