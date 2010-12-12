@@ -187,6 +187,18 @@ final class Storage
     public function __set($name, $value) {
         
     }
+
+    /**
+     * @override magic method
+     *
+     * @example isset($storage->dbname)
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name) {
+
+    }
     
 /*** PRIVATE: ***/
     
