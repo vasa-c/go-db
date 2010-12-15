@@ -27,7 +27,7 @@ final class EngineTest extends \go\Tests\DB\Base
         $cursor = $engine->query($query);
         $this->assertInstanceOf('go\DB\Implementations\TestBase\Cursor', $cursor);
         $result = array();
-        while ($row = $cursor->fetch_assoc()) {
+        while ($row = $cursor->fetchAssoc()) {
             $result[] = $row;
         }
         $this->assertEquals($expected, $result);
@@ -71,9 +71,9 @@ final class EngineTest extends \go\Tests\DB\Base
                 ),
             ),
             array(
-                'SELECT `b` FROM `table` LIMIT 5,4',
+                'SELECT `c`,`b` FROM `table` LIMIT 5,4',
                 array(
-                    array('a' => 6, 'b' => 4, 'c' => 8),
+                    array('c' => 8, 'b' => 4),
                 ),
             ),
         );
@@ -133,7 +133,7 @@ final class EngineTest extends \go\Tests\DB\Base
     public function testErrorTable() {
         $engine = new Engine();
         $this->assertFalse($engine->query('SELECT * FROM `tablicco`'));
-        $this->assertEquals(Engine::ERROR_OPERATOR, $engine->getErrorCode());
+        $this->assertEquals(Engine::ERROR_TABLE, $engine->getErrorCode());
     }
     
     /**

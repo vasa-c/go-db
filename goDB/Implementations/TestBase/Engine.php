@@ -54,35 +54,175 @@ final class Engine
      * @return \go\DB\Implementations\TestBase\Cursor | bool
      */
     public function query($query) {
-        
+        $this->errorInfo = null;
+        $this->errorCode = null;
+        $this->affectedRows = 0;
+        $query    = \strtolower($query);
+        $query    = \explode(' ', $query, 2);
+        $operator = $query[0];
+        $query    = isset($query[1]) ? $query[1] : '';
+        switch ($operator) {
+            case 'select':
+                return $this->select($query);
+            case 'insert':
+                return $this->insert($query);
+            case 'update':
+                return $this->update($query);
+            default:
+                $this->errorInfo = 'Unknown operator "'.$operator.'"';
+                $this->errorCode = self::ERROR_OPERATOR;
+                return false;
+        }
     }
 
     /**
      * @return string
      */
     public function getErrorInfo() {
-
+        return $this->errorInfo;
     }
 
     /**
      * @return int
      */
     public function getErrorCode() {
-        
+        return $this->errorCode;
     }
 
     /**
      * @return int
      */
     public function getInsertId() {
-
+        return $this->lastInsertId;
     }
 
     /**
      * @return int
      */
     public function getAffectedRows() {
-        
+        return $this->affectedRows;
     }
-    
+
+    /**
+     * @return \go\DB\Implements\TestBase\Cursor
+     */
+    private function select($query) {
+        $pattern = '~^(.*?)FROM (.*?)(LIMIT (.*?))?$~i';
+        if (!preg_match($pattern, $query, $matches)) {
+            $this->errorInfo = 'Error SELECT query "'.$query.'"';
+            $this->errorCode = self::ERROR_TABLE;
+        }
+        $cols  = \trim($matches[1]);
+        $table = \trim($matches[2]);
+        $limit = isset($matches[4]) ? $matches[4] : null;
+        $limit = $this->parseLimit($limit);
+
+        $table = \str_replace('`', '', $table);
+        if ($table != 'table') {
+            $this->errorInfo = 'Table "'.$table.'" not found';
+            $this->errorCode = self::ERROR_TABLE;
+            return false;
+        }
+
+        if ($cols == '*') {
+            $cols = null;
+        } else {
+            $cols = \explode(',', \str_replace('`', '', $cols));
+        }
+
+        $data = array();
+        for ($i = $limit['begin']; $i <= $limit['end']; $i++) {
+            $row = $this->table[$i];
+            if ($cols) {
+                $res = array();
+                foreach ($cols as $col) {
+                    if (!isset($row[$col])) {
+                        $this->errorInfo = 'Unknown column "'.$col.'"';
+                        $this->errorCode = self::ERROR_COL;
+                        return false;
+                    }
+                    $res[$col] = $row[$col];
+                }
+            } else {
+                $res = $row;
+            }
+            $data[] = $res;
+        }
+        return new Cursor($data);
+    }
+
+    /**
+     * @return bool
+     */
+    private function insert($query) {
+        $this->lastInsertId++;
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function update($query) {
+        $query = \explode('limit', $query, 2);
+        if (isset($query[1])) {
+            $limit = $query[1];
+        } else {
+            $limit = '';
+        }
+        $limit = $this->parseLimit($limit);
+        $this->affectedRows = $limit['end'] - $limit['begin'] + 1;
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    private function parseLimit($limit) {
+        $limit = \trim($limit);
+        if (empty($limit)) {
+            return array(
+                'begin' => 0,
+                'end'   => \count($this->table) - 1,
+            );
+        }
+        $limit = \explode(',', $limit, 2);
+        if (\count($limit) == 2) {
+            $begin = (int)$limit[0];
+            $end   = $begin + (int)$limit[1] - 1;
+        } else {
+            $begin = 0;
+            $end   = (int)$limit[0] - 1;
+        }
+        $max = \count($this->table) - 1;
+        if ($begin > $max) {
+            $begin = $max;
+        }
+        if ($end > $max) {
+            $end = $max;
+        }
+        return array(
+            'begin' => $begin,
+            'end'   => $end,
+        );
+    }
+
+    /**
+     * @var string
+     */
+    private $errorInfo;
+
+    /**
+     * @var int
+     */
+    private $errorCode;
+
+    /**
+     * @var int
+     */
+    private $lastInsertId = 0;
+
+    /**
+     * @var int
+     */
+    private $affectedRows = 0;
 }
