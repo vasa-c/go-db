@@ -30,7 +30,7 @@ final class Connector
     public function __construct(Implementation $implementation, array $params) {
         $params = $implementation->checkParams($params);
         if (!$params) {
-            throw new \go\DB\Exceptions\ConfigConnect();
+            throw new Exceptions\ConfigConnect();
         }
         $this->implementation = $implementation;
         $this->params         = $params;
@@ -52,7 +52,7 @@ final class Connector
         if (!$this->implementation->connect($this->params)) {
             $error     = $this->implementation->getErrorInfo();
             $errorcode = $this->implementation->getErrorCode();
-            throw new \go\DB\Exceptions\Connect($error, $errorcode);
+            throw new Exceptions\Connect($error, $errorcode);
         }
         $this->connected = true;
         return true;
