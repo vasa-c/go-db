@@ -51,7 +51,7 @@ final class Engine
      * Выполнения запроса
      *
      * @param string $query
-     * @return \go\DB\Implementations\TestBase\Cursor
+     * @return \go\DB\Implementations\TestBase\Cursor | bool
      */
     public function query($query) {
         
@@ -81,7 +81,7 @@ final class Engine
     /**
      * @return int
      */
-    public function getAffectedRow() {
+    public function getAffectedRows() {
         
     }
     
