@@ -76,6 +76,21 @@ final class Engine
     }
 
     /**
+     * Закрыть "подключение"
+     */
+    public function close() {
+        $this->closed = true;
+        return true;
+    }
+
+    /**
+     * Закрыто ли подключение
+     */
+    public function isClosed() {
+        return $this->closed;
+    }
+
+    /**
      * @return string
      */
     public function getErrorInfo() {
@@ -225,4 +240,9 @@ final class Engine
      * @var int
      */
     private $affectedRows = 0;
+
+    /**
+     * @var bool
+     */
+    private $closed = false;
 }

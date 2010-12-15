@@ -168,4 +168,15 @@ final class EngineTest extends \go\Tests\DB\Base
         $this->assertEmpty($engine->getErrorCode());
     }
 
+    /**
+     * @covers close
+     * @covers isClosed
+     */
+    public function testClose() {
+        $engine = new Engine();
+        $this->assertFalse($engine->isClosed());
+        $engine->close();
+        $this->assertTrue($engine->isClosed());
+    }
+
 }
