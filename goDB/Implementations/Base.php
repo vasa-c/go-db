@@ -35,7 +35,7 @@ abstract class Base
      * @return bool
      *         успешно или нет
      */
-    abstract public function connect($params);
+    abstract public function connect(array $params);
 
     /**
      * Закрыть подключение к серверу
