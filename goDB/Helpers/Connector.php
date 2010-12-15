@@ -28,7 +28,12 @@ final class Connector
      *        параметры подключения
      */
     public function __construct(Implementation $implementation, array $params) {
-        
+        $params = $implementation->checkParams($params);
+        if (!$params) {
+            throw new \go\DB\Exceptions\ConfigConnect();
+        }
+        $this->implementation = $implementation;
+        $this->params         = $params;
     }
 
     /**
@@ -41,7 +46,16 @@ final class Connector
      *         было ли подключение установлено именно в этот раз
      */
     public function connect() {
-
+        if ($this->connected) {
+            return false;
+        }
+        if (!$this->implementation->connect($this->params)) {
+            $error     = $this->implementation->getErrorInfo();
+            $errorcode = $this->implementation->getErrorCode();
+            throw new \go\DB\Exceptions\Connect($error, $errorcode);
+        }
+        $this->connected = true;
+        return true;
     }
 
     /**
@@ -51,7 +65,12 @@ final class Connector
      *         было ли подключение разорвано именно в этот раз
      */
     public function close() {
-
+        if (!$this->connected) {
+            return false;
+        }
+        $this->implementation->close();
+        $this->connected = false;
+        return true;
     }
 
     /**
@@ -60,6 +79,27 @@ final class Connector
      * @return bool
      */
     public function isConnected() {
-        
+        return $this->connected;
     }
+
+    /**
+     * Внутренняя реализация базы
+     *
+     * @var \go\DB\Implementations\Base
+     */
+    private $implementation;
+
+    /**
+     * Параметры подключения
+     *
+     * @var array
+     */
+    private $params;
+
+    /**
+     * Произведено ли подключение
+     *
+     * @var bool
+     */
+    private $connected = false;
 }

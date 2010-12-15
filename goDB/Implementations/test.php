@@ -49,7 +49,7 @@ final class test extends Base
      * @override Base
      */
     public function close() {
-        $this->connection = null;
+        $this->connection->close();
         return true;
     }
 
