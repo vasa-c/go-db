@@ -154,7 +154,7 @@ abstract class Base
      * @param mixed $cursor
      * @return array|false
      */
-    abstract public function fetchRow(&$cursor);
+    abstract public function fetchRow($cursor);
 
     /**
      * Получить очередную строку в виде ассоциативного массива
@@ -162,7 +162,7 @@ abstract class Base
      * @param mixed $cursor
      * @return array|false
      */
-    abstract public function fetchAssoc(&$cursor);
+    abstract public function fetchAssoc($cursor);
 
     /**
      * Получить очередную строку в виде объекта
@@ -170,7 +170,7 @@ abstract class Base
      * @param mixed $cursor
      * @return object|false
      */
-    public function fetchObject(&$cursor) {
+    public function fetchObject($cursor) {
         $result = $this->fetchAssoc($cursor);
         return $result ? (object)$result : false;
     }
