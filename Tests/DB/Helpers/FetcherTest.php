@@ -66,8 +66,8 @@ final class FetcherTest extends \go\Tests\DB\Base
                 $query,
                 'vars',
                 array(
-                    array(3 => 2),
-                    array(4 => 4),
+                    3 => 2,
+                    4 => 4,
                 ),
             ),
         );
@@ -78,7 +78,8 @@ final class FetcherTest extends \go\Tests\DB\Base
      * @dataProvider providerListKey
      */
     public function testListKey($query, $fetch, $expected) {
-        $this->assertEquals($expected, $this->dbQuery($query, $fetch));
+        $result = $this->dbQuery($query, $fetch);
+        $this->assertEquals($expected, $result);
     }
     public function providerListKey() {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
@@ -93,7 +94,7 @@ final class FetcherTest extends \go\Tests\DB\Base
             ),
             array(
                 $query,
-                'numerics:b',
+                'numerics:0',
                 array(
                     3 => array(3, 2),
                     4 => array(4, 4),
@@ -162,8 +163,8 @@ final class FetcherTest extends \go\Tests\DB\Base
                 $query,
                 'ivars',
                 array(
-                    array(3 => 2),
-                    array(4 => 4),
+                    3 => 2,
+                    4 => 4,
                 ),
             ),
         );
@@ -195,7 +196,7 @@ final class FetcherTest extends \go\Tests\DB\Base
             ),
             array(
                 $query,
-                'inumerics:b',
+                'inumerics:0',
                 array(
                     3 => array(3, 2),
                     4 => array(4, 4),
@@ -325,11 +326,8 @@ final class FetcherTest extends \go\Tests\DB\Base
 
 
     public function testNoSelect() {
-        $id = $this->dbQuery('INSERT', 'id');
-        $this->assertEquals($id + 1, $this->dbQuery('INSERT', 'id'));
-
+        $this->assertEquals(1, $this->dbQuery('INSERT', 'id'));
         $this->assertEquals(3, $this->dbQuery('UPDATE LIMIT 3,3', 'ar'));
-
         $this->assertType('object', $this->dbQuery('SELECT * FROM `table`', 'cursor'));
     }
 
