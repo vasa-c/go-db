@@ -2,7 +2,9 @@
 /**
  * Подключалка к базе
  *
- * Занимается подключением к БД
+ * Занимается подключением к БД, агрегируется в объект DB.
+ *
+ * Может разделяться несколькими объектами DB.
  *
  * @package    go\DB
  * @subpackage Helpers
@@ -34,10 +36,12 @@ final class Connector
         }
         $this->implementation = $implementation;
         $this->params         = $params;
+        $this->links          = 1;
+        $this->connections    = 0;
     }
 
     /**
-     * Попытаться подключиться, если ещё не подключены
+     * Требование подключения
      *
      * @throws \go\DB\Exceptions\Connect
      *         ошибка при подключении
@@ -46,7 +50,8 @@ final class Connector
      *         было ли подключение установлено именно в этот раз
      */
     public function connect() {
-        if ($this->connected) {
+        $this->connections++;
+        if ($this->connections > 1) {
             return false;
         }
         if (!$this->implementation->connect($this->params)) {
@@ -54,7 +59,6 @@ final class Connector
             $errorcode = $this->implementation->getErrorCode();
             throw new Exceptions\Connect($error, $errorcode);
         }
-        $this->connected = true;
         return true;
     }
 
@@ -65,11 +69,14 @@ final class Connector
      *         было ли подключение разорвано именно в этот раз
      */
     public function close() {
-        if (!$this->connected) {
+        if ($this->connections == 0) {
+            return false;
+        }
+        $this->connections--;
+        if ($this->connections > 0) {
             return false;
         }
         $this->implementation->close();
-        $this->connected = false;
         return true;
     }
 
@@ -79,7 +86,41 @@ final class Connector
      * @return bool
      */
     public function isConnected() {
-        return $this->connected;
+        return $this->connections > 0;
+    }
+
+    /**
+     * Добавить ссылку из объекта базы
+     *
+     * @param bool $connection
+     *        есть ли в этой базе уже подключение
+     */
+    public function addLink($connection) {
+        $this->links++;
+        if ($connection) {
+            $this->connections++;
+        }
+        return true;
+    }
+
+    /**
+     * Удалить ссылку из объекта базы
+     */
+    public function removeLink() {
+        $this->links--;
+        if ($this->links < 1) {
+            $this->implementation = null;
+        }
+        return true;
+    }
+
+    /**
+     * Узнать количество ссылок на коннектор
+     *
+     * @return int
+     */
+    public function getCountConnections() {
+        return $this->connections;
     }
 
     /**
@@ -97,9 +138,16 @@ final class Connector
     private $params;
 
     /**
-     * Произведено ли подключение
+     * Количество ссылок на коннектор из объектов баз
      *
-     * @var bool
+     * @var int
      */
-    private $connected = false;
+    private $links;
+
+    /**
+     * Количество затребованных подключений
+     *
+     * @var int
+     */
+    private $connections;
 }

@@ -79,4 +79,32 @@ final class ConnectorTest extends \go\Tests\DB\Base
         $this->assertFalse($connector->isConnected());
         $this->assertTrue($engine->isClosed());
     }
+
+    public function testShare() {
+        $params         = array('host' => 'localhost');
+        $implementation = new Implementation();
+        $connector      = new Connector($implementation, $params);
+
+        $this->assertTrue($connector->connect());
+        $engine = $implementation->getConnection();
+        $this->assertFalse($connector->connect());
+        $this->assertEquals(2, $connector->getCountConnections());
+        $connector->connect();
+        $this->assertEquals(3, $connector->getCountConnections());
+
+        $this->assertFalse($engine->isClosed());
+
+        $this->assertFalse($connector->close());
+        $this->assertEquals(2, $connector->getCountConnections());
+        $this->assertFalse($engine->isClosed());
+
+        $this->assertFalse($connector->close());
+        $this->assertEquals(1, $connector->getCountConnections());
+        $this->assertFalse($engine->isClosed());
+
+        $this->assertTrue($connector->close());
+        $this->assertEquals(0, $connector->getCountConnections());
+        $this->assertTrue($engine->isClosed());
+    }
+
 }
