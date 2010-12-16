@@ -88,11 +88,12 @@ abstract class DB
      *        формат представления результата
      * @param string $prefix [optional]
      *        префикс таблиц для данного конкретного запроса
-     * @return mixed
+     * @return \go\DB\Result
      *         результат в заданном формате
      */
     final public function query($pattern, $data = null, $fetch = null, $prefix = null) {
-        
+        $query = $this->makeQuery($pattern, $data, $prefix);
+        return $this->plainQuery($query, $fetch);
     }
 
     /**
@@ -107,11 +108,24 @@ abstract class DB
      *        SQL-запрос
      * @param string $fetch [optional]
      *        формат представления результата
-     * @return mixed
+     * @return \go\DB\Result
      *         результат в заданном формате
      */
     final public function plainQuery($query, $fetch = null) {
-
+        $this->forcedConnect();
+        $imp    = $this->implementation;
+        $mt     = microtime(true);
+        $cursor = $imp->query($query);
+        $mt     = microtime(true) - $mt;
+        if (!$cursor) {
+            throw new Exceptions\Query($query, $imp->getErrorInfo(), $imp->getErrorCode());
+        }
+        $this->debugLog($query, $mt, null);
+        $fetcher = $this->createFetcher($cursor);
+        if (is_null($fetch)) {
+            return $fetcher;
+        }
+        return $fetcher->fetch($fetch);
     }
 
     /**
@@ -131,10 +145,10 @@ abstract class DB
      * @param array $data [optional]
      * @param string $fetch [optional]
      * @param string $prefix [optional]
-     * @return mixed
+     * @return \go\DB\Result
      */
     final public function __invoke($pattern, $data = null, $fetch = null, $prefix = null) {
-
+        return $this->query($pattern, $data, $fetch, $prefix);
     }
 
     /**
@@ -142,8 +156,8 @@ abstract class DB
      *
      * @return bool
      */
-    final public function isConnected() {
-
+    final public function isConnected() { // @todo close
+        return $this->connector->isConnected();
     }
 
     /**
@@ -154,8 +168,11 @@ abstract class DB
      * @throws \go\DB\Exceptions\Closed
      *         подключение закрыто "жестким" образом
      */
-    final public function forcedConnect() {
-
+    final public function forcedConnect() { // @todo close
+        if ($this->isClosed()) {
+            throw new Exceptions\Closed();
+        }
+        return $this->connector->connect();
     }
 
     /**
@@ -164,8 +181,11 @@ abstract class DB
      * @param bool $safe [optional]
      *        "мягкое" закрытие: с возможностью восстановления
      */
-    final public function close($safe = false) {
-
+    final public function close($safe = false) { // @todo close
+        $this->connector->close();
+        $this->closed = true;
+        $this->safeClosed = $safe;
+        return true;
     }
 
     /**
@@ -173,8 +193,8 @@ abstract class DB
      *
      * @return bool
      */
-    final public function isClosed() {
-
+    final public function isClosed() { // @todo close
+        return ($this->closed && (!$this->safeClosed));
     }
 
     /**
@@ -183,7 +203,8 @@ abstract class DB
      * @param string $prefix
      */
     final public function setPrefix($prefix) {
-
+        $this->prefix = $prefix;
+        return true;
     }
 
     /**
@@ -192,7 +213,7 @@ abstract class DB
      * @return string
      */
     final public function getPrefix() {
-
+        return $this->prefix;
     }
 
     /**
@@ -201,8 +222,12 @@ abstract class DB
      * @param callback $callback
      *        обработчик (true - стандартный)
      */
-    final public function setDebug($callback = true) {
-
+    final public function setDebug($callback = true) { // @todo cli
+        if ($callback === true) {
+            $callback = new Helpers\Debuggers\OutHtml();
+        }
+        $this->debugCallback = $callback;
+        return true;
     }
 
     /**
@@ -211,14 +236,15 @@ abstract class DB
      * @return callback
      */
     final public function getDebug() {
-
+        return $this->debugCallback;
     }
 
     /**
      * Отключить отправку отладочной информации
      */
     final public function disableDebug() {
-
+        $this->debugCallback = null;
+        return true;
     }
 
     /**
@@ -230,10 +256,135 @@ abstract class DB
      * @return mixed
      */
     final public function getImplementationConnection() {
-        
+        return $this->implementation->getConnection();
+    }
+
+    /**
+     * Сформировать запрос на основании шаблона и данных
+     *
+     * @throws \go\DB\Exceptions\Templater
+     *
+     * @param string $pattern
+     * @param array $data
+     * @param string $prefix
+     * @return string
+     */
+    final public function makeQuery($pattern, $data, $prefix = null) {
+        $this->forcedConnect();
+        if (is_null($prefix)) {
+            $prefix = $this->prefix;
+        }
+        $templater = $this->createTemplater($pattern, $data, $prefix);
+        $templater->parse();
+        return $templater->getQuery();
     }
 
 /*** PROTECTED: ***/
+
+    /**
+     * Скрытый конструктор - извне не создать
+     * 
+     * @param array $params
+     *        конфигурационные параметры базы
+     */
+    protected function __construct($params) {
+        $this->separateParams($params);
+        $this->implementation = $this->createImplementation();
+        $this->connector      = $this->createConnector();
+        if (!$this->paramsSys['lazy']) {
+            $this->connector->connect();
+        }
+        $this->setPrefix($this->paramsSys['prefix']);
+        $this->setDebug($this->paramsSys['debug']);
+    }
+
+    /**
+     * Деструктор
+     */
+    public final function __destructor() {
+        $this->connector->close();
+        $this->implementation = null;
+        $this->connector = null;
+    }
+
+    /**
+     * Создать объект низкоуровневой реализации доступа к базе
+     *
+     * @return \go\DB\Implementations\Base
+     */
+    protected function createImplementation() {
+        $classname = __NAMESPACE__.'\\Implementations\\'.$this->paramsSys['adapter'];
+        return new $classname();
+    }
+
+    /**
+     * Создать объект подключения к базе
+     *
+     * @return \go\DB\Helpers\Connector
+     */
+    protected function createConnector() {
+        return (new Helpers\Connector($this->implementation, $this->paramsDB));
+    }
+
+    /**
+     * Создать шаблонизатор запроса
+     *
+     * @param string $pattern
+     * @param array $data
+     * @param string $prefix
+     * @return \go\DB\Helpers\Templater
+     */
+    protected function createTemplater($pattern, $data, $prefix) {
+        return (new Helpers\Templater($this->implementation, $pattern, $data, $prefix));
+    }
+
+    /**
+     * Создать объек представления результата
+     *
+     * @param mixed $cursor
+     * @return \go\DB\Result
+     */
+    protected function createFetcher($cursor) {
+        return (new Helpers\Fetcher($this->implementation, $cursor));
+    }
+
+    /**
+     * Разбор и сортировка параметров на системные и подключения
+     *
+     * @throws \go\DB\Exceptions\ConfigSys
+     *
+     * @param array $params
+     */
+    protected function separateParams($params) {
+        $this->paramsDB  = array();
+        $this->paramsSys = \go\DB\Helpers\Config::get('configsys');
+        foreach ($params as $name => $value) {
+            if ((!empty($name)) && ($name[0] == '_')) {
+                $name = substr($name, 1);
+                if (!array_key_exists($name, $this->paramsSys)) {
+                    throw new Exceptions\ConfigSys('Unknown system param "'.$name.'"');
+                }
+                $this->paramsSys[$name] = $value;
+            } else {
+                $this->paramsDB[$name] = $value;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Отправка запроса в отладчик
+     * 
+     * @param string $query
+     * @param float $duration
+     * @param mixed $info
+     */
+    protected function debugLog($query, $duration, $info) {
+        if ($this->debugCallback) {
+            call_user_func($this->debugCallback, $query, $duration, $info);
+        }
+        return true;
+    }
 
 /*** VARS: ***/
 
@@ -244,6 +395,61 @@ abstract class DB
      */
     private static $availableAdapters;
 
+    /**
+     * Надстройка над низкоуровневой реализацией
+     * 
+     * @var \go\DB\Implementation\Base
+     */
+    protected $implementation;
+
+    /**
+     * Объект-подключалка
+     *
+     * @var \go\DB\Helpers\Connector
+     */
+    protected $connector;
+
+    /**
+     * Системные параметры
+     *
+     * @var array
+     */
+    protected $paramsSys;
+
+    /**
+     * Параметры подключения к базе
+     *
+     * @var array
+     */
+    protected $paramsDB;
+
+    /**
+     * Текущий префикс имён таблиц
+     *
+     * @var string
+     */
+    protected $prefix;
+
+    /**
+     * Отладчик запросов
+     *
+     * @var callback
+     */
+    protected $debugCallback;
+
+    /**
+     * Закрыто ли подключение для данного объекта
+     *
+     * @var bool
+     */
+    protected $closed = false;
+
+    /**
+     * Закрыто ли подключение мягким образом
+     *
+     * @var bool
+     */
+    protected $safeClosed = false;
 }
 
 /**
