@@ -89,16 +89,45 @@ final class DBTest extends \go\Tests\DB\Base
         );
     }
 
+    /**
+     * @covers create
+     * @expectedException \go\DB\Exceptions\ConfigSys
+     */
     public function testExceptionConfigSys() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+            '_unknown' => 'error',
+        );
+        $db = \go\DB\DB::create($params);
     }
 
+    /**
+     * @covers create
+     * @expectedException \go\DB\Exceptions\ConfigConnect
+     */
     public function testExceptionConfigConnect() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'port'     => 777,
+        );
+        $db = \go\DB\DB::create($params);
     }
 
+    /**
+     * @covers create
+     */
     public function testExceptionConnect() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            '_lazy'    => true,
+            'host'     => 'notlocalhost',
+            'port'     => 777,
+        );
+        $db = \go\DB\DB::create($params);
+
+        $this->setExpectedException('go\DB\Exceptions\Connect');
+        $db->forcedConnect();
     }
 
     /**
@@ -121,39 +150,176 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertContains('test', $adapters);
     }
 
+    public function testConnectClose() {
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+        
+        $this->assertFalse($db->isConnected());
+        $db->forceConnect();
+        $this->assertTrue($db->isConnected());
+        $db->close(true); // safe
+        $this->assertFalse($db->isConnected());
+        $db->plainQuery('INSERT');
+        $this->assertTrue($db->isConnected());
+
+        $db->close(false); // not safe
+        $this->assertFalse($db->isConnected());
+        $this->setExpectedException('go\DB\Exceptions\Closed');
+        $db->plainQuery('INSERT');
+    }
+
+    public function testNotLazyConnect() {
+        $params = array(
+            '_adapter' => 'test',
+            '_lazy'    => false,
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+        $this->assertTrue($db->isConnected());
+    }
+
+    /**
+     * @covers query
+     */
     public function testQuery() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $result = $db->query('SELECT * FROM `table` WHERE LIMIT ?i,?i', array(2, 2));
+        $this->assertInstanceOf('go\DB\Result', $result);
+        $result = $result->assoc();
+        $expected = array(
+            array('a' => 3, 'b' => 4, 'c' => 5),
+            array('a' => 4, 'b' => 4, 'c' => 6),
+        );
+        $this->assertEquals($expected, $result);
+
+        $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
+        $result = $db->query('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
+    /**
+     * @covers plainQuery
+     */
     public function testPlainQuery() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $result = $db->query('SELECT * FROM `table` WHERE LIMIT 2,2', 'assoc');
+        $expected = array(
+            array('a' => 3, 'b' => 4, 'c' => 5),
+            array('a' => 4, 'b' => 4, 'c' => 6),
+        );
+        $this->assertEquals($expected, $result);
+
+        $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
+        $result = $db->query('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
+    /**
+     * @covers __invoke
+     */
     public function testInvoke() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $result = $db('SELECT * FROM `table` WHERE LIMIT ?i,?i', array(2, 2), '');
+        $expected = array(
+            array('a' => 3, 'b' => 4, 'c' => 5),
+            array('a' => 4, 'b' => 4, 'c' => 6),
+        );
+        $this->assertEquals($expected, $result);
+
+        $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
+        $result = $db('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), '');
     }
 
-    public function testConnect() {
-        $this->markTestSkipped();
-    }
 
-    public function testClose() {
-        $this->markTestSkipped();
-    }
-
+    /**
+     * @covers setPrefix
+     * @covers getPrefix
+     * @covers makeQuery
+     */
     public function testPrefix() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $prefix  = 'p_';
+        $pattern = 'SELECT * FROM {table} LEFT JOIN ?t AS `t` ON ?c=?c';
+        $data    = array('t', 'a', array('table', 'b'));
+        $expectedN = 'SELECT * FROM `table` LEFT JOIN `t` AS `t` ON `a`=`table`.`b`';
+        $expectedP = 'SELECT * FROM `p_table` LEFT JOIN `p_t` AS `t` ON `a`=`p_table`.`b`';
+
+        $this->assertEmpty($db->getPrefix());
+        $this->assertEquals($expectedN, $db->makeQuery($pattern, $data));
+
+        $db->setPrefix($prefix);
+        $this->assertEquals($prefix, $db->getPrefix());
+        $this->assertEquals($expectedP, $db->makeQuery($pattern, $data));
+
+        $db->setPrefix('');
+        $this->assertEmpty($db->getPrefix());
+        $this->assertEquals($expectedN, $db->makeQuery($pattern, $data));
+
+        $this->assertEquals($expectedP, $db->makeQuery($pattern, $data, $prefix));
     }
 
     public function testDebug() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $this->assertEmpty($db->getDebug());
+
+        $debugger = new \go\DB\Helpers\Debuggers\Test();
+        $db->setDebug($debugger);
+        $this->assertSame($debugger, $db->getDebug());
+        $this->assertEmpty($debugger->getQuery());
+
+        $db->query('UPDATE LIMIT ?i,?i', array(1, 2), 'ar');
+        $this->assertEquals('UPDATE LIMIT 1,2', $debugger->getQuery());
+
+        $db->query('UPDATE LIMIT ?i,?i', array(3, 4), 'ar');
+        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getQuery());
+        
+        $db->disableDebug();
+        $db->query('UPDATE LIMIT ?i,?i', array(5, 6), 'ar');
+        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getQuery());
+
+        $db->setDebug(true);
+        $this->assertType('object', $db->getDebug());
     }
 
-    public function testLazyConnection() {
-        $this->markTestSkipped();
-    }
-
+    /**
+     * @covers getImplementationConnection
+     */
     public function testGetImplementationConnection() {
-        $this->markTestSkipped();
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+
+        $this->assertEmpty($db->getImplementationConnection());
+
+        $db->forcedConnect();
+        $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection());
     }
 }
