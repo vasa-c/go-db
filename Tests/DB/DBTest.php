@@ -158,7 +158,7 @@ final class DBTest extends \go\Tests\DB\Base
         $db = \go\DB\DB::create($params);
         
         $this->assertFalse($db->isConnected());
-        $db->forceConnect();
+        $db->forcedConnect();
         $this->assertTrue($db->isConnected());
         $db->close(true); // safe
         $this->assertFalse($db->isConnected());
@@ -191,7 +191,7 @@ final class DBTest extends \go\Tests\DB\Base
         );
         $db = \go\DB\DB::create($params);
 
-        $result = $db->query('SELECT * FROM `table` WHERE LIMIT ?i,?i', array(2, 2));
+        $result = $db->query('SELECT * FROM `table` LIMIT ?i,?i', array(2, 2));
         $this->assertInstanceOf('go\DB\Result', $result);
         $result = $result->assoc();
         $expected = array(
@@ -201,7 +201,7 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
 
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
-        $result = $db->query('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), 'assoc');
+        $result = $db->query('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
     /**
@@ -214,7 +214,7 @@ final class DBTest extends \go\Tests\DB\Base
         );
         $db = \go\DB\DB::create($params);
 
-        $result = $db->query('SELECT * FROM `table` WHERE LIMIT 2,2', 'assoc');
+        $result = $db->plainQuery('SELECT * FROM `table` LIMIT 2,2', 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
             array('a' => 4, 'b' => 4, 'c' => 6),
@@ -222,7 +222,7 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
 
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
-        $result = $db->query('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), 'assoc');
+        $result = $db->plainQuery('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
     /**
@@ -235,7 +235,7 @@ final class DBTest extends \go\Tests\DB\Base
         );
         $db = \go\DB\DB::create($params);
 
-        $result = $db('SELECT * FROM `table` WHERE LIMIT ?i,?i', array(2, 2), '');
+        $result = $db('SELECT * FROM `table` LIMIT ?i,?i', array(2, 2), 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
             array('a' => 4, 'b' => 4, 'c' => 6),
@@ -243,7 +243,7 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
 
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
-        $result = $db('SELECT * FROM `unknown` WHERE LIMIT ?i,?i', array(2, 2), '');
+        $result = $db('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
 
@@ -291,17 +291,17 @@ final class DBTest extends \go\Tests\DB\Base
         $debugger = new \go\DB\Helpers\Debuggers\Test();
         $db->setDebug($debugger);
         $this->assertSame($debugger, $db->getDebug());
-        $this->assertEmpty($debugger->getQuery());
+        $this->assertEmpty($debugger->getLastQuery());
 
         $db->query('UPDATE LIMIT ?i,?i', array(1, 2), 'ar');
-        $this->assertEquals('UPDATE LIMIT 1,2', $debugger->getQuery());
+        $this->assertEquals('UPDATE LIMIT 1,2', $debugger->getLastQuery());
 
         $db->query('UPDATE LIMIT ?i,?i', array(3, 4), 'ar');
-        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getQuery());
+        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getLastQuery());
         
         $db->disableDebug();
         $db->query('UPDATE LIMIT ?i,?i', array(5, 6), 'ar');
-        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getQuery());
+        $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getLastQuery());
 
         $db->setDebug(true);
         $this->assertType('object', $db->getDebug());
