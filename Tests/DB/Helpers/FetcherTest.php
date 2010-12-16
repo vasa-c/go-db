@@ -363,6 +363,31 @@ final class FetcherTest extends \go\Tests\DB\Base
         return $provider;
     }
 
+    public function testIteratorsListsDiff() {
+        $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
+
+        $result = array();
+        foreach ($this->dbQuery($query, 'vars') as $k => $v) {
+            $result[] = array($k, $v);
+        }
+        $expected = array(
+            array(3, 2),
+            array(4, 4),
+        );
+        $this->assertEquals($expected, $result);
+
+        $result = array();
+        foreach ($this->dbQuery($query, 'ivars') as $k => $v) {
+            $result[] = array($k, $v);
+        }
+        $expected = array(
+            array(3, 2),
+            array(4, 3),
+            array(4, 4),
+        );
+        $this->assertEquals($expected, $result);
+    }
+
     private function dbQuery($query, $fetch) {
         $fetcher = $this->createFetcher($query);
         return $fetcher->fetch($fetch);
