@@ -112,6 +112,8 @@ final class EngineTest extends \go\Tests\DB\Base
         $this->assertEquals(3, $engine->getAffectedRows());
         $engine->query('UPDATE `table` LIMIT 4,3');
         $this->assertEquals(2, $engine->getAffectedRows());
+        $engine->query('UPDATE `table` LIMIT 40,3');
+        $this->assertEquals(0, $engine->getAffectedRows());
         $engine->query('SELECT * FROM `table`');
         $this->assertEquals(0, $engine->getAffectedRows());
     }

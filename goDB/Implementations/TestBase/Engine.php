@@ -186,6 +186,9 @@ final class Engine
         }
         $limit = $this->parseLimit($limit);
         $this->affectedRows = $limit['end'] - $limit['begin'] + 1;
+        if ($this->affectedRows < 0) {
+            $this->affectedRows = 0;
+        }
         return true;
     }
 
@@ -209,9 +212,6 @@ final class Engine
             $end   = (int)$limit[0] - 1;
         }
         $max = \count($this->table) - 1;
-        if ($begin > $max) {
-            $begin = $max;
-        }
         if ($end > $max) {
             $end = $max;
         }
