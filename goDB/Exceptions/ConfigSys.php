@@ -10,7 +10,7 @@
 
 namespace go\DB\Exceptions;
 
-final class ConfigConnect extends Config
+final class ConfigSys extends Config
 {
     public function __construct($message = null) {
         $message = 'Error system config'.($message ? (': "'.$message.'"') : '');
