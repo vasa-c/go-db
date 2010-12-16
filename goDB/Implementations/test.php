@@ -106,7 +106,7 @@ final class test extends Base
      * @return int
      */
     public function getNumRows($cursor) {
-        return $this->connection->getNumRows();
+        return $cursor->getNumRows();
     }
 
     /**
