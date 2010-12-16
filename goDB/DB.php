@@ -54,8 +54,8 @@ abstract class DB
     final public static function getAvailableAdapters() {
         if (!self::$availableAdapters) {
             $A = array();
-            foreach (glob(__DIR__.'/Adapters/*.php') as $filename) {
-                if (preg_match('~([a-z0-9]*)\.php$~s', $filename, $matches)) {
+            foreach (\glob(__DIR__.'/Adapters/*.php') as $filename) {
+                if (\preg_match('~([a-z0-9]*)\.php$~s', $filename, $matches)) {
                     $A[] = $matches[1];
                 }
             }
@@ -114,9 +114,9 @@ abstract class DB
     final public function plainQuery($query, $fetch = null) {
         $this->forcedConnect();
         $imp    = $this->implementation;
-        $mt     = microtime(true);
+        $mt     = \microtime(true);
         $cursor = $imp->query($query);
-        $mt     = microtime(true) - $mt;
+        $mt     = \microtime(true) - $mt;
         if (!$cursor) {
             throw new Exceptions\Query($query, $imp->getErrorInfo(), $imp->getErrorCode());
         }
@@ -361,7 +361,7 @@ abstract class DB
         foreach ($params as $name => $value) {
             if ((!empty($name)) && ($name[0] == '_')) {
                 $name = substr($name, 1);
-                if (!array_key_exists($name, $this->paramsSys)) {
+                if (!\array_key_exists($name, $this->paramsSys)) {
                     throw new Exceptions\ConfigSys('Unknown system param "'.$name.'"');
                 }
                 $this->paramsSys[$name] = $value;
@@ -381,7 +381,7 @@ abstract class DB
      */
     protected function debugLog($query, $duration, $info) {
         if ($this->debugCallback) {
-            call_user_func($this->debugCallback, $query, $duration, $info);
+            \call_user_func($this->debugCallback, $query, $duration, $info);
         }
         return true;
     }
