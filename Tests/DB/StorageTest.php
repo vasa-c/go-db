@@ -172,8 +172,6 @@ final class StorageTest extends \go\Tests\DB\Base
      * @covers __invoke
      */
     public function testInvoke() {
-        $this->markTestIncomplete();
-
         $storage = new Storage();
         $storage->create(array('host' => 'localhost', '_adapter' => 'test'));
 
@@ -186,9 +184,7 @@ final class StorageTest extends \go\Tests\DB\Base
      * @covers query
      * @covers go\DB\query
      */
-    public function testQuery() {
-        $this->markTestIncomplete();
-        
+    public function testQuery() {       
         $instance = Storage::getInstance();
 
         $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');

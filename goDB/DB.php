@@ -488,5 +488,5 @@ function create(array $params, $adapter = null) {
  * @param string $prefix [optional]
  */
 function query($pattern, $data = null, $fetch = null, $prefix = null) {
-
+    return Storage::getInstance()->query($pattern, $data, $fetch, $prefix);
 }
