@@ -11,7 +11,6 @@
 
 namespace go\DB\Helpers;
 
-use go\DB\Implementations\Base as Implementation;
 use go\DB\Exceptions as Exceptions;
 
 class Templater
@@ -19,8 +18,8 @@ class Templater
     /**
      * Конструктор
      *
-     * @param Implementation $implementation
-     *        низкоуровневая реализация подключения к базе
+     * @param \go\DB\Helpers\Connector $connector
+     *        подключалка к базе (подключение должно быть установлено)
      * @param string $pattern
      *        шаблон запроса
      * @param array $data
@@ -28,8 +27,9 @@ class Templater
      * @param string $prefix
      *        префикс запроса
      */
-    public function __construct(Implementation $implementation, $pattern, $data, $prefix) {
-        $this->implementation = $implementation;
+    public function __construct(Connector $connector, $pattern, $data, $prefix) {
+        $this->implementation = $connector->getImplementation();
+        $this->connection     = $connector->getConnection();
         $this->pattern        = $pattern;
         $this->data           = $data ?: array();
         $this->prefix         = $prefix;
@@ -45,16 +45,16 @@ class Templater
      *         итоговые запрос
      */
     public function parse() {
-        if (!is_null($this->query)) {
+        if (!\is_null($this->query)) {
             return $this->query;
         }
         /* Замена {table} */
-        $query    = preg_replace_callback('~{(.*?)}~', array($this, '_table'), $this->pattern);
+        $query    = \preg_replace_callback('~{(.*?)}~', array($this, '_table'), $this->pattern);
         /* Замена плейсхолдеров */
         $pattern  = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
         $callback = array($this, '_placeholder');
-        $query    = preg_replace_callback($pattern, $callback, $query);
-        if ((!$this->named) && (count($this->data) > $this->counter)) {
+        $query    = \preg_replace_callback($pattern, $callback, $query);
+        if ((!$this->named) && (\count($this->data) > $this->counter)) {
             throw new \go\DB\Exceptions\DataMuch(count($this->data), $this->counter);
         }
         $this->query = $query;
@@ -74,7 +74,7 @@ class Templater
      * Замена имени таблицы "{table}"
      */
     private function _table($matches) {
-        return $this->implementation->reprTable($this->prefix.$matches[1]);
+        return $this->implementation->reprTable($this->connection, $this->prefix.$matches[1]);
     }
 
     /**
@@ -137,16 +137,16 @@ class Templater
      */
     private function valueModification($value, array $modifers) {
         if ($modifers['n'] && is_null($value)) {
-            return $this->implementation->reprNULL();
+            return $this->implementation->reprNULL($this->connection);
         }
         if ($modifers['i']) {
-            return $this->implementation->reprInt($value);
+            return $this->implementation->reprInt($this->connection, $value);
         } elseif ($modifers['f']) {
-            return $this->implementation->reprFloat($value);
+            return $this->implementation->reprFloat($this->connection, $value);
         } elseif ($modifers['b']) {
-            return $this->implementation->reprBool($value);
+            return $this->implementation->reprBool($this->connection, $value);
         }
-        return $this->implementation->reprString($value);
+        return $this->implementation->reprString($this->connection, $value);
     }
 
     /**
@@ -185,7 +185,9 @@ class Templater
     private function replacement_s(array $value, array $modifers) {
         $set = array();
         foreach ($value as $col => $element) {
-            $set[] = $this->implementation->reprCol($col).'='.$this->valueModification($element, $modifers);
+            $key   = $this->implementation->reprCol($this->connection, $col);
+            $value = $this->valueModification($element, $modifers);
+            $set[] = $key.'='.$value;
         }
         return implode(', ', $set);
     }
@@ -213,7 +215,7 @@ class Templater
      * @return string
      */
     private function replacement_t($value, array $modifers) {
-        return $this->implementation->reprTable($this->prefix.$value);
+        return $this->implementation->reprTable($this->connection, $this->prefix.$value);
     }
 
     /**
@@ -225,9 +227,10 @@ class Templater
      */
     private function replacement_c($value, array $modifers) {
         if (is_array($value)) {
-            $result = $this->implementation->reprChainFields(array($this->prefix.$value[0], $value[1]));
+            $chain = array($this->prefix.$value[0], $value[1]);
+            $result = $this->implementation->reprChainFields($this->connection, $chain);
         } else {
-            $result = $this->implementation->reprTable($value);
+            $result = $this->implementation->reprCol($this->connection, $value);
         }
         return $result;
     }
@@ -240,7 +243,7 @@ class Templater
      * @return string
      */
     private function replacement_e($value, array $modifers) {
-        return $this->implementation->escapeString($value);
+        return $this->implementation->escapeString($this->connection, $value);
     }
 
     /**
@@ -260,6 +263,13 @@ class Templater
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
+
+    /**
+     * Низкоуровневое подключение к базе
+     *
+     * @var mixed
+     */
+    protected $connection;
 
     /**
      * Шаблон запроса

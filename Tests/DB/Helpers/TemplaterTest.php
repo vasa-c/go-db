@@ -394,7 +394,8 @@ final class TemplaterTest extends \go\Tests\DB\Base
      * @return \go\DB\Templaters\Base
      */
     protected function createTemplater($pattern, $data, $prefix = null) {
-        $implementation = new \go\DB\Implementations\test();
-        return new \go\DB\Helpers\Templater($implementation, $pattern, $data, $prefix);
+        $connector = new \go\DB\Helpers\Connector('test', array('host' => 'localhost'));
+        $connector->connect();
+        return new \go\DB\Helpers\Templater($connector, $pattern, $data, $prefix);
     }
 }
