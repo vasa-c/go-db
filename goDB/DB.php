@@ -113,14 +113,17 @@ abstract class DB
      */
     final public function plainQuery($query, $fetch = null) {
         $this->forcedConnect();
-        $imp    = $this->implementation;
-        $mt     = \microtime(true);
-        $cursor = $imp->query($query);
-        $mt     = \microtime(true) - $mt;
+        $implementation = $this->connector->getImplementation();
+        $connection     = $this->connector->getConnection();
+        $duration       = \microtime(true);
+        $cursor         = $implementation->query($connection, $query);
+        $duration       = \microtime(true) - $duration;
         if (!$cursor) {
-            throw new Exceptions\Query($query, $imp->getErrorInfo(), $imp->getErrorCode());
+            $errorInfo  = $implementation->getErrorInfo($connection);
+            $errorCode  = $implementation->getErrorCode($connection);
+            throw new Exceptions\Query($query, $errorInfo, $errorCode);
         }
-        $this->debugLog($query, $mt, null);
+        $this->debugLog($query, $duration, null);
         $fetcher = $this->createFetcher($cursor);
         if (is_null($fetch)) {
             return $fetcher;
@@ -156,9 +159,22 @@ abstract class DB
      *
      * @return bool
      */
-    final public function isConnected() { // @todo close
+    final public function isConnected() {
+        if ($this->hardClosed) {
+            return false;
+        }
         return $this->connector->isConnected();
     }
+
+    /**
+     * Закрыто ли соединение
+     *
+     * @return bool
+     */
+    final public function isClosed() {
+        return $this->hardClosed;
+    }
+
 
     /**
      * Принудительно установить соединение, если оно ещё не установлено
@@ -168,11 +184,16 @@ abstract class DB
      * @throws \go\DB\Exceptions\Closed
      *         подключение закрыто "жестким" образом
      */
-    final public function forcedConnect() { // @todo close
-        if ($this->isClosed()) {
+    final public function forcedConnect() {
+        if ($this->hardClosed) {
             throw new Exceptions\Closed();
         }
-        return $this->connector->connect();
+        if ($this->connected) {
+            return false;
+        }
+        $res = $this->connector->connect();
+        $this->connected = true;
+        return $res;
     }
 
     /**
@@ -182,19 +203,16 @@ abstract class DB
      *        "мягкое" закрытие: с возможностью восстановления
      */
     final public function close($safe = false) { // @todo close
-        $this->connector->close();
-        $this->closed = true;
-        $this->safeClosed = $safe;
-        return true;
-    }
-
-    /**
-     * Закрыто ли соединение "жестким" образом
-     *
-     * @return bool
-     */
-    final public function isClosed() { // @todo close
-        return ($this->closed && (!$this->safeClosed));
+        if ($this->hardClosed) {
+            return false;
+        }
+        $result = false;
+        if ($this->connected) {
+            $result = $this->connector->close();
+            $this->connected = false;
+        }
+        $this->hardClosed = !$safe;
+        return $result;
     }
 
     /**
@@ -253,10 +271,16 @@ abstract class DB
      * @throws \go\DB\Exceptions\Connect
      * @throws \go\DB\Exceptions\Closed
      *
+     * @param bool $connect
+     *        подключиться, если не подключены
      * @return mixed
+     *         низкоуровневая реализация или FALSE если ещё не создана
      */
-    final public function getImplementationConnection() {
-        return $this->implementation->getConnection();
+    final public function getImplementationConnection($connect = true) {
+        if ($connect && (!$this->connector->isConnected())) {
+            $this->forcedConnect();
+        }
+        return $this->connector->getConnection();
     }
 
     /**
@@ -289,10 +313,10 @@ abstract class DB
      */
     protected function __construct($params) {
         $this->separateParams($params);
-        $this->implementation = $this->createImplementation();
         $this->connector      = $this->createConnector();
         if (!$this->paramsSys['lazy']) {
             $this->connector->connect();
+            $this->connected = true;
         }
         $this->setPrefix($this->paramsSys['prefix']);
         $this->setDebug($this->paramsSys['debug']);
@@ -301,20 +325,17 @@ abstract class DB
     /**
      * Деструктор
      */
-    public final function __destructor() {
+    public final function __destruct() {
         $this->connector->close();
-        $this->implementation = null;
+        $this->connector->removeLink();
         $this->connector = null;
     }
 
     /**
-     * Создать объект низкоуровневой реализации доступа к базе
-     *
-     * @return \go\DB\Implementations\Base
+     * Обработчик клонирования объекта
      */
-    protected function createImplementation() {
-        $classname = __NAMESPACE__.'\\Implementations\\'.$this->paramsSys['adapter'];
-        return new $classname();
+    public function __clone() {
+        $this->connector->addLink($this->connected);
     }
 
     /**
@@ -323,7 +344,7 @@ abstract class DB
      * @return \go\DB\Helpers\Connector
      */
     protected function createConnector() {
-        return (new Helpers\Connector($this->implementation, $this->paramsDB));
+        return (new Helpers\Connector($this->paramsSys['adapter'], $this->paramsDB));
     }
 
     /**
@@ -335,7 +356,7 @@ abstract class DB
      * @return \go\DB\Helpers\Templater
      */
     protected function createTemplater($pattern, $data, $prefix) {
-        return (new Helpers\Templater($this->implementation, $pattern, $data, $prefix));
+        return (new Helpers\Templater($this->connector, $pattern, $data, $prefix));
     }
 
     /**
@@ -345,7 +366,7 @@ abstract class DB
      * @return \go\DB\Result
      */
     protected function createFetcher($cursor) {
-        return (new Helpers\Fetcher($this->implementation, $cursor));
+        return (new Helpers\Fetcher($this->connector, $cursor));
     }
 
     /**
@@ -396,13 +417,6 @@ abstract class DB
     private static $availableAdapters;
 
     /**
-     * Надстройка над низкоуровневой реализацией
-     * 
-     * @var \go\DB\Implementation\Base
-     */
-    protected $implementation;
-
-    /**
      * Объект-подключалка
      *
      * @var \go\DB\Helpers\Connector
@@ -438,18 +452,18 @@ abstract class DB
     protected $debugCallback;
 
     /**
-     * Закрыто ли подключение для данного объекта
+     * Установлено ли подключение для данного объекта базы
      *
      * @var bool
      */
-    protected $closed = false;
+    protected $connected = false;
 
     /**
-     * Закрыто ли подключение мягким образом
+     * Закрыто ли подключение жёстким образом
      *
      * @var bool
      */
-    protected $safeClosed = false;
+    protected $hardClosed = false;
 }
 
 /**

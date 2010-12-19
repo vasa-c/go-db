@@ -150,20 +150,32 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertContains('test', $adapters);
     }
 
+    /**
+     * @covers isConnected
+     * @covers forcedConnect
+     * @covers close
+     */
     public function testConnectClose() {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
         $db = \go\DB\DB::create($params);
-        
+
         $this->assertFalse($db->isConnected());
         $db->forcedConnect();
         $this->assertTrue($db->isConnected());
+        $engine = $db->getImplementationConnection(false);
+        $this->assertFalse($engine->isClosed());
+
         $db->close(true); // safe
         $this->assertFalse($db->isConnected());
+        $this->assertTrue($engine->isClosed());
+
         $db->plainQuery('INSERT');
         $this->assertTrue($db->isConnected());
+        $engine = $db->getImplementationConnection(false);
+        $this->assertFalse($engine->isClosed());
 
         $db->close(false); // not safe
         $this->assertFalse($db->isConnected());
@@ -171,6 +183,9 @@ final class DBTest extends \go\Tests\DB\Base
         $db->plainQuery('INSERT');
     }
 
+    /**
+     * @covers create
+     */
     public function testNotLazyConnect() {
         $params = array(
             '_adapter' => 'test',
@@ -279,6 +294,12 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals($expectedP, $db->makeQuery($pattern, $data, $prefix));
     }
 
+    /**
+     * @covers setDebug
+     * @covers getDebug
+     * @covers disableDebug
+     * @covers query
+     */
     public function testDebug() {
         $params = array(
             '_adapter' => 'test',
@@ -317,9 +338,89 @@ final class DBTest extends \go\Tests\DB\Base
         );
         $db = \go\DB\DB::create($params);
 
-        $this->assertEmpty($db->getImplementationConnection());
-
-        $db->forcedConnect();
-        $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection());
+        $this->assertEmpty($db->getImplementationConnection(false));
+        $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection(true));
+        $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection(false));
     }
+
+    /**
+     * @covers clone
+     */
+    public function testClone() {
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+            '_prefix'  => 'one_',
+        );
+        $db1 = \go\DB\DB::create($params);
+
+        $db2 = clone $db1;
+        $db2->setPrefix('two_');
+
+        $this->assertFalse($db1->isConnected());
+        $this->assertFalse($db2->isConnected());
+
+        $query1 = $db1->makeQuery('SELECT * FROM {table}', null);
+        $this->assertEquals('SELECT * FROM `one_table`', $query1);
+        $this->assertTrue($db1->isConnected());
+        $this->assertTrue($db2->isConnected());
+
+        $engine1 = $db1->getImplementationConnection(false);
+        $this->assertSame($engine1, $db2->getImplementationConnection(false));
+
+        $query2 = $db2->makeQuery('SELECT * FROM {table}', null);
+        $this->assertEquals('SELECT * FROM `two_table`', $query2);
+
+        $this->assertFalse($db1->close(true));
+        $this->assertTrue($db1->isConnected());
+        $this->assertTrue($db2->isConnected());
+        $this->assertFalse($db1->close(true));
+        $this->assertTrue($db1->isConnected());
+        $this->assertTrue($db2->isConnected());
+        $this->assertFalse($engine1->isClosed());
+        $this->assertTrue($db2->close(true));
+        $this->assertFalse($db1->isConnected());
+        $this->assertFalse($db2->isConnected());
+        $this->assertTrue($engine1->isClosed());
+
+        $db1->forcedConnect();
+        $this->assertTrue($db1->isConnected());
+        $this->assertTrue($db2->isConnected());
+        $db1->close(true);
+        $this->assertFalse($db1->isConnected());
+        $this->assertFalse($db2->isConnected());
+
+        $db1->forcedConnect();
+        $engine2 = $db1->getImplementationConnection();
+        $this->assertSame($engine2, $db2->getImplementationConnection(false));
+        $this->assertNotSame($engine1, $engine2);
+        
+        $db2->forcedConnect();
+        $db1->close(false);
+        $this->assertFalse($db1->isConnected());
+        $this->assertTrue($db2->isConnected());
+    }
+
+    /**
+     * @covers __destruct
+     */
+    public function testDestruct() {
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+            '_lazy'    => false,
+        );
+        $db1 = \go\DB\DB::create($params);
+        $db2 = clone $db1;
+
+        $engine = $db1->getImplementationConnection(false);
+
+        $this->assertFalse($engine->isClosed());
+        unset($db1);
+        $this->assertFalse($engine->isClosed());
+        unset($db2);
+        $this->assertTrue($engine->isClosed());
+    }
+
+
 }
