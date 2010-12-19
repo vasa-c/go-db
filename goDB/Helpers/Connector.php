@@ -2,7 +2,8 @@
 /**
  * Подключалка к базе
  *
- * Занимается подключением к БД, агрегируется в объект DB.
+ * Занимается подключением к БД.
+ * Агрегирует в себе объект низкоуровневого подключения, агрегируется в объект DB.
  *
  * Может разделяться несколькими объектами DB.
  *
@@ -13,7 +14,6 @@
 
 namespace go\DB\Helpers;
 
-use go\DB\Implementations\Base as Implementation;
 use go\DB\Exceptions as Exceptions;
 
 final class Connector
@@ -24,20 +24,26 @@ final class Connector
      * @throws \go\DB\Exceptions\ConfigConnect
      *         невеверный формат параметров подключения
      *
-     * @param Implementations $implementation
-     *        реализация соединения с базой
+     * @param string $adapter
+     *        для какого адаптера
      * @param array $params
      *        параметры подключения
      */
-    public function __construct(Implementation $implementation, array $params) {
-        $params = $implementation->checkParams($params);
-        if (!$params) {
+    public function __construct($adapter, array $params) {
+        $this->implementation = \go\DB\Implementations\Base::getImplementationForAdapter($adapter);
+        $this->params = $this->implementation->checkParams($params);
+        if (!$this->params) {
             throw new Exceptions\ConfigConnect();
         }
-        $this->implementation = $implementation;
-        $this->params         = $params;
-        $this->links          = 1;
-        $this->connections    = 0;
+        $this->countLinks       = 1;
+        $this->countConnections = 0;
+    }
+
+    /**
+     * Деструктор - уничтожение всех подключений
+     */
+    public function __destruct() {
+        $this->deny();
     }
 
     /**
@@ -50,33 +56,35 @@ final class Connector
      *         было ли подключение установлено именно в этот раз
      */
     public function connect() {
-        $this->connections++;
-        if ($this->connections > 1) {
+        if ($this->connection) {
+            $this->countConnections++;
             return false;
         }
-        if (!$this->implementation->connect($this->params)) {
-            $error     = $this->implementation->getErrorInfo();
-            $errorcode = $this->implementation->getErrorCode();
-            throw new Exceptions\Connect($error, $errorcode);
+        $connection = $this->implementation->connect($this->params, $errorInfo, $errorCode);
+        if (!$connection) {
+            throw new Exceptions\Connect($errorInfo, $errorCode);
         }
+        $this->connection = $connection;
+        $this->countConnections = 1;
         return true;
     }
 
     /**
-     * Отключиться, если отключены
+     * Требование отключения
      *
      * @return bool
      *         было ли подключение разорвано именно в этот раз
      */
     public function close() {
-        if ($this->connections == 0) {
+        if (!$this->connection) {
             return false;
         }
-        $this->connections--;
-        if ($this->connections > 0) {
+        $this->countConnections--;
+        if ($this->countConnections > 0) {
             return false;
         }
-        $this->implementation->close();
+        $this->implementation->close($this->connection);
+        $this->connection = null;
         return true;
     }
 
@@ -86,7 +94,7 @@ final class Connector
      * @return bool
      */
     public function isConnected() {
-        return $this->connections > 0;
+        return (!empty($this->connection));
     }
 
     /**
@@ -96,9 +104,9 @@ final class Connector
      *        есть ли в этой базе уже подключение
      */
     public function addLink($connection) {
-        $this->links++;
+        $this->countLinks++;
         if ($connection) {
-            $this->connections++;
+            $this->countConnections++;
         }
         return true;
     }
@@ -107,9 +115,9 @@ final class Connector
      * Удалить ссылку из объекта базы
      */
     public function removeLink() {
-        $this->links--;
-        if ($this->links < 1) {
-            $this->implementation = null;
+        $this->countLinks--;
+        if ($this->countLinks == 0) {
+            $this->deny();
         }
         return true;
     }
@@ -120,8 +128,40 @@ final class Connector
      * @return int
      */
     public function getCountConnections() {
-        return $this->connections;
+        return $this->countConnections;
     }
+
+    /**
+     * Получить реализацию подключения
+     *
+     * @return mixed
+     */
+    public function getConnection() {
+        return $this->connection;
+    }
+
+    /**
+     * Получить имплементатор
+     *
+     * @return \go\DB\Implementations\Base
+     */
+    public function getImplementation() {
+        return $this->implementation;
+    }
+
+    /**
+     * Уничтожение всех подклбчений
+     */
+    protected function deny() {
+        if ($this->connection) {
+            $this->implementation->close($this->connection);
+            $this->connection = null;
+        }
+        $this->countLinks       = 0;
+        $this->countConnections = 0;
+        return true;
+    }
+
 
     /**
      * Внутренняя реализация базы
@@ -131,6 +171,13 @@ final class Connector
     private $implementation;
 
     /**
+     * Низкоуровневая реализация подключения
+     *
+     * @var mixed
+     */
+    private $connection;
+
+    /**
      * Параметры подключения
      *
      * @var array
@@ -138,16 +185,16 @@ final class Connector
     private $params;
 
     /**
-     * Количество ссылок на коннектор из объектов баз
+     * Количество ссылок из различных объектов DB
      *
      * @var int
      */
-    private $links;
+    private $countLinks;
 
     /**
-     * Количество затребованных подключений
+     * Количество запрошенных подключений
      *
      * @var int
      */
-    private $connections;
+    private $countConnections;
 }
