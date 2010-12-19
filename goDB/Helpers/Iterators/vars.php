@@ -18,7 +18,7 @@ final class vars extends Base
      * @return mixed | false
      */
     public function fetchNextRow() {
-        return $this->implementation->fetchRow($this->cursor);
+        return $this->implementation->fetchRow($this->connection, $this->cursor);
     }
 
     /**

@@ -12,7 +12,6 @@ namespace go\Tests\DB\Helpers;
 require_once(__DIR__.'/../../Tests.php');
 
 use go\DB\Helpers\Fetcher as Fetcher;
-use go\DB\Implementations\test as Implementation;
 
 /**
  * @covers \go\DB\Helpers\Fetcher
@@ -397,9 +396,9 @@ final class FetcherTest extends \go\Tests\DB\Base
      * @return \go\DB\Result
      */
     private function createFetcher($query) {
-        $implementation = new Implementation();
-        $implementation->connect(array('host' => 'localhost'));
-        $cursor = $implementation->query($query);
-        return (new Fetcher($implementation, $cursor));
+        $connector = new \go\DB\Helpers\Connector('test', array('host' => 'localhost'));
+        $connector->connect();
+        $cursor = $connector->getConnection()->query($query);
+        return (new Fetcher($connector, $cursor));
     }
 }

@@ -9,22 +9,21 @@
 
 namespace go\DB\Helpers\Iterators;
 
-use go\DB\Implementations\Base as Implementation;
-
 abstract class Base implements \Iterator, \Countable
 {
     /**
      * Конструктор
      *
-     * @param \go\DB\Implementations\Base $implementation
-     *        низкоуровневая реализация базы
+     * @param \go\DB\Helpers\Connector $connector
+     *        подключалка (подключение должно быть установлено)
      * @param mixed $cursor
      *        низкоуровневый курсор
      * @param string $key [optional]
      *        поле используемое в качестве ключа (по умолчанию - порядковый массив)
      */
-    public function __construct(Implementation $implementation, $cursor, $key = null) {
-        $this->implementation = $implementation;
+    public function __construct(\go\DB\Helpers\Connector $connector, $cursor, $key = null) {
+        $this->implementation = $connector->getImplementation();
+        $this->connection     = $connector->getConnection();
         $this->cursor         = $cursor;
         $this->key            = $key;
         $this->pointer        = 0;
@@ -66,7 +65,7 @@ abstract class Base implements \Iterator, \Countable
      * @override \Iterator
      */
     public function rewind() {
-        $this->implementation->rewindCursor($this->cursor);
+        $this->implementation->rewindCursor($this->connection, $this->cursor);
         $this->pointer = 0;
         $this->nextRow = $this->fetchNextRow();
     }
@@ -82,7 +81,7 @@ abstract class Base implements \Iterator, \Countable
      * @overrider \Countable
      */
     public function count() {
-        return $this->implementation->getNumRows($cursor);
+        return $this->implementation->getNumRows($this->connection, $cursor);
     }
 
     /**
@@ -93,11 +92,18 @@ abstract class Base implements \Iterator, \Countable
     abstract protected function fetchNextRow();
 
     /**
-     * Низкоуровневая реализация базы
+     * Внутренняя реализация взаимодействия с базой
      * 
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
+
+    /**
+     * Низкоуровневое подключение к базе
+     * 
+     * @var mixed
+     */
+    protected $connection;
 
     /**
      * Низкоуровневый курсор

@@ -9,7 +9,6 @@
 
 namespace go\DB\Helpers;
 
-use go\DB\Implementations\Base as Implementation;
 use go\DB\Exceptions as Exceptions;
 
 class Fetcher implements \go\DB\Result
@@ -17,13 +16,17 @@ class Fetcher implements \go\DB\Result
     /**
      * Конструктор
      *
-     * @param Implementation $implementation
+     * @param \go\DB\Helpers\Connector $connector
+     *        подключалка (подключение должно быть установлено)
      * @param mixed $cursor
+     *        низкоуровневая реализация курсора
      */
-    public function __construct(Implementation $implementation, $cursor) {
-        $this->implementation = $implementation;
+    public function __construct(Connector $connector, $cursor) {
+        $this->connector      = $connector;
+        $this->implementation = $connector->getImplementation();
+        $this->connection     = $connector->getConnection();
         $this->cursor         = $cursor;
-        $this->isCursor       = $implementation->isCursor($cursor);
+        $this->isCursor       = $this->implementation->isCursor($this->connection, $cursor);
     }
 
     /**
@@ -57,10 +60,11 @@ class Fetcher implements \go\DB\Result
      */
     public function free() {
         if ((!$this->isFree) && ($this->isCursor)) {
-            $this->implementation->freeCursor($this->cursor);
-            $this->cursor         = false;
-            $this->implementation = false;
+            $this->implementation->freeCursor($this->connection, $this->cursor);
         }
+        $this->cursor         = false;
+        $this->implementation = false;
+        $this->connection     = false;
         return true;
     }
 
@@ -75,14 +79,15 @@ class Fetcher implements \go\DB\Result
     public function assoc($param = null) {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
+        $conn   = $this->connection;
         $cursor = $this->cursor;
         $result = array();
         if ($param) {
-            while ($row = $imp->fetchAssoc($cursor)) {
+            while ($row = $imp->fetchAssoc($conn, $cursor)) {
                 $result[$row[$param]] = $row;
             }
         } else {
-            while ($row = $imp->fetchAssoc($cursor)) {
+            while ($row = $imp->fetchAssoc($conn, $cursor)) {
                 $result[] = $row;
             }
         }
@@ -100,14 +105,15 @@ class Fetcher implements \go\DB\Result
     public function numerics($param = null) {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
+        $conn   = $this->connection;
         $cursor = $this->cursor;
         $result = array();
         if (!is_null($param)) {
-            while ($row = $imp->fetchRow($cursor)) {
+            while ($row = $imp->fetchRow($conn, $cursor)) {
                 $result[$row[$param]] = $row;
             }
         } else {
-            while ($row = $imp->fetchRow($cursor)) {
+            while ($row = $imp->fetchRow($conn, $cursor)) {
                 $result[] = $row;
             }
         }
@@ -125,14 +131,15 @@ class Fetcher implements \go\DB\Result
     public function objects($param = null) {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
+        $conn   = $this->connection;
         $cursor = $this->cursor;
         $result = array();
         if ($param) {
-            while ($row = $imp->fetchObject($cursor)) {
+            while ($row = $imp->fetchObject($conn, $cursor)) {
                 $result[$row->$param] = $row;
             }
         } else {
-            while ($row = $imp->fetchObject($cursor)) {
+            while ($row = $imp->fetchObject($conn, $cursor)) {
                 $result[] = $row;
             }
         }
@@ -149,9 +156,10 @@ class Fetcher implements \go\DB\Result
     public function col($param = null) {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
+        $conn   = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        while ($row = $imp->fetchRow($cursor)) {
+        while ($row = $imp->fetchRow($conn, $cursor)) {
             $result[] = $row[0];
         }
         return $result;
@@ -167,9 +175,10 @@ class Fetcher implements \go\DB\Result
     public function vars($param = null) {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
+        $conn   = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        while ($row = $imp->fetchRow($cursor)) {
+        while ($row = $imp->fetchRow($conn, $cursor)) {
             $result[$row[0]] = isset($row[1]) ? $row[1] : $row[0];
         }
         return $result;
@@ -185,7 +194,7 @@ class Fetcher implements \go\DB\Result
      */
     public function iassoc($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\assoc($this->implementation, $this->cursor, $param));
+        return (new Iterators\assoc($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -198,7 +207,7 @@ class Fetcher implements \go\DB\Result
      */
     public function inumerics($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\numerics($this->implementation, $this->cursor, $param));
+        return (new Iterators\numerics($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -211,7 +220,7 @@ class Fetcher implements \go\DB\Result
      */
     public function iobjects($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\objects($this->implementation, $this->cursor, $param));
+        return (new Iterators\objects($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -223,7 +232,7 @@ class Fetcher implements \go\DB\Result
      */
     public function ivars($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\vars($this->implementation, $this->cursor, $param));
+        return (new Iterators\vars($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -235,7 +244,7 @@ class Fetcher implements \go\DB\Result
      */
     public function icol($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\col($this->implementation, $this->cursor, $param));
+        return (new Iterators\col($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -247,7 +256,7 @@ class Fetcher implements \go\DB\Result
      */
     public function row($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return $this->implementation->fetchAssoc($this->cursor) ?: null;
+        return $this->implementation->fetchAssoc($this->connection, $this->cursor) ?: null;
     }
 
     /**
@@ -259,7 +268,7 @@ class Fetcher implements \go\DB\Result
      */
     public function numeric($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return $this->implementation->fetchRow($this->cursor) ?: null;
+        return $this->implementation->fetchRow($this->connection, $this->cursor) ?: null;
     }
 
     /**
@@ -271,7 +280,7 @@ class Fetcher implements \go\DB\Result
      */
     public function object($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return $this->implementation->fetchObject($this->cursor) ?: null;
+        return $this->implementation->fetchObject($this->connection, $this->cursor) ?: null;
     }
 
     /**
@@ -283,7 +292,7 @@ class Fetcher implements \go\DB\Result
      */
     public function el($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        $result = $this->implementation->fetchRow($this->cursor);
+        $result = $this->implementation->fetchRow($this->connection, $this->cursor);
         return $result ? $result[0] : null;
     }
 
@@ -296,7 +305,7 @@ class Fetcher implements \go\DB\Result
      */
     public function bool($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        $result = $this->implementation->fetchRow($this->cursor);
+        $result = $this->implementation->fetchRow($this->connection, $this->cursor);
         return $result ? (bool)$result[0] : null;
     }
 
@@ -309,7 +318,7 @@ class Fetcher implements \go\DB\Result
      */
     public function num($param = null) {
         $this->requiredCursor(__FUNCTION__);
-        return $this->implementation->getNumRows($this->cursor);
+        return $this->implementation->getNumRows($this->connection, $this->cursor);
     }
 
     /**
@@ -318,7 +327,7 @@ class Fetcher implements \go\DB\Result
      * @return int
      */
     public function id($param = null) {
-        return $this->implementation->getInsertId();
+        return $this->implementation->getInsertId($this->connection);
     }
 
     /**
@@ -327,7 +336,7 @@ class Fetcher implements \go\DB\Result
      * @return int
      */
     public function ar($param = null) {
-        return $this->implementation->getAffectedRows();
+        return $this->implementation->getAffectedRows($this->connection);
     }
 
     /**
@@ -370,11 +379,25 @@ class Fetcher implements \go\DB\Result
     protected $cursor;
 
     /**
+     * Подключалка к базе
+     * 
+     * @var \go\DB\Helpers\Connector
+     */
+    protected $connector;
+
+    /**
      * Внутренняя реализация подключения к базе
+     *
+     * @var \go\DB\Implementations\Base
+     */
+    protected $implementation;
+
+    /**
+     * Низкоуровневое подключение
      *
      * @var mixed
      */
-    protected $implementation;
+    protected $connection;
 
     /**
      * Является ли $cursor результатом выборки (курсором)
