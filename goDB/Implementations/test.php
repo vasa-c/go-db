@@ -33,137 +33,152 @@ final class test extends Base
      * @override Base
      *
      * @param array $params
+     * @param string &$errorInfo
+     * @param int &$errorCode
      * @return bool
      */
-    public function connect(array $params) {
+    public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
         if ($params['host'] != 'localhost') {
-            $this->errorInfo = 'Unable connect to "'.$params['host'].'"';
-            $this->errorCode = TestBase\Engine::ERROR_CONNECT;
+            $errorInfo = 'Unable connect to "'.$params['host'].'"';
+            $errorCode = TestBase\Engine::ERROR_CONNECT;
             return false;
         }
-        $this->connection = new TestBase\Engine();
-        return true;
+        return (new TestBase\Engine());
     }
 
     /**
      * @override Base
+     *
+     * @param mixed $connection
      */
-    public function close() {
-        $this->connection->close();
+    public function close($connection) {
+        $connection->close();
         return true;
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @param string $query
      * @return mixed
      */
-    public function query($query) {
-        return $this->connection->query($query);
+    public function query($connection, $query) {
+        return $connection->query($query);
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @return int
      */
-    public function getInsertId() {
-        return $this->connection->getInsertId();
+    public function getInsertId($connection) {
+        return $connection->getInsertId();
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @return int
      */
-    public function getAffectedRows() {
-        return $this->connection->getAffectedRows();
+    public function getAffectedRows($connection) {
+        return $connection->getAffectedRows();
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @return string
      */
-    protected function realErrorInfo() {
-        return $this->connection->getErrorInfo();
+    public function getErrorInfo($connection) {
+        return $connection->getErrorInfo();
     }
 
     /**
      * @override
      *
+     * @param mixed $connection
      * @return int
      */
-    protected function realErrorCode() {
-        return $this->connection->getErrorCode();
+    public function getErrorCode($connection) {
+        return $connection->getErrorCode();
     }
 
     /**
      * @override
      *
+     * @param mixed $connection
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($cursor) {
+    public function getNumRows($connection, $cursor) {
         return $cursor->getNumRows();
     }
 
     /**
      * @override
      *
+     * @param mixed $connection
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchRow($cursor) {
+    public function fetchRow($connection, $cursor) {
         return $cursor->fetchRow();
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchAssoc($cursor) {
+    public function fetchAssoc($connection, $cursor) {
         return $cursor->fetchAssoc();
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @param mixed $cursor
      * @return object|false
      */
-    public function fetchObject($cursor) {
+    public function fetchObject($connection, $cursor) {
         return $cursor->fetchObject();
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @param mixed $cursor
      */
-    public function freeCursor($cursor) {
+    public function freeCursor($connection, $cursor) {
         return true;
     }
 
     /**
      * @override Base
      *
+     * @param mixed $connection
      * @param string $value
      * @return string
      */
-    protected function reprField($value) {
+    protected function reprField($connection, $value) {
         return '`'.$value.'`';
     }
 
     /**
      * Вернуться в начало курсора
      *
+     * @param mixed $connection
      * @param mixed $cursor
      */
-    public function rewindCursor($cursor) {
+    public function rewindCursor($connection, $cursor) {
         return $cursor->reset();
     }
 }
