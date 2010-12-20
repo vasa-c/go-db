@@ -14,7 +14,7 @@ namespace go\DB\Implementations;
 final class test extends Base
 {
     /**
-     * Обязательные параметров подключения
+     * Обязательные параметры подключения
      *
      * @var array
      */

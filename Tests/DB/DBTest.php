@@ -421,6 +421,4 @@ final class DBTest extends \go\Tests\DB\Base
         unset($db2);
         $this->assertTrue($engine->isClosed());
     }
-
-
 }

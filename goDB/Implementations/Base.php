@@ -24,7 +24,7 @@ namespace go\DB\Implementations;
 abstract class Base
 {
     /**
-     * Обязательные параметров подключения
+     * Обязательные параметры подключения
      * (переопределяются у потомков)
      *
      * @var array
