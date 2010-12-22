@@ -236,6 +236,24 @@ class Templater
     }
 
     /**
+     * ?cols
+     *
+     * @param array $value
+     * @param array $modifers
+     * @return string
+     */
+    private function replacement_xc($value, array $modifers) {
+        if (!is_array($value)) {
+            return $this->replacement_c($value, $modifers);
+        }
+        $cols = array();
+        foreach ($value as $col) {
+            $cols[] = $this->replacement_c($col, $modifers);
+        }
+        return implode(',', $cols);
+    }
+
+    /**
      * ?e, ?escape
      *
      * @param array $value

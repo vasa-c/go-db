@@ -313,7 +313,7 @@ abstract class DB
      */
     protected function __construct($params) {
         $this->separateParams($params);
-        $this->connector      = $this->createConnector();
+        $this->connector = $this->createConnector();
         if (!$this->paramsSys['lazy']) {
             $this->connector->connect();
             $this->connected = true;

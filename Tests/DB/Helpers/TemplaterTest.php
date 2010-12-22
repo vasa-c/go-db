@@ -187,6 +187,11 @@ final class TemplaterTest extends \go\Tests\DB\Base
                 array('table', array('t', 'col'), 1),
                 'INSERT INTO `table` SET `t`.`col`=1'
             ),
+            array(
+                'SELECT ?cols FROM ?t',
+                array(array('a', 'b', 'c', array('t', 'd')), 'table'),
+                'SELECT `a`,`b`,`c`,`t`.`d` FROM `table`',
+            ),
         );
     }
 

@@ -68,6 +68,7 @@ class ParserPHTest extends \go\Tests\DB\Base
             array('ni', '', 'ni'),
             array('null', '', 'n'),
             array('null-bool', '', 'nb'),
+            array('cols', 'xc', ''),
         );
     }
 
