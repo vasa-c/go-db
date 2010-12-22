@@ -41,7 +41,7 @@ final class mysqlold extends Base
      * @return mixed
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
-        $connection = @\mysql_connect($params['host'], $params['username'], $params['password']);
+        $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
         if (!$connection) {
             $errorInfo = \mysql_error();
             $errorCode = \mysql_errno();
