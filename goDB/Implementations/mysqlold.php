@@ -56,7 +56,7 @@ final class mysqlold extends Base
             }
         }
         if ($params['charset']) {
-            if (!mysql_query('SET NAMES '.$params['charset'])) {
+            if (!\mysql_set_charset($params['charset'], $connection)) {
                 $errorInfo = \mysql_error($connection);
                 $errorCode = \mysql_errno($connection);
                 @\mysql_close($connection);
