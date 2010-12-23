@@ -2,8 +2,6 @@
 /**
  * Надстройка над php_mysql
  *
- * @see TestBase\Engine
- *
  * @package    go\DB
  * @subpackage Implementations
  * @author     Григорьев Олег aka vasa_c

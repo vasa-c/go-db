@@ -38,10 +38,10 @@ abstract class Base extends \go\Tests\DB\Base
         $db = $helper->getDB('fill');
         $helper->updated();
 
-        $pattern = 'INSERT INTO ?t SET ?s';
-        $data    = array('test_table', array('name' => 'test', 'number' => 77));
+        $pattern = 'INSERT INTO ?t (?c, ?c) VALUES (?,?)';
+        $data    = array('test_table', 'name', 'number', 'test', 77);
         $this->assertEquals(6, $db->query($pattern, $data, 'id'));
-        $data    = array('test_table', array('name' => 'test2', 'number' => 78));
+        $data    = array('test_table', 'name', 'number', 'test2', 78);
         $this->assertEquals(7, $db->query($pattern, $data, 'id'));
         $this->assertEquals(7, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
         $name = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 6), 'el');

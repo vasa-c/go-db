@@ -1,6 +1,6 @@
 <?php
 /**
- * Надстройка над php_mysqli
+ * Надстройка над sqlite3
  *
  * @package    go\DB
  * @subpackage Implementations
@@ -9,14 +9,14 @@
 
 namespace go\DB\Implementations;
 
-final class mysql extends Base
+final class sqlite extends Base
 {
     /**
      * Обязательные параметры подключения
      *
      * @var array
      */
-    protected $paramsReq = array('host', 'username', 'password');
+    protected $paramsReq = array('filename');
 
     /**
      * Необязательные параметры подключения
@@ -26,10 +26,8 @@ final class mysql extends Base
      * @var array
      */
     protected $paramsDefault = array(
-        'dbname'  => null,
-        'charset' => null,
-        'port'    => null,
-        'socket'  => null,
+        'flags'          => null,
+        'encryption_key' => null,
     );
 
     /**
@@ -41,30 +39,13 @@ final class mysql extends Base
      * @return mixed
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
-        $host = \explode(':', $params['host'], 2);
-        if (!empty($host[1])) {
-            $port = $host[1];
-        } else {
-            $port = $params['port'];
-        }
-        $host     = $host[0];
-        $user     = $params['username'];
-        $password = $params['password'];
-        $dbname   = $params['dbname'];
-        $socket   = $params['socket'];
-        $connection = @(new \mysqli($host, $user, $password, $dbname, $port, $socket));
-        if ($connection->connect_error) {
-            $this->errorInfo = $connection->connect_error;
-            $this->errorCode = $connection->connect_errno;
+        $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
+        try {
+            $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
+        } catch (\Exception $e) {
+            $this->errorInfo = $e->getMessage();
+            $this->errorCode = $e->getCode();
             return false;
-        }
-        if ($params['charset']) {
-            if (!$connection->set_charset($params['charset'])) {
-                $this->errorInfo = $connection->error;
-                $this->errorCode = $connection->errno;
-                $connection->close();
-                return false;
-            }
         }
         return $connection;
     }
@@ -86,7 +67,7 @@ final class mysql extends Base
      * @return mixed
      */
     public function query($connection, $query) {
-        return $connection->query($query, \MYSQLI_STORE_RESULT);
+        return @$connection->query($query);
     }
 
     /**
@@ -96,7 +77,7 @@ final class mysql extends Base
      * @return int
      */
     public function getInsertId($connection) {
-        return $connection->insert_id;
+        return $connection->lastInsertRowID();;
     }
 
     /**
@@ -106,7 +87,7 @@ final class mysql extends Base
      * @return int
      */
     public function getAffectedRows($connection) {
-        return $connection->affected_rows;
+        return $connection->changes();
     }
 
     /**
@@ -116,7 +97,7 @@ final class mysql extends Base
      * @return string
      */
     public function getErrorInfo($connection) {
-        return $connection->error;
+        return $connection->lastErrorMsg();
     }
 
 
@@ -127,7 +108,7 @@ final class mysql extends Base
      * @return int
      */
     public function getErrorCode($connection) {
-        return $connection->errno;
+        return $connection->lastErrorCode();
     }
 
 
@@ -138,8 +119,8 @@ final class mysql extends Base
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($connection, $cursor) {
-        return $cursor->num_rows;
+    public function getNumRows($connection, $cursor) { // в sqlite3 нет num_rows
+        return 0;
     }
 
     /**
@@ -150,7 +131,7 @@ final class mysql extends Base
      * @return array|false
      */
     public function fetchRow($connection, $cursor) {
-        return $cursor->fetch_row();
+        return $cursor->fetchArray(\SQLITE3_NUM);
     }
 
     /**
@@ -161,18 +142,7 @@ final class mysql extends Base
      * @return array|false
      */
     public function fetchAssoc($connection, $cursor) {
-        return $cursor->fetch_assoc();
-    }
-
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return object|false
-     */
-    public function fetchObject($connection, $cursor) {
-        return $cursor->fetch_object();
+        return $cursor->fetchArray(\SQLITE3_ASSOC);
     }
 
     /**
@@ -182,7 +152,7 @@ final class mysql extends Base
      * @param mixed $cursor
      */
     public function freeCursor($connection, $cursor) {
-        return $cursor->free();
+        return $cursor->finalize();
     }
 
     /**
@@ -193,7 +163,7 @@ final class mysql extends Base
      * @return string
      */
     public function escapeString($connection, $value) {
-        return $connection->real_escape_string($value);
+        return $connection->escapeString($value);
     }
 
     /**
@@ -204,7 +174,7 @@ final class mysql extends Base
      * @return string
      */
     protected function reprField($connection, $value) {
-        return '`'.$value.'`';
+        return '"'.$value.'"';
     }
 
     /**
@@ -214,6 +184,6 @@ final class mysql extends Base
      * @param mixed $cursor
      */
     public function rewindCursor($connection, $cursor) {
-        return $cursor->data_seek(0);
+        return $cursor->reset(0);
     }
 }
