@@ -2,6 +2,12 @@
 /**
  * Тестирование адаптеров
  *
+ * Тестирование основных механизмов производится в тестах соответствующих хелперах.
+ * Здесь просто немного сборных тестов, для лучшей уверенности.
+ *
+ * От Base наследуются тесты конкретных адаптеров.
+ * Каждый использует хелпер (из _helpers) для создания и наполнения тестовых таблиц.
+ *
  * @package    go\DB
  * @subpackage Tests
  * @author     Григорьев Олег aka vasa_c
@@ -13,7 +19,6 @@ require_once(__DIR__.'/../../Tests.php');
 
 abstract class Base extends \go\Tests\DB\Base
 {
-
     public function setUp() {
         parent::setUp();
         if (!$this->getHelper()->getConfig()) {
@@ -21,37 +26,69 @@ abstract class Base extends \go\Tests\DB\Base
         }
     }
 
-    public function testCountAndInsert() {
-        $db = $this->getHelper()->getDB('fill');
+    public function testCount() {
+        $helper = $this->getHelper();
+        $db = $helper->getDB('fill');
         $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
-        $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_vars}')->el());
+        $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_vars}')->el());        
+    }
 
+    public function testInsert() {
+        $helper = $this->getHelper();
+        $db = $helper->getDB('fill');
+        $helper->updated();
+
+        $pattern = 'INSERT INTO ?t SET ?s';
+        $data    = array('test_table', array('name' => 'test', 'number' => 77));
+        $this->assertEquals(6, $db->query($pattern, $data, 'id'));
+        $data    = array('test_table', array('name' => 'test2', 'number' => 78));
+        $this->assertEquals(7, $db->query($pattern, $data, 'id'));
+        $this->assertEquals(7, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
+        $name = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 6), 'el');
+        $this->assertEquals('test', $name);        
     }
 
     public function testUpdate() {
+        $helper = $this->getHelper();
+        $db = $helper->getDB('fill');
+        $helper->updated();
 
+        $two = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 2))->el();
+        $this->assertEquals('two', $two);
+
+        $ar = $db->query('UPDATE {test_table} SET ?c=? WHERE ?c IS NULL', array('name', 'zzz', 'number'))->ar();
+        $this->assertEquals(2, $ar);
+
+        $two = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 2))->el();
+        $this->assertEquals('zzz', $two);
     }
 
     public function testDrop() {
+        $helper = $this->getHelper();
+        $db = $helper->getDB(true);
+        $helper->dropped();
 
+        $tables = $db->query('SHOW TABLES')->col();
+        $this->assertContains('test_table', $tables);
+        $this->assertContains('test_vars', $tables);
+
+        $db->query('DROP TABLE IF EXISTS ?t', array('test_table'));
+
+        $tables = $db->query('SHOW TABLES')->col();
+        $this->assertNotContains('test_table', $tables);
+        $this->assertContains('test_vars', $tables);
+   }
+
+    public function testJoinAndPrefix() {
+        $helper = $this->getHelper();
+        $db = $helper->getDB('fill');
+
+        $db->setPrefix('test_');
+
+        $pattern = 'SELECT ?c FROM {table} LEFT JOIN ?t ON ?c=?c WHERE ?c=?i';
+        $data    = array('value', 'vars', 'name', 'key', 'id', 3);
+        $this->assertEquals(33, $db->query($pattern, $data, 'el'));
     }
-
-    public function testSelect() {
-
-    }
-
-    public function testJoin() {
-
-    }
-
-
-    public function testPrefix() {
-
-    }
-
-
-
-
 
     /**
      * Получить хелпер создания базы

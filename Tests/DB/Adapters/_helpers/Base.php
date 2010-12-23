@@ -47,7 +47,7 @@ abstract class Base
                 array('pi',   '3,14'),
                 array('e',    '2,7'),
                 array('year', '2010'),
-                array('three', 3),
+                array('three', 33),
             ),
         ),
     );
