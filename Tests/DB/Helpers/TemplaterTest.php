@@ -234,6 +234,30 @@ final class TemplaterTest extends \go\Tests\DB\Base
     }
 
     /**
+     * ?? - вставка вопросительного знака
+     * @dataProvider providerQMark
+     */
+    public function testQMark($pattern, $data, $expected) {
+        $templater = $this->createTemplater($pattern, $data);
+        $templater->parse();
+        $this->assertEquals($expected, $templater->getQuery());
+    }
+    public function providerQMark() {
+        return array(
+            array(
+                'INSERT INTO `table` SET `a`="who??", `b`=?',
+                array('who?'),
+                'INSERT INTO `table` SET `a`="who?", `b`="who?"',
+            ),
+            array(
+                'INSERT INTO `table` SET `a`="who??;", `b`=?',
+                array('who?'),
+                'INSERT INTO `table` SET `a`="who?", `b`="who?"',
+            ),
+        );
+    }
+
+    /**
      * Префикс таблиц
      * @dataProvider providerPrefix
      */

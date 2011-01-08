@@ -98,6 +98,9 @@ class Templater
             }
         } else {
             $name = null;
+            if ($placeholder == '?') { // ?? - вставка вопросительного знака
+                return '?';
+            }
         }
         if ($name) {
             if ($this->counter == 0) {
