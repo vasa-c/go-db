@@ -4,7 +4,7 @@
  *
  * @package go\DB
  * @link    http://code.google.com/p/go-db/
- * @version 2.0.0 alfa
+ * @version 2.0.0 beta
  * @author  Григорьев Олег aka vasa_c (http://blgo.ru/)
  * @license MIT (http://www.opensource.org/licenses/mit-license.php)
  * @uses    PHP >= 5.3
@@ -13,7 +13,7 @@
 
 namespace go\DB;
 
-const VERSION = '2.0.0 alfa';
+const VERSION = '2.0.0 beta';
 
 abstract class DB
 {
