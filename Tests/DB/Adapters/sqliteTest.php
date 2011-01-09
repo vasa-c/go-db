@@ -16,9 +16,6 @@ require_once(__DIR__.'/Base.php');
  */
 class sqliteTest extends Base
 {
-    public function setUp() {
-        //$this->markTestSkipped();
-    }
 
     public function testInsert() {
 return;
