@@ -168,7 +168,7 @@ final class DBTest extends \go\Tests\DB\Base
         $engine = $db->getImplementationConnection(false);
         $this->assertFalse($engine->isClosed());
 
-        $db->close(true); // safe
+        $db->close(true); // soft
         $this->assertFalse($db->isConnected());
         $this->assertTrue($engine->isClosed());
 
@@ -177,7 +177,7 @@ final class DBTest extends \go\Tests\DB\Base
         $engine = $db->getImplementationConnection(false);
         $this->assertFalse($engine->isClosed());
 
-        $db->close(false); // not safe
+        $db->close(false); // not soft
         $this->assertFalse($db->isConnected());
         $this->setExpectedException('go\DB\Exceptions\Closed');
         $db->plainQuery('INSERT');

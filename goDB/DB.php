@@ -199,10 +199,10 @@ abstract class DB
     /**
      * Закрыть соединение
      *
-     * @param bool $safe [optional]
+     * @param bool $soft [optional]
      *        "мягкое" закрытие: с возможностью восстановления
      */
-    final public function close($safe = false) { // @todo close
+    final public function close($soft = false) { // @todo close
         if ($this->hardClosed) {
             return false;
         }
@@ -211,7 +211,7 @@ abstract class DB
             $result = $this->connector->close();
             $this->connected = false;
         }
-        $this->hardClosed = !$safe;
+        $this->hardClosed = !$soft;
         return $result;
     }
 
