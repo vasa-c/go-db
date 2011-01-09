@@ -17,10 +17,11 @@ require_once(__DIR__.'/Base.php');
 class sqliteTest extends Base
 {
     public function setUp() {
-        $this->markTestSkipped();
+        //$this->markTestSkipped();
     }
 
     public function testInsert() {
+return;
         $helper = $this->getHelper();
         $db = $helper->getDB('fill');
         $helper->updated();
@@ -36,5 +37,22 @@ class sqliteTest extends Base
     }
     public function testDrop() {
         
+    }
+
+    public function testMysqlQuote() {
+        $params = $this->getHelper()->getConfig();
+
+        $pattern = 'SELECT `name` FROM `table` WHERE `id`=?i';
+        $data    = array(1);
+
+        $params['mysql_quot'] = false;
+        $db = \go\DB\DB::create($params, 'sqlite');
+        $sql = $db->makeQuery($pattern, $data);
+        $this->assertEquals('SELECT `name` FROM `table` WHERE `id`=1', $sql);
+
+        $params['mysql_quot'] = true;
+        $db = \go\DB\DB::create($params, 'sqlite');
+        $sql = $db->makeQuery($pattern, $data);
+        $this->assertEquals('SELECT "name" FROM "table" WHERE "id"=1', $sql);
     }
 }

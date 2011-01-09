@@ -28,6 +28,7 @@ final class sqlite extends Base
     protected $paramsDefault = array(
         'flags'          => null,
         'encryption_key' => null,
+        'mysql_quot'     => false,
     );
 
     /**

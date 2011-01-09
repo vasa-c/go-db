@@ -297,7 +297,7 @@ abstract class DB
      * @param string $prefix
      * @return string
      */
-    final public function makeQuery($pattern, $data, $prefix = null) {
+    public function makeQuery($pattern, $data, $prefix = null) {
         $this->forcedConnect();
         if (is_null($prefix)) {
             $prefix = $this->prefix;

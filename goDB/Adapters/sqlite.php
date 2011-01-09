@@ -13,4 +13,21 @@ namespace go\DB\Adapters;
 final class sqlite extends \go\DB\DB
 {
 
+    /**
+     * @override \go\DB\DB
+     *
+     * @throws \go\DB\Exceptions\Templater
+     *
+     * @param string $pattern
+     * @param array $data
+     * @param string $prefix
+     * @return string
+     */
+    public function makeQuery($pattern, $data, $prefix = null) {
+        if (!empty($this->paramsDB['mysql_quot'])) {
+            $pattern = \str_replace('`', '"', $pattern);
+        }
+        return parent::makeQuery($pattern, $data, $prefix);
+    }
+
 }
