@@ -159,7 +159,7 @@ final class Storage
             } elseif (isset($mparams[$params])) {
                 $assocs[$name] = $params;
             } else {
-                throw new Exceptions\StorageAssoc($name);
+                throw new Exceptions\StorageAssoc($params);
             }
         }
         foreach ($assocs as $name => $assoc) {
