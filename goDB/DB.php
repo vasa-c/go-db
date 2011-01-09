@@ -242,7 +242,11 @@ abstract class DB
      */
     final public function setDebug($callback = true) { // @todo cli
         if ($callback === true) {
-            $callback = new Helpers\Debuggers\OutHtml();
+            if (php_sapi_name() == 'cli') {
+                $callback = new Helpers\Debuggers\OutConsole();
+            } else {
+                $callback = new Helpers\Debuggers\OutHtml();
+            }
         }
         $this->debugCallback = $callback;
         return true;
