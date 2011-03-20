@@ -71,9 +71,10 @@ final class test extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection) {
+    public function getInsertId($connection, $cursor = null) {
         return $connection->getInsertId();
     }
 
@@ -81,9 +82,10 @@ final class test extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection) {
+    public function getAffectedRows($connection, $cursor = null) {
         return $connection->getAffectedRows();
     }
 
@@ -91,9 +93,10 @@ final class test extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection) {
+    public function getErrorInfo($connection, $cursor = null) {
         return $connection->getErrorInfo();
     }
 
@@ -101,9 +104,10 @@ final class test extends Base
      * @override
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection) {
+    public function getErrorCode($connection, $cursor = null) {
         return $connection->getErrorCode();
     }
 

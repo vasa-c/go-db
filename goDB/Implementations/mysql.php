@@ -93,9 +93,10 @@ final class mysql extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection) {
+    public function getInsertId($connection, $cursor = null) {
         return $connection->insert_id;
     }
 
@@ -103,9 +104,10 @@ final class mysql extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection) {
+    public function getAffectedRows($connection, $cursor = null) {
         return $connection->affected_rows;
     }
 
@@ -113,9 +115,10 @@ final class mysql extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection) {
+    public function getErrorInfo($connection, $cursor = null) {
         return $connection->error;
     }
 
@@ -124,9 +127,10 @@ final class mysql extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection) {
+    public function getErrorCode($connection, $cursor = null) {
         return $connection->errno;
     }
 

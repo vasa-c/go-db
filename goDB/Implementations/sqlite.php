@@ -75,9 +75,10 @@ final class sqlite extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection) {
+    public function getInsertId($connection, $cursor = null) {
         return $connection->lastInsertRowID();;
     }
 
@@ -85,9 +86,10 @@ final class sqlite extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection) {
+    public function getAffectedRows($connection, $cursor = null) {
         return $connection->changes();
     }
 
@@ -95,9 +97,10 @@ final class sqlite extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection) {
+    public function getErrorInfo($connection, $cursor = null) {
         return $connection->lastErrorMsg();
     }
 
@@ -106,9 +109,10 @@ final class sqlite extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection) {
+    public function getErrorCode($connection, $cursor = nulll) {
         return $connection->lastErrorCode();
     }
 

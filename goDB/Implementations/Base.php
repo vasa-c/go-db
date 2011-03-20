@@ -137,34 +137,38 @@ abstract class Base
      * Получить последний авто-инкремент (или аналог для баз без него)
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    abstract public function getInsertId($connection);
+    abstract public function getInsertId($connection, $cursor = null);
 
     /**
      * Получить количество строк, затронутых запросом
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    abstract public function getAffectedRows($connection);
+    abstract public function getAffectedRows($connection, $cursor = null);
 
     /**
      * Получить описание последней ошибки
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return string
      */
-    abstract public function getErrorInfo($connection);
+    abstract public function getErrorInfo($connection, $cursor = null);
 
 
     /**
      * Получить код последней ошибки
      *
      * @param mixed $connection
+     * @param mixed $cursor [optional]
      * @return int
      */
-    abstract public function getErrorCode($connection);
+    abstract public function getErrorCode($connection, $cursor);
 
 
     /**

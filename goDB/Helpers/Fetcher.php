@@ -327,7 +327,7 @@ class Fetcher implements \go\DB\Result
      * @return int
      */
     public function id($param = null) {
-        return $this->implementation->getInsertId($this->connection);
+        return $this->implementation->getInsertId($this->connection, $this->cursor);
     }
 
     /**
@@ -336,7 +336,7 @@ class Fetcher implements \go\DB\Result
      * @return int
      */
     public function ar($param = null) {
-        return $this->implementation->getAffectedRows($this->connection);
+        return $this->implementation->getAffectedRows($this->connection, $this->cursor);
     }
 
     /**

@@ -19,6 +19,8 @@ require_once(__DIR__.'/../../Tests.php');
 
 abstract class Base extends \go\Tests\DB\Base
 {
+	protected $PATTERN_SHOW_TABLES  =  'SHOW TABLES';
+
     public function setUp() {
         parent::setUp();
         if (!$this->getHelper()->getConfig()) {
@@ -50,6 +52,7 @@ abstract class Base extends \go\Tests\DB\Base
 
     public function testUpdate() {
         $helper = $this->getHelper();
+		$helper->dropped();
         $db = $helper->getDB('fill');
         $helper->updated();
 
@@ -68,13 +71,13 @@ abstract class Base extends \go\Tests\DB\Base
         $db = $helper->getDB(true);
         $helper->dropped();
 
-        $tables = $db->query('SHOW TABLES')->col();
+        $tables = $db->query($this->PATTERN_SHOW_TABLES)->col();
         $this->assertContains('test_table', $tables);
         $this->assertContains('test_vars', $tables);
 
         $db->query('DROP TABLE IF EXISTS ?t', array('test_table'));
 
-        $tables = $db->query('SHOW TABLES')->col();
+        $tables = $db->query($this->PATTERN_SHOW_TABLES)->col();
         $this->assertNotContains('test_table', $tables);
         $this->assertContains('test_vars', $tables);
    }

@@ -1,24 +1,24 @@
 <?php
 /**
- * Надстройка над php_mysql
+ *	Надстройка над php_pgsql
  *
- * @package    go\DB
+ * @package  go\DB
  * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
+ * @author  Alex Polev
  */
 
 namespace go\DB\Implementations;
 
-final class mysqlold extends Base
+final class pgsql extends Base
 {
-    /**
+	/**
      * Обязательные параметры подключения
      *
      * @var array
      */
     protected $paramsReq = array('host', 'username', 'password');
 
-    /**
+	/**
      * Необязательные параметры подключения
      *
      * параметр => значение по умолчанию
@@ -26,9 +26,16 @@ final class mysqlold extends Base
      * @var array
      */
     protected $paramsDefault = array(
-        'dbname'  => null,
-        'charset' => null,
+        'dbname'          => null,
+        'charset'         => null,
+		'port'            => null,
+		'hostaddr'        => null,
+		'connect_timeout' => null,
+		'options'         => null,
+		'sslmode'         => null,
+		'service'         => null,
     );
+
 
     /**
      * @override Base
@@ -39,30 +46,22 @@ final class mysqlold extends Base
      * @return mixed
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
-        $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
-        if (!$connection) {
-            $errorInfo = \mysql_error();
-            $errorCode = \mysql_errno();
-            return false;
-        }
-        if ($params['dbname']) {
-            if (!@\mysql_select_db($params['dbname'], $connection)) {
-                $errorInfo = \mysql_error($connection);
-                $errorCode = \mysql_errno($connection);
-                @\mysql_close($connection);
-                return false;
-            }
-        }
-        if ($params['charset']) {
-            if (!\mysql_set_charset($params['charset'], $connection)) {
-                $errorInfo = \mysql_error($connection);
-                $errorCode = \mysql_errno($connection);
-                @\mysql_close($connection);
-                return false;
-            }
-        }
+        $host = \explode(':', $params['host'], 2);
+        if (!empty($host[1])) {
+			$params['host'] =  $host[0];
+			$params['port'] =  $host[1];
+        }		
+
+        $connection = @\pg_connect($this->generateConnectString($params));
+
+		if(!$connection){
+			$this->errorInfo = \error_get_last();
+			return false;
+		}
+
         return $connection;
     }
+
 
     /**
      * @override Base
@@ -70,10 +69,10 @@ final class mysqlold extends Base
      * @param mixed $connection
      */
     public function close($connection) {
-        return @\mysql_close($connection);
+        return @\pg_close($connection);
     }
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
@@ -81,7 +80,7 @@ final class mysqlold extends Base
      * @return mixed
      */
     public function query($connection, $query) {
-        return \mysql_query($query, $connection);
+        return \pg_query($connection, $query);
     }
 
     /**
@@ -89,24 +88,32 @@ final class mysqlold extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
-     * @return int
+     * @return mixed
      */
     public function getInsertId($connection, $cursor = null) {
-        return \mysql_insert_id($connection);
+		$result  =  @\pg_query($connection, 'SELECT lastval()');
+
+		if(!$result){
+			return  false;
+		}
+		
+		$row  =  pg_fetch_row($result);
+		
+		return  $row[0];
     }
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
      * @return int
-     */
-    public function getAffectedRows($connection, $cursor = null) {
-        return \mysql_affected_rows($connection);
-    }
+	 */
+	public  function  getAffectedRows($connection, $cursor = null) {
+		return \pg_affected_rows($cursor);
+	}
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
@@ -114,7 +121,7 @@ final class mysqlold extends Base
      * @return string
      */
     public function getErrorInfo($connection, $cursor = null) {
-        return \mysql_error($connection);
+        return \pg_errormessage($connection);
     }
 
     /**
@@ -125,10 +132,10 @@ final class mysqlold extends Base
      * @return int
      */
     public function getErrorCode($connection, $cursor = null) {
-        return \mysql_errno($connection);
+        return  null;
     }
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
@@ -136,10 +143,10 @@ final class mysqlold extends Base
      * @return int
      */
     public function getNumRows($connection, $cursor) {
-        return \mysql_num_rows($cursor);
+        return \pg_numrows($cursor);
     }
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
@@ -147,7 +154,7 @@ final class mysqlold extends Base
      * @return array|false
      */
     public function fetchRow($connection, $cursor) {
-        return \mysql_fetch_row($cursor);
+        return \pg_fetch_row($cursor);
     }
 
     /**
@@ -158,10 +165,10 @@ final class mysqlold extends Base
      * @return array|false
      */
     public function fetchAssoc($connection, $cursor) {
-        return \mysql_fetch_assoc($cursor);
+        return \pg_fetch_assoc($cursor);
     }
 
-    /**
+	/**
      * @override Base
      *
      * @param mixed $connection
@@ -169,7 +176,7 @@ final class mysqlold extends Base
      * @return object|false
      */
     public function fetchObject($connection, $cursor) {
-        return \mysql_fetch_object($cursor);
+        return \pg_fetch_object($cursor);
     }
 
     /**
@@ -179,7 +186,18 @@ final class mysqlold extends Base
      * @param mixed $cursor
      */
     public function freeCursor($connection, $cursor) {
-        return \mysql_free_result($cursor);
+        return \pg_free_result($cursor);
+    }
+
+	/**
+     * @override Base
+     *
+     * @param mixed $connection
+     * @param scalar $value
+     * @return string
+     */
+    public function escapeString($connection, $value) {
+        return \pg_escape_string($connection, $value);
     }
 
     /**
@@ -189,10 +207,10 @@ final class mysqlold extends Base
      * @param scalar $value
      * @return string
      */
-    public function escapeString($connection, $value) {
-        return \mysql_real_escape_string($value, $connection);
+    public function reprString($connection, $value) {
+        return '\''.$this->escapeString($connection, $value).'\'';
     }
-
+	
     /**
      * @override Base
      *
@@ -201,7 +219,7 @@ final class mysqlold extends Base
      * @return string
      */
     protected function reprField($connection, $value) {
-        return '`'.$value.'`';
+        return '"'.$value.'"';
     }
 
     /**
@@ -211,6 +229,43 @@ final class mysqlold extends Base
      * @param mixed $cursor
      */
     public function rewindCursor($connection, $cursor) {
-        return mysql_data_seek($cursor, $connection);
-    }    
+        return \pg_result_seek($cursor, $offset);
+    }
+	
+    /**
+     * Генерируем строку для подключения к БД
+     *
+     * @param array  $params параметры для подключения (@see $this->paramsDefault)
+     *
+     * @return  String
+     */
+    private  function  generateConnectString($params){
+
+        $connString  =  '';
+        if($params){
+            foreach($params  as  $key=>$value){
+
+                if(!$value){
+                    continue;
+                }
+
+                switch($key){
+                    case 'username':
+                        $connString  .=  'user='.$value;
+                    break;
+
+					case 'charset':
+						$connString  .=  'options=\'--client_encoding='.$value.'\'';
+					break;
+                    default:
+                        $connString  .=  $key.'='.$value;
+                    break;
+                }
+
+                $connString  .=  ' ';
+            }
+        }
+
+        return  rtrim($connString);
+    }
 }
