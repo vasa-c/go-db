@@ -387,6 +387,31 @@ final class FetcherTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * [fix]: если вторая колонка NULL, "vars" считал, что выборка идёт по одной
+     */
+    public function testVarsNull() {
+        $query = 'SELECT `a`,`null` FROM `table` LIMIT 1,3';
+
+        $expected = array(
+            '2' => null,
+            '3' => null,
+            '4' => null,
+        );
+
+        $result = array();
+        foreach ($this->dbQuery($query, 'vars') as $k => $v) {
+            $result[$k] = $v;
+        }
+        $this->assertEquals($expected, $result);
+
+        $result = array();
+        foreach ($this->dbQuery($query, 'ivars') as $k => $v) {
+            $result[$k] = $v;
+        }
+        $this->assertEquals($expected, $result);
+    }
+
     private function dbQuery($query, $fetch) {
         $fetcher = $this->createFetcher($query);
         return $fetcher->fetch($fetch);

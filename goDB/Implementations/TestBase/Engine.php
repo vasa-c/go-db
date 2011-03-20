@@ -11,6 +11,8 @@
  * 
  * Все "данные" описаны в $table
  *
+ * "столбец" `null` всегда возвращает NULL и не выбирается при SELECT *
+ *
  * INSERT
  * просто увеличивает автоинкремент. Ничего в "данные" не добавляет
  * автоикремент каждый раз начинается с начала
@@ -151,12 +153,15 @@ final class Engine
             if ($cols) {
                 $res = array();
                 foreach ($cols as $col) {
-                    if (!isset($row[$col])) {
+                    if (isset($row[$col])) {
+                        $res[$col] = $row[$col];
+                    } elseif ($col == 'null') {
+                        $res['null'] = null;
+                    } else {
                         $this->errorInfo = 'Unknown column "'.$col.'"';
                         $this->errorCode = self::ERROR_COL;
                         return false;
                     }
-                    $res[$col] = $row[$col];
                 }
             } else {
                 $res = $row;

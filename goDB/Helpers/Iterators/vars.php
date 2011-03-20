@@ -39,6 +39,6 @@ final class vars extends Base
      * @return mixed
      */
     public function current() {
-        return isset($this->nextRow[1]) ? $this->nextRow[1] : $this->nextRow[0];
+        return \array_key_exists('1', $this->nextRow) ? $this->nextRow[1] : $this->nextRow[0];
     }
 }

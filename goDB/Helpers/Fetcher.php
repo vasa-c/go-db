@@ -179,7 +179,7 @@ class Fetcher implements \go\DB\Result
         $cursor = $this->cursor;
         $result = array();
         while ($row = $imp->fetchRow($conn, $cursor)) {
-            $result[$row[0]] = isset($row[1]) ? $row[1] : $row[0];
+            $result[$row[0]] = \array_key_exists('1', $row) ? $row[1] : $row[0];
         }
         return $result;
     }
