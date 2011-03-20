@@ -364,7 +364,7 @@ abstract class DB
     }
 
     /**
-     * Создать объек представления результата
+     * Создать объект представления результата
      *
      * @param mixed $cursor
      * @return \go\DB\Result
