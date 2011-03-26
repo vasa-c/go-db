@@ -16,7 +16,7 @@ final class pgsql extends Base
      *
      * @var array
      */
-    protected $paramsReq = array('host', 'username', 'password');
+    protected $paramsReq = array();
 
 	/**
      * Необязательные параметры подключения
@@ -46,11 +46,13 @@ final class pgsql extends Base
      * @return mixed
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
-        $host = \explode(':', $params['host'], 2);
-        if (!empty($host[1])) {
-			$params['host'] =  $host[0];
-			$params['port'] =  $host[1];
-        }		
+		if(isset ($params['host'])){
+			$host = \explode(':', $params['host'], 2);
+			if (!empty($host[1])) {
+				$params['host'] =  $host[0];
+				$params['port'] =  $host[1];
+			}
+		}
 
         $connection = @\pg_connect($this->generateConnectString($params));
 
