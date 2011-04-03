@@ -146,7 +146,7 @@ final class DBTest extends \go\Tests\DB\Base
      */
     public function testGetAvailableAdapters() {
         $adapters = \go\DB\DB::getAvailableAdapters();
-        $this->assertType('array', $adapters);
+        $this->assertInternalType('array', $adapters);
         $this->assertContains('test', $adapters);
     }
 
@@ -325,7 +325,7 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getLastQuery());
 
         $db->setDebug(true);
-        $this->assertType('object', $db->getDebug());
+        $this->assertInternalType('object', $db->getDebug());
     }
 
     /**

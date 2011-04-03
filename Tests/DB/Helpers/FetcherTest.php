@@ -327,7 +327,7 @@ final class FetcherTest extends \go\Tests\DB\Base
     public function testNoSelect() {
         $this->assertEquals(1, $this->dbQuery('INSERT', 'id'));
         $this->assertEquals(3, $this->dbQuery('UPDATE LIMIT 3,3', 'ar'));
-        $this->assertType('object', $this->dbQuery('SELECT * FROM `table`', 'cursor'));
+        $this->assertInternalType('object', $this->dbQuery('SELECT * FROM `table`', 'cursor'));
     }
 
     /**
