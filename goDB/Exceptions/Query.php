@@ -25,6 +25,8 @@ final class Query extends Logic
      *        код ошибки
      */
     public function __construct($query, $error, $errorcode = null) {
+        $this->query = $query;
+        $this->error = $error;
         $message = str_replace(
             array('{{ query }}', '{{ error }}', '{{ code }}'),
             array($query, $error, $errorcode),

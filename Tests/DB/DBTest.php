@@ -216,7 +216,13 @@ final class DBTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
 
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
-        $result = $db->query('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
+        try {
+            $result = $db->query('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
+        } catch (\go\DB\Exceptions\Query $e) {
+            $this->assertNotEmpty($e->getQuery());
+            $this->assertNotEmpty($e->getError());
+            throw $e;
+        }
     }
 
     /**
