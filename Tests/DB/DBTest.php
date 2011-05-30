@@ -224,6 +224,20 @@ final class DBTest extends \go\Tests\DB\Base
             throw $e;
         }
     }
+    
+    public function testMinus() {
+        $params = array(
+            '_adapter' => 'test',
+            'host'     => 'localhost',
+        );
+        $db = \go\DB\DB::create($params);
+        
+        $pattern = 'UPDATE `table` SET `x`=`x`-?i';
+        $data    = array(-1);
+        $query   = $db->makeQuery($pattern, $data);
+        
+        $this->assertEquals('UPDATE `table` SET `x`=`x`-(-1)', $query);
+    }
 
     /**
      * @covers plainQuery

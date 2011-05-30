@@ -248,7 +248,11 @@ abstract class Base
      * @return string
      */
     public function reprInt($connection, $value) {
-        return (int)$value;
+        $value = (int)$value;
+        if ($value < 0) {
+            $value = '('.$value.')';
+        }
+        return $value;
     }
 
     /**
