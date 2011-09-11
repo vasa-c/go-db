@@ -112,7 +112,7 @@ final class sqlite extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection, $cursor = nulll) {
+    public function getErrorCode($connection, $cursor = null) {
         return $connection->lastErrorCode();
     }
 
