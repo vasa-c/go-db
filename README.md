@@ -6,6 +6,7 @@
  * Документация: https://github.com/vasa-c/go-db/wiki
  * Обсуждение на pyha.ru: http://pyha.ru/forum/topic/554.0
  * Версия 1.x: https://github.com/vasa-c/godb-old
+ * Лицензия: MIT (http://www.opensource.org/licenses/mit-license.php)
 
 ## Установка
 
