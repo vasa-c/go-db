@@ -3,8 +3,9 @@
  * goDB2: библиотека для работы с реляционными базами данных из PHP
  *
  * @package go\DB
- * @link    http://code.google.com/p/go-db/
- * @version 2.0.0 beta
+ * @link    https://github.com/vasa-c/go-db source
+ * @link    https://github.com/vasa-c/go-db/wiki documentation
+ * @version 2.0.1 beta
  * @author  Григорьев Олег aka vasa_c (http://blgo.ru/)
  * @license MIT (http://www.opensource.org/licenses/mit-license.php)
  * @uses    PHP >= 5.3
@@ -13,7 +14,7 @@
 
 namespace go\DB;
 
-const VERSION = '2.0.0 beta';
+const VERSION = '2.0.1 beta';
 
 abstract class DB
 {
@@ -133,7 +134,7 @@ abstract class DB
 
     /**
      * Вызов объекта, как функции - переадресация на query()
-     * 
+     *
      * Следующие два примера идентичны:
      * @example $db->query('SELECT * FROM `table`');
      * @example $db('SELECT * FROM `table`');
@@ -143,7 +144,7 @@ abstract class DB
      * @throws \go\DB\Exceptions\Templater
      * @throws \go\DB\Exceptions\Query
      * @throws \go\DB\Exceptions\Fetch
-     * 
+     *
      * @param string $pattern
      * @param array $data [optional]
      * @param string $fetch [optional]
@@ -311,7 +312,7 @@ abstract class DB
 
     /**
      * Скрытый конструктор - извне не создать
-     * 
+     *
      * @param array $params
      *        конфигурационные параметры базы
      */
@@ -399,7 +400,7 @@ abstract class DB
 
     /**
      * Отправка запроса в отладчик
-     * 
+     *
      * @param string $query
      * @param float $duration
      * @param mixed $info
@@ -415,7 +416,7 @@ abstract class DB
 
     /**
      * Кэш списка доступных адаптеров
-     * 
+     *
      * @var array
      */
     private static $availableAdapters;
