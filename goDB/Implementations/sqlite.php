@@ -175,6 +175,17 @@ final class sqlite extends Base
      * @override Base
      *
      * @param mixed $connection
+     * @param scalar $value
+     * @return string
+     */
+    public function reprString($connection, $value) {
+        return "'".$this->escapeString($connection, $value)."'";
+    }
+
+    /**
+     * @override Base
+     *
+     * @param mixed $connection
      * @param string $value
      * @return string
      */
