@@ -1,6 +1,6 @@
 <?php
 /**
- * Тестирование базового поведения класса DB с помощью адаптера test
+ * Query-исключение
  *
  * @package    go\DB
  * @subpackage Tests
