@@ -26,6 +26,8 @@ final class pgsql extends Base
      * @var array
      */
     protected $paramsDefault = array(
+		'username'        => null,
+		'password'        => null,
         'dbname'          => null,
         'charset'         => null,
 		'port'            => null,
@@ -54,7 +56,7 @@ final class pgsql extends Base
 			}
 		}
 
-        $connection = @\pg_connect($this->generateConnectString($params));
+        $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
 
 		if(!$connection){
 			$this->errorInfo = \error_get_last();
@@ -98,9 +100,9 @@ final class pgsql extends Base
 		if(!$result){
 			return  false;
 		}
-		
+
 		$row  =  pg_fetch_row($result);
-		
+
 		return  $row[0];
     }
 
@@ -212,7 +214,7 @@ final class pgsql extends Base
     public function reprString($connection, $value) {
         return '\''.$this->escapeString($connection, $value).'\'';
     }
-	
+
     /**
      * @override Base
      *
@@ -233,7 +235,7 @@ final class pgsql extends Base
     public function rewindCursor($connection, $cursor) {
         return \pg_result_seek($cursor, $offset);
     }
-	
+
     /**
      * Генерируем строку для подключения к БД
      *
