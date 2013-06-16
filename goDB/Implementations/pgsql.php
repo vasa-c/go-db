@@ -59,7 +59,7 @@ final class pgsql extends Base
         $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
 
 		if(!$connection){
-			$this->errorInfo = \error_get_last();
+			$errorInfo = \error_get_last();
 			return false;
 		}
 
@@ -67,12 +67,12 @@ final class pgsql extends Base
     }
 
 
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     */
-    public function close($connection) {
+	/**
+	 * @override Base
+	 * @param mixed $connection
+	 * @return bool
+	 */
+	public function close($connection) {
         return @\pg_close($connection);
     }
 
@@ -155,7 +155,7 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return array|false
+     * @return array|bool
      */
     public function fetchRow($connection, $cursor) {
         return \pg_fetch_row($cursor);
@@ -166,7 +166,7 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return array|false
+     * @return array|bool
      */
     public function fetchAssoc($connection, $cursor) {
         return \pg_fetch_assoc($cursor);
@@ -177,19 +177,20 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return object|false
+     * @return object|bool
      */
     public function fetchObject($connection, $cursor) {
         return \pg_fetch_object($cursor);
     }
 
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     */
-    public function freeCursor($connection, $cursor) {
+
+	/**
+	 * @override Base
+	 * @param mixed $connection
+	 * @param mixed $cursor
+	 * @return bool
+	 */
+	public function freeCursor($connection, $cursor) {
         return \pg_free_result($cursor);
     }
 
@@ -197,7 +198,7 @@ final class pgsql extends Base
      * @override Base
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param mixed $value
      * @return string
      */
     public function escapeString($connection, $value) {
@@ -208,7 +209,7 @@ final class pgsql extends Base
      * @override Base
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param mixed $value
      * @return string
      */
     public function reprString($connection, $value) {
@@ -226,14 +227,14 @@ final class pgsql extends Base
         return '"'.$value.'"';
     }
 
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     */
-    public function rewindCursor($connection, $cursor) {
-        return \pg_result_seek($cursor, $offset);
+	/**
+	 * @override Base
+	 * @param mixed $connection
+	 * @param mixed $cursor
+	 * @return bool
+	 */
+	public function rewindCursor($connection, $cursor) {
+        return \pg_result_seek($cursor, 0);
     }
 
     /**
@@ -272,4 +273,5 @@ final class pgsql extends Base
 
         return  rtrim($connString);
     }
+
 }
