@@ -9,7 +9,7 @@
 
 namespace go\Tests\DB\Adapters\_helpers;
 
-class sqlite extends Base
+class Sqlite extends Base
 {
     protected $testTypes = array(
         'ID'     => 'INT UNSIGNED NOT NULL',
@@ -21,21 +21,24 @@ class sqlite extends Base
         'primary' => 'PRIMARY KEY (?cols)',
     );
 
-    protected function fillSingleTestTable($table, array $data) {
+    protected function fillSingleTestTable($table, array $data)
+    {
         $this->truncateSingleTestTable($table);
         foreach ($data as $d) {
             $pattern = 'INSERT INTO ?table VALUES (?list-null)';
             $this->db->query($pattern, array($table, $d));
-        }        
+        }
         return true;
     }
 
-    protected function truncateSingleTestTable($table) {
+    protected function truncateSingleTestTable($table)
+    {
         $this->db->query('DELETE FROM ?table', array($table));
         return true;
     }
 
-    protected function toFill($fill) {
+    protected function toFill($fill)
+    {
         if ($fill) {
             $this->db->query('BEGIN');
             parent::toFill($fill);

@@ -16,15 +16,16 @@ use go\DB\Helpers\Fetcher as Fetcher;
  */
 final class FetcherTest extends \go\Tests\DB\Base
 {
-
     /**
      * assoc, numerics, objects, col, vars
      * @dataProvider providerList
      */
-    public function testList($query, $fetch, $expected) {
+    public function testList($query, $fetch, $expected)
+    {
         $this->assertEquals($expected, $this->dbQuery($query, $fetch));
     }
-    public function providerList() {
+    public function providerList()
+    {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
         return array(
             array(
@@ -74,11 +75,13 @@ final class FetcherTest extends \go\Tests\DB\Base
      * assoc, numerics, objects, col, vars
      * @dataProvider providerListKey
      */
-    public function testListKey($query, $fetch, $expected) {
+    public function testListKey($query, $fetch, $expected)
+    {
         $result = $this->dbQuery($query, $fetch);
         $this->assertEquals($expected, $result);
     }
-    public function providerListKey() {
+    public function providerListKey()
+    {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
         return array(
             array(
@@ -112,7 +115,8 @@ final class FetcherTest extends \go\Tests\DB\Base
      * iassoc, inumerics, iobjects, icol, ivars
      * @dataProvider providerIterators
      */
-    public function testIterators($query, $fetch, $expected) {
+    public function testIterators($query, $fetch, $expected)
+    {
         $iter = $this->dbQuery($query, $fetch);
         $this->assertInstanceOf('Iterator', $iter);
         $result = array();
@@ -121,7 +125,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         }
         $this->assertEquals($expected, $result);
     }
-    public function providerIterators() {
+    public function providerIterators()
+    {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
         return array(
             array(
@@ -171,7 +176,8 @@ final class FetcherTest extends \go\Tests\DB\Base
      * iassoc, inumerics, iobjects, icol, ivars
      * @dataProvider providerIteratorsKey
      */
-    public function testIteratorsKey($query, $fetch, $expected) {
+    public function testIteratorsKey($query, $fetch, $expected)
+    {
         $iter = $this->dbQuery($query, $fetch);
         $this->assertInstanceOf('Iterator', $iter);
         $result = array();
@@ -180,7 +186,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         }
         $this->assertEquals($expected, $result);
     }
-    public function providerIteratorsKey() {
+    public function providerIteratorsKey()
+    {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
         return array(
             array(
@@ -215,10 +222,12 @@ final class FetcherTest extends \go\Tests\DB\Base
      * row, numeric, object, el, bool
      * @dataProvider providerRow
      */
-    public function testRow($query, $fetch, $expected) {
+    public function testRow($query, $fetch, $expected)
+    {
         $this->assertEquals($expected, $this->dbQuery($query, $fetch));
     }
-    public function providerRow() {
+    public function providerRow()
+    {
         $query = 'SELECT * FROM `table` LIMIT 1';
         return array(
             array(
@@ -244,10 +253,12 @@ final class FetcherTest extends \go\Tests\DB\Base
      * el, bool
      * @dataProvider providerEl
      */
-    public function testEl($query, $fetch, $expected) {
+    public function testEl($query, $fetch, $expected)
+    {
         $this->assertEquals($expected, $this->dbQuery($query, $fetch));
     }
-    public function providerEl() {
+    public function providerEl()
+    {
         $query = 'SELECT `a` FROM `table` LIMIT 1';
         return array(
             array(
@@ -266,7 +277,8 @@ final class FetcherTest extends \go\Tests\DB\Base
     /**
      * num
      */
-    public function testNum() {
+    public function testNum()
+    {
         $query = 'SELECT * FROM `table` LIMIT 2,3';
         $this->assertEquals(3, $this->dbQuery($query, 'num'));
     }
@@ -274,7 +286,8 @@ final class FetcherTest extends \go\Tests\DB\Base
     /**
      * @dataProvider providerEmpty
      */
-    public function testEmpty($fetch, $expected) {
+    public function testEmpty($fetch, $expected)
+    {
         $query   = 'SELECT * FROM `table` LIMIT 10,10';
         $result  = $this->dbQuery($query, $fetch);
         if (is_object($result)) {
@@ -286,7 +299,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         }
         $this->assertSame($expected, $result);
     }
-    public function providerEmpty() {
+    public function providerEmpty()
+    {
         return array(
             array('assoc', array()),
             array('numerics', array()),
@@ -306,7 +320,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         );
     }
 
-    public function testFetcherIterator() {
+    public function testFetcherIterator()
+    {
         $query   = 'SELECT * FROM `table` LIMIT 0,3';
         $fetcher = $this->createFetcher($query);
         $result  = array();
@@ -321,8 +336,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
     }
 
-
-    public function testNoSelect() {
+    public function testNoSelect()
+    {
         $this->assertEquals(1, $this->dbQuery('INSERT', 'id'));
         $this->assertEquals(3, $this->dbQuery('UPDATE LIMIT 3,3', 'ar'));
         $this->assertInternalType('object', $this->dbQuery('SELECT * FROM `table`', 'cursor'));
@@ -332,10 +347,12 @@ final class FetcherTest extends \go\Tests\DB\Base
      * @dataProvider providerUnknownFetch
      * @expectedException \go\DB\Exceptions\UnknownFetch
      */
-    public function testUnknownFetch($fetch) {
+    public function testUnknownFetch($fetch)
+    {
         $this->dbQuery('SELECT * FROM `table`', $fetch);
     }
-    public function providerUnknownFetch() {
+    public function providerUnknownFetch()
+    {
         return array(
             array('qwerty'),
         );
@@ -345,10 +362,12 @@ final class FetcherTest extends \go\Tests\DB\Base
      * @dataProvider providerUnexpectedFetch
      * @expectedException \go\DB\Exceptions\UnexpectedFetch
      */
-    public function testUnexpectedFetch($fetch) {
+    public function testUnexpectedFetch($fetch)
+    {
         $this->dbQuery('INSERT', $fetch);
     }
-    public function providerUnexpectedFetch() {
+    public function providerUnexpectedFetch()
+    {
         $fetches  = array(
             'assoc', 'numerics', 'objects', 'col', 'vars', 'iassoc', 'inumerics',
             'iobjects', 'ivars', 'icol', 'row', 'numeric', 'object', 'el', 'bool', 'num',
@@ -360,7 +379,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         return $provider;
     }
 
-    public function testIteratorsListsDiff() {
+    public function testIteratorsListsDiff()
+    {
         $query = 'SELECT `b`,`a` FROM `table` LIMIT 1,3';
 
         $result = array();
@@ -388,21 +408,19 @@ final class FetcherTest extends \go\Tests\DB\Base
     /**
      * [fix]: если вторая колонка NULL, "vars" считал, что выборка идёт по одной
      */
-    public function testVarsNull() {
+    public function testVarsNull()
+    {
         $query = 'SELECT `a`,`null` FROM `table` LIMIT 1,3';
-
         $expected = array(
             '2' => null,
             '3' => null,
             '4' => null,
         );
-
         $result = array();
         foreach ($this->dbQuery($query, 'vars') as $k => $v) {
             $result[$k] = $v;
         }
         $this->assertEquals($expected, $result);
-
         $result = array();
         foreach ($this->dbQuery($query, 'ivars') as $k => $v) {
             $result[$k] = $v;
@@ -410,7 +428,8 @@ final class FetcherTest extends \go\Tests\DB\Base
         $this->assertEquals($expected, $result);
     }
 
-    private function dbQuery($query, $fetch) {
+    private function dbQuery($query, $fetch)
+    {
         $fetcher = $this->createFetcher($query);
         return $fetcher->fetch($fetch);
     }
@@ -418,7 +437,8 @@ final class FetcherTest extends \go\Tests\DB\Base
     /**
      * @return \go\DB\Result
      */
-    private function createFetcher($query) {
+    private function createFetcher($query)
+    {
         $connector = new \go\DB\Helpers\Connector('test', array('host' => 'localhost'));
         $connector->connect();
         $cursor = $connector->getConnection()->query($query);

@@ -9,9 +9,8 @@
 
 namespace go\Tests\DB\Adapters\_helpers;
 
-class pgsql extends Base
+class Pgsql extends Base
 {
-
     protected $testTypes = array(
         'ID'     => 'SERIAL',
         'STRING' => 'VARCHAR(200) NULL DEFAULT NULL',
@@ -22,7 +21,7 @@ class pgsql extends Base
         'primary' => 'PRIMARY KEY (?cols)',
     );
 
-	/**
+    /**
      * Структуры тестовых таблиц
      *
      * @var array

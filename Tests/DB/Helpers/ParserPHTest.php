@@ -27,7 +27,8 @@ class ParserPHTest extends \go\Tests\DB\Base
      * @param string $expectedModifer
      *        список его ожидаемых модификаторов
      */
-    public function testParse($placeholder, $expectType, $expectModifers) {
+    public function testParse($placeholder, $expectType, $expectModifers)
+    {
         $modifers = self::getModifers();
         $len = strlen($expectModifers);
         for ($i = 0; $i < $len; $i++) {
@@ -37,7 +38,9 @@ class ParserPHTest extends \go\Tests\DB\Base
         $this->assertEquals($expectType, $parser->getType());
         $this->assertEquals($modifers, $parser->getModifers());
     }
-    public function providerParse() {
+
+    public function providerParse()
+    {
         return array(
             array('', '', ''),
             array('l', 'l', ''),
@@ -74,10 +77,12 @@ class ParserPHTest extends \go\Tests\DB\Base
      * @dataProvider providerUnknownPlaceholder
      * @expectedException \go\DB\Exceptions\UnknownPlaceholder
      */
-    public function testUnknownPlaceholder($placeholder) {
+    public function testUnknownPlaceholder($placeholder)
+    {
         $parser = new ParserPH($placeholder);
     }
-    public function providerUnknownPlaceholder() {
+    public function providerUnknownPlaceholder()
+    {
         return array(
             array('u'),
             array('unknown'),
@@ -86,7 +91,8 @@ class ParserPHTest extends \go\Tests\DB\Base
         );
     }
 
-    private static function getModifers() {
+    private static function getModifers()
+    {
         if (!self::$modifers) {
             $config = \go\DB\Helpers\Config::get('placeholders');
             $modifers = $config['modifers'];

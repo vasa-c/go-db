@@ -17,27 +17,29 @@ namespace go\Tests\DB\Adapters;
 
 abstract class Base extends \go\Tests\DB\Base
 {
-	protected $PATTERN_SHOW_TABLES  =  'SHOW TABLES';
+    protected $PATTERN_SHOW_TABLES = 'SHOW TABLES';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         if (!$this->getHelper()->getConfig()) {
             $this->markTestSkipped();
         }
     }
 
-    public function testCount() {
+    public function testCount()
+    {
         $helper = $this->getHelper();
         $db = $helper->getDB('fill');
         $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
         $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_vars}')->el());
     }
 
-    public function testInsert() {
+    public function testInsert()
+    {
         $helper = $this->getHelper();
         $db = $helper->getDB('fill');
         $helper->updated();
-
         $pattern = 'INSERT INTO ?t (?c, ?c) VALUES (?,?)';
         $data    = array('test_table', 'name', 'number', 'test', 77);
         $this->assertEquals(6, $db->query($pattern, $data, 'id'));
@@ -48,44 +50,39 @@ abstract class Base extends \go\Tests\DB\Base
         $this->assertEquals('test', $name);
     }
 
-    public function testUpdate() {
+    public function testUpdate()
+    {
         $helper = $this->getHelper();
-		$helper->dropped();
+        $helper->dropped();
         $db = $helper->getDB('fill');
         $helper->updated();
-
         $two = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 2))->el();
         $this->assertEquals('two', $two);
-
         $ar = $db->query('UPDATE {test_table} SET ?c=? WHERE ?c IS NULL', array('name', 'zzz', 'number'))->ar();
         $this->assertEquals(2, $ar);
-
         $two = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 2))->el();
         $this->assertEquals('zzz', $two);
     }
 
-    public function testDrop() {
+    public function testDrop()
+    {
         $helper = $this->getHelper();
         $db = $helper->getDB(true);
         $helper->dropped();
-
         $tables = $db->query($this->PATTERN_SHOW_TABLES)->col();
         $this->assertContains('test_table', $tables);
         $this->assertContains('test_vars', $tables);
-
         $db->query('DROP TABLE IF EXISTS ?t', array('test_table'));
-
         $tables = $db->query($this->PATTERN_SHOW_TABLES)->col();
         $this->assertNotContains('test_table', $tables);
         $this->assertContains('test_vars', $tables);
-   }
+    }
 
-    public function testJoinAndPrefix() {
+    public function testJoinAndPrefix()
+    {
         $helper = $this->getHelper();
         $db = $helper->getDB('fill');
-
         $db->setPrefix('test_');
-
         $pattern = 'SELECT ?c FROM {table} LEFT JOIN ?t ON ?c=?c WHERE ?c=?i';
         $data    = array('value', 'vars', 'name', 'key', 'id', 3);
         $this->assertEquals(33, $db->query($pattern, $data, 'el'));
@@ -96,7 +93,8 @@ abstract class Base extends \go\Tests\DB\Base
      *
      * @return \go\Tests\DB\Adapters\_helpers\Base
      */
-    protected function getHelper() {
+    protected function getHelper()
+    {
         if (!$this->helper) {
             if (!\class_exists('\go\Tests\DB\Adapters\_helpers\Base', false)) {
                 require_once(__DIR__.'/_helpers/Base.php');
@@ -111,7 +109,8 @@ abstract class Base extends \go\Tests\DB\Base
      *
      * @return string
      */
-    protected function getAdapter() {
+    protected function getAdapter()
+    {
         if (!$this->adapter) {
             \preg_match('~\\\\([^\\\\]+)Test$~s', \get_class($this), $matches);
             $this->adapter = $matches[1];

@@ -18,7 +18,8 @@ final class BaseTest extends \go\Tests\DB\Base
     /**
      * @covers getImplementationForAdapter
      */
-    public function testCreate() {
+    public function testCreate()
+    {
         $imp = \go\DB\Implementations\Base::getImplementationForAdapter('test');
         $this->assertInstanceOf('go\DB\Implementations\Base', $imp);
         $this->assertSame($imp, \go\DB\Implementations\Base::getImplementationForAdapter('test'));
@@ -28,11 +29,14 @@ final class BaseTest extends \go\Tests\DB\Base
      * @covers checkParams
      * @dataProvider providerCheckParams
      */
-    public function testCheckParams($params, $expected) {
+    public function testCheckParams($params, $expected)
+    {
         $imp = \go\DB\Implementations\Base::getImplementationForAdapter('test');
         $this->assertEquals($expected, $imp->checkParams($params));
     }
-    public function providerCheckParams() {
+
+    public function providerCheckParams()
+    {
         return array(
             array(
                 array('host' => 'localhost'),
@@ -52,7 +56,8 @@ final class BaseTest extends \go\Tests\DB\Base
     /**
      * @covers connect()
      */
-    public function testConnect() {
+    public function testConnect()
+    {
         $implementation = \go\DB\Implementations\Base::getImplementationForAdapter('test');
 
         $params     = array('host' => 'localhost');
@@ -68,7 +73,8 @@ final class BaseTest extends \go\Tests\DB\Base
     /**
      * @covers close()
      */
-    public function testClose() {
+    public function testClose()
+    {
         $this->createImp();
         $this->assertFalse($this->connection->isClosed());
         $this->implementation->close($this->connection);
@@ -88,12 +94,11 @@ final class BaseTest extends \go\Tests\DB\Base
      * @covers fetchObject
      * @covers rewindCursor
      */
-    public function testQuery() {
+    public function testQuery()
+    {
         $this->createImp();
-
         $imp  = $this->implementation;
         $conn = $this->connection;
-
         $cursor = $imp->query($conn, 'SELECT * FROM `table` LIMIT 2');
         $this->assertTrue($imp->isCursor($conn, $cursor));
         $this->assertEquals(2, $imp->getNumRows($conn, $cursor));
@@ -102,16 +107,13 @@ final class BaseTest extends \go\Tests\DB\Base
         $this->assertEquals(false, $imp->fetchObject($conn, $cursor));
         $imp->rewindCursor($conn, $cursor);
         $this->assertEquals((object)array('a' => 1, 'b' => 2, 'c' => 3), $imp->fetchObject($conn, $cursor));
-
         $cursor = $imp->query($conn, 'INSERT');
         $this->assertFalse($imp->isCursor($conn, $cursor));
         $id = $imp->getInsertId($conn);
         $imp->query($conn, 'INSERT');
         $this->assertEquals($id + 1, $imp->getInsertId($conn));
-
         $imp->query($conn, 'UPDATE LIMIT 2');
         $this->assertEquals(2, $imp->getAffectedRows($conn));
-
         $this->assertFalse($imp->query($conn, 'ERROR'));
         $this->assertNotEmpty($imp->getErrorInfo($conn));
         $this->assertEquals(\go\DB\Implementations\TestBase\Engine::ERROR_OPERATOR, $imp->getErrorCode($conn));
@@ -127,12 +129,11 @@ final class BaseTest extends \go\Tests\DB\Base
      * @covers reprCol
      * @covers reprChainFields
      */
-    public function testRepr() {
+    public function testRepr()
+    {
         $this->createImp();
-
         $imp  = $this->implementation;
         $conn = $this->connection;
-
         $this->assertEquals('qw\"er', $imp->escapeString($conn, 'qw"er'));
         $this->assertEquals('"qw\"er"', $imp->reprString($conn, 'qw"er'));
         $this->assertEquals('123', $imp->reprInt($conn, '123d'));
@@ -144,7 +145,8 @@ final class BaseTest extends \go\Tests\DB\Base
         $this->assertEquals('`db`.`table`.`col`', $imp->reprChainFields($conn, array('db', 'table', 'col')));
     }
 
-    private function createImp() {
+    private function createImp()
+    {
         $params = array('host' => 'localhost');
         $this->implementation = \go\DB\Implementations\Base::getImplementationForAdapter('test');
         $this->connection     = $this->implementation->connect($params);

@@ -9,7 +9,7 @@
 
 namespace go\Tests\DB\Adapters\_helpers;
 
-class mysql extends Base
+class Mysql extends Base
 {
     protected $testTypes = array(
         'ID'     => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',

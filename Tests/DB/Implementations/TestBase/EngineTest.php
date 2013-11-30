@@ -20,7 +20,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @dataProvider providerSelect
      */
-    public function testSelect($query, $expected) {
+    public function testSelect($query, $expected)
+    {
         $engine = new Engine();
         $cursor = $engine->query($query);
         $this->assertInstanceOf('go\DB\Implementations\TestBase\Cursor', $cursor);
@@ -30,7 +31,8 @@ final class EngineTest extends \go\Tests\DB\Base
         }
         $this->assertEquals($expected, $result);
     }
-    public function providerSelect() {
+    public function providerSelect()
+    {
         return array(
             array(
                 'SELECT * FROM `table`',
@@ -81,7 +83,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @covers getInstertId
      */
-    public function testInsert() {
+    public function testInsert()
+    {
         $engine = new Engine();
         $this->assertEquals(0, $engine->getInsertId());
         $engine->query('INSERT INTO `table`');
@@ -99,7 +102,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @covers getAffectedRows
      */
-    public function testUpdate() {
+    public function testUpdate()
+    {
         $engine = new Engine();
         $this->assertEquals(0, $engine->getAffectedRows());
         $engine->query('UPDATE `table`');
@@ -120,7 +124,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @covers getErrorCode
      */
-    public function testErrorOperator() {
+    public function testErrorOperator()
+    {
         $engine = new Engine();
         $this->assertFalse($engine->query('SLCT * FROM `table`'));
         $this->assertEquals(Engine::ERROR_OPERATOR, $engine->getErrorCode());
@@ -130,7 +135,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @covers getErrorCode
      */
-    public function testErrorTable() {
+    public function testErrorTable()
+    {
         $engine = new Engine();
         $this->assertFalse($engine->query('SELECT * FROM `tablicco`'));
         $this->assertEquals(Engine::ERROR_TABLE, $engine->getErrorCode());
@@ -140,7 +146,8 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers query
      * @covers getErrorCode
      */
-    public function testErrorCol() {
+    public function testErrorCol()
+    {
         $engine = new Engine();
         $this->assertFalse($engine->query('SELECT `a`,`b`,`x` FROM `table`'));
         $this->assertEquals(Engine::ERROR_COL, $engine->getErrorCode());
@@ -151,18 +158,16 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers getErrorInfo
      * @covers getErrorCode
      */
-    public function testErrorInfo() {
+    public function testErrorInfo()
+    {
         $engine = new Engine();
         $this->assertEmpty($engine->getErrorInfo());
         $this->assertEmpty($engine->getErrorCode());
-
         $this->assertFalse($engine->query('ERROR'));
         $this->assertNotEmpty($engine->getErrorInfo());
         $this->assertNotEmpty($engine->getErrorCode());
-
         $this->assertNotEmpty($engine->getErrorInfo());
         $this->assertNotEmpty($engine->getErrorCode());
-
         $this->assertTrue($engine->query('INSERT'));
         $this->assertEmpty($engine->getErrorInfo());
         $this->assertEmpty($engine->getErrorCode());
@@ -172,11 +177,11 @@ final class EngineTest extends \go\Tests\DB\Base
      * @covers close
      * @covers isClosed
      */
-    public function testClose() {
+    public function testClose()
+    {
         $engine = new Engine();
         $this->assertFalse($engine->isClosed());
         $engine->close();
         $this->assertTrue($engine->isClosed());
     }
-
 }

@@ -16,11 +16,11 @@ use go\DB\Implementations\TestBase\Cursor as Cursor;
  */
 final class CursorTest extends \go\Tests\DB\Base
 {
-
     /**
      * @covers fetch_assoc
      */
-    public function testAssoc() {
+    public function testAssoc()
+    {
         $data = array(
             array('a' => 1, 'b' => 2),
             array('a' => 3, 'b' => 4),
@@ -35,7 +35,8 @@ final class CursorTest extends \go\Tests\DB\Base
     /**
      * @covers fetch_row
      */
-    public function testRow() {
+    public function testRow()
+    {
         $data = array(
             array('a' => 1, 'b' => 2),
             array('a' => 3, 'b' => 4),
@@ -50,7 +51,8 @@ final class CursorTest extends \go\Tests\DB\Base
     /**
      * @covers fetch_object
      */
-    public function testObject() {
+    public function testObject()
+    {
         $data = array(
             array('a' => 1, 'b' => 2),
             array('a' => 3, 'b' => 4),
@@ -65,7 +67,8 @@ final class CursorTest extends \go\Tests\DB\Base
     /**
      * @covers reset
      */
-    public function testReset() {
+    public function testReset()
+    {
         $data = array(
             array('a' => 1, 'b' => 2),
             array('a' => 3, 'b' => 4),
@@ -83,7 +86,8 @@ final class CursorTest extends \go\Tests\DB\Base
     /**
      * @covers getNumRows
      */
-    public function testGetNumRows() {
+    public function testGetNumRows()
+    {
         $data = array(
             array('a' => 1, 'b' => 2),
             array('a' => 3, 'b' => 4),
@@ -91,5 +95,4 @@ final class CursorTest extends \go\Tests\DB\Base
         $cursor = new Cursor($data);
         $this->assertEquals(2, $cursor->getNumRows());
     }
-
 }

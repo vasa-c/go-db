@@ -22,7 +22,8 @@ final class QueryTest extends \go\Tests\DB\Base
      * @covers go\DB\Exceptions\Query::getError
      * @covers go\DB\Exceptions\Query::getErrorCode
      */
-    public function testGetMethods() {
+    public function testGetMethods()
+    {
         try {
             throw new Query('This is query', 'Error! Error!', 1234);
         } catch (Query $e) {

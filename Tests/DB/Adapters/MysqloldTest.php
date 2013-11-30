@@ -9,12 +9,10 @@
 
 namespace go\Tests\DB\Adapters;
 
-require_once(__DIR__.'/mysqlTest.php');
-
 /**
  * @covers \go\DB\Adapters\mysqlold
  */
-class mysqloldTest extends mysqlTest
+class MysqloldTest extends MysqlTest
 {
 
 }

@@ -55,7 +55,7 @@ abstract class Base
     /**
      * Описание типов столбцов
      * (переопределяется у потомков)
-     * 
+     *
      * @var array
      */
     protected $testTypes = array(
@@ -63,15 +63,15 @@ abstract class Base
         'STRING' => null,
         'INT'    => null,
     );
-    
+
     /**
      * Описание ключей
      * (переопределяется у потомков)
-     * 
+     *
      * @var array
      */
     protected $testKeys = array(
-        'primary' => NULL,
+        'primary' => null,
     );
 
     protected $PATTERN_DROP_QUERY = 'DROP TABLE IF EXISTS ?table:table';
@@ -83,7 +83,8 @@ abstract class Base
      * @param string $adapter
      * @return \go\Tests\DB\Adapters\_helpers\Base
      */
-    public static function getHelperForAdapter($adapter) {
+    public static function getHelperForAdapter($adapter)
+    {
         if (!isset(self::$cacheHelpers[$adapter])) {
             $classname = __NAMESPACE__.'\\'.$adapter;
             if (!\class_exists($classname, false)) {
@@ -99,7 +100,8 @@ abstract class Base
      *
      * @param string $adapter
      */
-    protected function __construct($adapter) {
+    protected function __construct($adapter)
+    {
         $this->adapter = $adapter;
     }
 
@@ -108,8 +110,9 @@ abstract class Base
      *
      * @return array
      */
-    public function getConfig() {
-        return \go\Tests\DB\Config::getInstance()->__get($this->adapter);
+    public function getConfig()
+    {
+        return \go\Tests\DB\Config::getInstance()->__get(\strtolower($this->adapter));
     }
 
     /**
@@ -121,7 +124,8 @@ abstract class Base
      *        "fill" - наполнить таблицы тестовыми данными
      * @return \go\DB\DB
      */
-    public function createDB($fill = false) {
+    public function createDB($fill = false)
+    {
         $this->db = \go\DB\DB::create($this->getConfig(), $this->adapter);
         // $this->db->setDebug((function($query) {echo $query.";\n";}));
         $this->toFill($fill);
@@ -137,7 +141,8 @@ abstract class Base
      *        "fill" - наполнить таблицы тестовыми данными
      * @return \go\DB\DB
      */
-    public function getDB($fill = false) {
+    public function getDB($fill = false)
+    {
         if ($this->db) {
             $this->toFill($fill);
             return $this->db;
@@ -148,7 +153,8 @@ abstract class Base
     /**
      * Указать, что в рамках теста, тестовая таблица была уничтожена
      */
-    public function dropped() {
+    public function dropped()
+    {
         $this->created = false;
         $this->filled  = false;
         return true;
@@ -157,7 +163,8 @@ abstract class Base
     /**
      * Указать, что рамках теста, тестовая таблица была изменена
      */
-    public function updated() {
+    public function updated()
+    {
         $this->filled = false;
         return true;
     }
@@ -165,17 +172,19 @@ abstract class Base
     /**
      * Указать, что в рамках теста, тестовая БД была закрыта жёстким образом
      */
-    public function closed() {
+    public function closed()
+    {
         $this->db = null;
         return true;
     }
 
     /**
      * Установить объект тестовой БД
-     * 
+     *
      * @param DB $db
      */
-    public function setDB(\go\DB\DB $db) {
+    public function setDB(\go\DB\DB $db)
+    {
         $this->db = $db;
         return true;
     }
@@ -188,7 +197,8 @@ abstract class Base
      *        TRUE   - создать таблицы
      *        "fill" - наполнить таблицы тестовыми данными
      */
-    protected function toFill($fill) {
+    protected function toFill($fill)
+    {
         if ($fill) {
             $this->createTestTables();
             if ($fill === 'fill') {
@@ -201,7 +211,8 @@ abstract class Base
     /**
      * Создать набор тестовых таблиц
      */
-    protected function createTestTables() {
+    protected function createTestTables()
+    {
         if ($this->created) {
             return true;
         }
@@ -216,7 +227,8 @@ abstract class Base
     /**
      * Заполнить тестовые таблицы тестовыми данными
      */
-    protected function fillTestTables() {
+    protected function fillTestTables()
+    {
         if ($this->filled) {
             return true;
         }
@@ -235,7 +247,8 @@ abstract class Base
      * @param array $struct
      *        структура таблицы
      */
-    protected function createSingleTestTable($table, array $struct) {
+    protected function createSingleTestTable($table, array $struct)
+    {
         $this->dropSingleTestTable($table);
         $data = array(
             'table' => $table,
@@ -251,27 +264,30 @@ abstract class Base
      *
      * @param string $table
      */
-    protected function dropSingleTestTable($table) {
+    protected function dropSingleTestTable($table)
+    {
         $this->db->query($this->PATTERN_DROP_QUERY, array('table' => $table));
         return true;
     }
 
     /**
      * Заполнить одну тестовую таблицу тестовыми данными
-     * 
+     *
      * @param string $table
      *        имя таблицы
      * @param array $data
      *        тестовые данные
      */
-    protected function fillSingleTestTable($table, array $data) {
+    protected function fillSingleTestTable($table, array $data)
+    {
         $this->truncateSingleTestTable($table);
         $pattern = 'INSERT INTO ?table VALUES ?values-null';
         $this->db->query($pattern, array($table, $data));
         return true;
     }
 
-    protected function truncateSingleTestTable($table) {
+    protected function truncateSingleTestTable($table)
+    {
         $this->db->query('TRUNCATE TABLE ?table', array($table));
         return true;
     }
@@ -282,7 +298,8 @@ abstract class Base
      * @param array $cols
      * @return string
      */
-    protected function getQueryForCols(array $cols) {
+    protected function getQueryForCols(array $cols)
+    {
         $pattern = array();
         $data    = array();
         foreach ($cols as $col => $type) {
@@ -300,7 +317,8 @@ abstract class Base
      * @param array $keys
      * @return string
      */
-    protected function getQueryForKeys(array $keys) {
+    protected function getQueryForKeys(array $keys)
+    {
         if (empty($keys)) {
             return '';
         }
@@ -313,14 +331,14 @@ abstract class Base
 
     /**
      * Кэш хелперов для адаптеров
-     * 
+     *
      * @var array
      */
     private static $cacheHelpers = array();
 
     /**
      * Текущий адаптер
-     * 
+     *
      * @var string
      */
     protected $adapter;
@@ -341,7 +359,7 @@ abstract class Base
 
     /**
      * Заполнены ли таблицы тестовыми данными
-     * 
+     *
      * @var bool
      */
     protected $filled = false;

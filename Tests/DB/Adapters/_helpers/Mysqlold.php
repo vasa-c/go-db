@@ -9,9 +9,7 @@
 
 namespace go\Tests\DB\Adapters\_helpers;
 
-require_once(__DIR__.'/mysql.php');
-
-class mysqlold extends mysql
+class Mysqlold extends Mysql
 {
 
 }
