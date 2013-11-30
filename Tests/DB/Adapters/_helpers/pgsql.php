@@ -9,7 +9,6 @@
 
 namespace go\Tests\DB\Adapters\_helpers;
 
-
 class pgsql extends Base
 {
 

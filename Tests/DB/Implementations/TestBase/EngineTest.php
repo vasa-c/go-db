@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB\Implementations\TestBase;
 
-require_once(__DIR__.'/../../../Tests.php');
-
 use go\DB\Implementations\TestBase\Engine as Engine;
 
 /**
@@ -137,7 +135,7 @@ final class EngineTest extends \go\Tests\DB\Base
         $this->assertFalse($engine->query('SELECT * FROM `tablicco`'));
         $this->assertEquals(Engine::ERROR_TABLE, $engine->getErrorCode());
     }
-    
+
     /**
      * @covers query
      * @covers getErrorCode

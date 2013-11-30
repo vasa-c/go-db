@@ -9,14 +9,15 @@
 
 namespace go\Tests\DB;
 
-final class Config {
-
+final class Config
+{
     /**
      * Получить экземпляр конфига
      *
      * @return \go\Tests\DB\Config
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!self::$instance) {
             self::$instance = new self(__DIR__.'/_config');
         }
@@ -32,7 +33,8 @@ final class Config {
      * @param string $name
      * @return mixed
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (\array_key_exists($name, $this->config)) {
             return $this->config[$name];
         }
@@ -49,7 +51,8 @@ final class Config {
      * @param string $name
      * @return bool
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if (\array_key_exists($name, $this->config)) {
             return true;
         }
@@ -66,19 +69,21 @@ final class Config {
      * @param string $dir
      *        каталог с конфигурацией
      */
-    private function __construct($dir) {
+    private function __construct($dir)
+    {
         $this->dir = $dir;
     }
 
     /**
      * Получить имя файла, содержащего параметр конфигурации
-     * 
+     *
      * @param string $name
      *        имя параметра
      * @return string
      *         имя файла
      */
-    private function getFilename($name) {
+    private function getFilename($name)
+    {
         return $this->dir.'/'.$name.'.php';
     }
 

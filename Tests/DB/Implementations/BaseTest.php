@@ -9,8 +9,6 @@
 
 namespace go\Tests\Implementations;
 
-require_once(__DIR__.'/../../Tests.php');
-
 /**
  * @covers \go\DB\Implementations\Test
  */

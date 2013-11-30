@@ -15,8 +15,6 @@
 
 namespace go\Tests\DB\Adapters;
 
-require_once(__DIR__.'/../../Tests.php');
-
 abstract class Base extends \go\Tests\DB\Base
 {
 	protected $PATTERN_SHOW_TABLES  =  'SHOW TABLES';
@@ -32,7 +30,7 @@ abstract class Base extends \go\Tests\DB\Base
         $helper = $this->getHelper();
         $db = $helper->getDB('fill');
         $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
-        $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_vars}')->el());        
+        $this->assertEquals(5, $db->query('SELECT COUNT(*) FROM {test_vars}')->el());
     }
 
     public function testInsert() {
@@ -47,7 +45,7 @@ abstract class Base extends \go\Tests\DB\Base
         $this->assertEquals(7, $db->query($pattern, $data, 'id'));
         $this->assertEquals(7, $db->query('SELECT COUNT(*) FROM {test_table}')->el());
         $name = $db->query('SELECT ?c FROM {test_table} WHERE ?c=?i', array('name', 'id', 6), 'el');
-        $this->assertEquals('test', $name);        
+        $this->assertEquals('test', $name);
     }
 
     public function testUpdate() {
@@ -95,7 +93,7 @@ abstract class Base extends \go\Tests\DB\Base
 
     /**
      * Получить хелпер создания базы
-     * 
+     *
      * @return \go\Tests\DB\Adapters\_helpers\Base
      */
     protected function getHelper() {

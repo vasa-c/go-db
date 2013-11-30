@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB;
 
-require_once(__DIR__.'/../Tests.php');
-
 /**
  * @covers \go\DB\DB
  */
@@ -20,11 +18,13 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers create
      * @dataProvider providerCreate
      */
-    public function testCreate($params, $adapter) {
+    public function testCreate($params, $adapter)
+    {
         $db = \go\DB\DB::create($params, $adapter);
         $this->assertInstanceOf('go\DB\DB', $db);
     }
-    public function providerCreate() {
+    public function providerCreate()
+    {
         return array(
             array( // адаптер отдельно
                 array(
@@ -60,11 +60,13 @@ final class DBTest extends \go\Tests\DB\Base
      * @dataProvider providerExceptionUnknownAdapter
      * @expectedException go\DB\Exceptions\UnknownAdapter
      */
-    public function testExceptionUnknownAdapter($params, $adapter) {
+    public function testExceptionUnknownAdapter($params, $adapter)
+    {
         $db = \go\DB\DB::create($params, $adapter);
         $this->assertInstanceOf('go\DB\DB', $db);
     }
-    public function providerExceptionUnknownAdapter() {
+    public function providerExceptionUnknownAdapter()
+    {
         return array(
             array(
                 array(
@@ -93,7 +95,8 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers create
      * @expectedException \go\DB\Exceptions\ConfigSys
      */
-    public function testExceptionConfigSys() {
+    public function testExceptionConfigSys()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -106,7 +109,8 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers create
      * @expectedException \go\DB\Exceptions\ConfigConnect
      */
-    public function testExceptionConfigConnect() {
+    public function testExceptionConfigConnect()
+    {
         $params = array(
             '_adapter' => 'test',
             'port'     => 777,
@@ -117,7 +121,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers create
      */
-    public function testExceptionConnect() {
+    public function testExceptionConnect()
+    {
         $params = array(
             '_adapter' => 'test',
             '_lazy'    => true,
@@ -133,7 +138,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers \go\DB\create()
      */
-    public function testAliasCreate() {
+    public function testAliasCreate()
+    {
         $db = \go\DB\create(array('host' => 'localhost'), 'test');
         $this->assertInstanceOf('go\DB\DB', $db);
 
@@ -144,7 +150,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers getAvailableAdapters
      */
-    public function testGetAvailableAdapters() {
+    public function testGetAvailableAdapters()
+    {
         $adapters = \go\DB\DB::getAvailableAdapters();
         $this->assertInternalType('array', $adapters);
         $this->assertContains('test', $adapters);
@@ -155,7 +162,8 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers forcedConnect
      * @covers close
      */
-    public function testConnectClose() {
+    public function testConnectClose()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -186,7 +194,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers create
      */
-    public function testNotLazyConnect() {
+    public function testNotLazyConnect()
+    {
         $params = array(
             '_adapter' => 'test',
             '_lazy'    => false,
@@ -199,7 +208,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers query
      */
-    public function testQuery() {
+    public function testQuery()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -224,38 +234,38 @@ final class DBTest extends \go\Tests\DB\Base
             throw $e;
         }
     }
-    
-    public function testMinus() {
+
+    public function testMinus()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
         $db = \go\DB\DB::create($params);
-        
+
         $pattern = 'UPDATE `table` SET `x`=`x`-?i';
         $data    = array(-1);
         $query   = $db->makeQuery($pattern, $data);
-        
+
         $this->assertEquals('UPDATE `table` SET `x`=`x`-(-1)', $query);
     }
 
     /**
      * @covers plainQuery
      */
-    public function testPlainQuery() {
+    public function testPlainQuery()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
         $db = \go\DB\DB::create($params);
-
         $result = $db->plainQuery('SELECT * FROM `table` LIMIT 2,2', 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
             array('a' => 4, 'b' => 4, 'c' => 6),
         );
         $this->assertEquals($expected, $result);
-
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
         $result = $db->plainQuery('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
@@ -263,20 +273,19 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers __invoke
      */
-    public function testInvoke() {
+    public function testInvoke()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
         $db = \go\DB\DB::create($params);
-
         $result = $db('SELECT * FROM `table` LIMIT ?i,?i', array(2, 2), 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
             array('a' => 4, 'b' => 4, 'c' => 6),
         );
         $this->assertEquals($expected, $result);
-
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
         $result = $db('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
@@ -287,7 +296,8 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers getPrefix
      * @covers makeQuery
      */
-    public function testPrefix() {
+    public function testPrefix()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -320,7 +330,8 @@ final class DBTest extends \go\Tests\DB\Base
      * @covers disableDebug
      * @covers query
      */
-    public function testDebug() {
+    public function testDebug()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -339,7 +350,7 @@ final class DBTest extends \go\Tests\DB\Base
 
         $db->query('UPDATE LIMIT ?i,?i', array(3, 4), 'ar');
         $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getLastQuery());
-        
+
         $db->disableDebug();
         $db->query('UPDATE LIMIT ?i,?i', array(5, 6), 'ar');
         $this->assertEquals('UPDATE LIMIT 3,4', $debugger->getLastQuery());
@@ -351,7 +362,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers getImplementationConnection
      */
-    public function testGetImplementationConnection() {
+    public function testGetImplementationConnection()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -366,7 +378,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers clone
      */
-    public function testClone() {
+    public function testClone()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',
@@ -414,7 +427,7 @@ final class DBTest extends \go\Tests\DB\Base
         $engine2 = $db1->getImplementationConnection();
         $this->assertSame($engine2, $db2->getImplementationConnection(false));
         $this->assertNotSame($engine1, $engine2);
-        
+
         $db2->forcedConnect();
         $db1->close(false);
         $this->assertFalse($db1->isConnected());
@@ -424,7 +437,8 @@ final class DBTest extends \go\Tests\DB\Base
     /**
      * @covers __destruct
      */
-    public function testDestruct() {
+    public function testDestruct()
+    {
         $params = array(
             '_adapter' => 'test',
             'host'     => 'localhost',

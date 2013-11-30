@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB\Helpers;
 
-require_once(__DIR__.'/../../Tests.php');
-
 use go\DB\Helpers\Fetcher as Fetcher;
 
 /**

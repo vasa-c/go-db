@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB;
 
-require_once(__DIR__.'/../Tests.php');
-
 use go\DB\Storage as Storage;
 
 /**
@@ -18,7 +16,6 @@ use go\DB\Storage as Storage;
  */
 final class StorageTest extends \go\Tests\DB\Base
 {
-
     /**
      * @covers getInstance
      * @covers setInstance
@@ -184,7 +181,7 @@ final class StorageTest extends \go\Tests\DB\Base
      * @covers query
      * @covers go\DB\query
      */
-    public function testQuery() {       
+    public function testQuery() {
         $instance = Storage::getInstance();
 
         $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');
@@ -201,7 +198,7 @@ final class StorageTest extends \go\Tests\DB\Base
 
         $id4 = \go\DB\query('INSERT')->id();
         $this->assertEquals($id3 + 1, $id4);
-        
+
         Storage::setInstance($instance);
     }
 }

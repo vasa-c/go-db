@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB\Exceptions;
 
-require_once(__DIR__.'/../../Tests.php');
-
 use go\DB\Exceptions\Query;
 
 /**

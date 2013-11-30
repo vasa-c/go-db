@@ -30,7 +30,8 @@ abstract class Base extends \PHPUnit_Framework_TestCase
      */
     protected $adapterConfigName;
 
-    protected function setUp() {
+    protected function setUp()
+    {
         if ($this->adapterTest) {
             if (!$this->getConfigForAdapter()) {
                 $this->markTestSkipped();
@@ -44,7 +45,8 @@ abstract class Base extends \PHPUnit_Framework_TestCase
      *
      * @return array | null
      */
-    protected function getConfigForAdapter() {
+    protected function getConfigForAdapter()
+    {
         $name   = $this->adapterConfigName ?: $this->adapterTest;
         $config = Config::getInstance();
         if (!isset($config->$name)) {
@@ -52,5 +54,4 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         }
         return $config->$name;
     }
-
 }

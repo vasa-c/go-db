@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB\Implementations\TestBase;
 
-require_once(__DIR__.'/../../../Tests.php');
-
 use go\DB\Implementations\TestBase\Cursor as Cursor;
 
 /**

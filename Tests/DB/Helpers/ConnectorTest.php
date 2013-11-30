@@ -9,8 +9,6 @@
 
 namespace go\Tests\DB\Helpers;
 
-require_once(__DIR__.'/../../Tests.php');
-
 use go\DB\Helpers\Connector as Connector;
 
 /**
@@ -100,7 +98,7 @@ final class ConnectorTest extends \go\Tests\DB\Base
         $this->assertFalse($connector->isConnected());
         $this->assertEquals(0, $connector->getCountConnections());
         $this->assertTrue($engine->isClosed());
-    }    
+    }
 
     /**
      * @covers __construct
