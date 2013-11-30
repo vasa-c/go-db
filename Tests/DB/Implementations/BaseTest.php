@@ -7,7 +7,7 @@
  * @author     Григорьев Олег aka vasa_c
  */
 
-namespace go\Tests\Implementations;
+namespace go\Tests\DB\Implementations;
 
 /**
  * @covers \go\DB\Implementations\Test
