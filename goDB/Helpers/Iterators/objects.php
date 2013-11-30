@@ -16,7 +16,8 @@ final class objects extends Base
      *
      * @return mixed | false
      */
-    public function fetchNextRow() {
+    public function fetchNextRow()
+    {
         return $this->implementation->fetchAssoc($this->connection, $this->cursor);
     }
 
@@ -25,7 +26,8 @@ final class objects extends Base
      *
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
         return (object)$this->nextRow;
     }
 }

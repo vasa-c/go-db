@@ -11,5 +11,5 @@ namespace go\DB\Adapters;
 
 final class test extends \go\DB\DB
 {
-    
+
 }

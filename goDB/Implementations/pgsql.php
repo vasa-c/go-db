@@ -47,7 +47,8 @@ final class pgsql extends Base
      * @param int & $errorCode
      * @return mixed
      */
-    public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
+    public function connect(array $params, &$errorInfo = null, &$errorCode = null)
+    {
         if (isset ($params['host'])) {
             $host = \explode(':', $params['host'], 2);
             if (!empty($host[1])) {
@@ -55,14 +56,11 @@ final class pgsql extends Base
                 $params['port'] = $host[1];
             }
         }
-
         $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
-
         if (!$connection) {
             $errorInfo = \error_get_last();
             return false;
         }
-
         return $connection;
     }
 
@@ -72,7 +70,8 @@ final class pgsql extends Base
      * @param mixed $connection
      * @return bool
      */
-    public function close($connection) {
+    public function close($connection)
+    {
         return @\pg_close($connection);
     }
 
@@ -83,7 +82,8 @@ final class pgsql extends Base
      * @param string $query
      * @return mixed
      */
-    public function query($connection, $query) {
+    public function query($connection, $query)
+    {
         return \pg_query($connection, $query);
     }
 
@@ -94,7 +94,8 @@ final class pgsql extends Base
      * @param mixed $cursor [optional]
      * @return mixed
      */
-    public function getInsertId($connection, $cursor = null) {
+    public function getInsertId($connection, $cursor = null)
+    {
         $result = @\pg_query($connection, 'SELECT lastval()');
 
         if (!$result) {
@@ -113,7 +114,8 @@ final class pgsql extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function  getAffectedRows($connection, $cursor = null) {
+    public function getAffectedRows($connection, $cursor = null)
+    {
         return \pg_affected_rows($cursor);
     }
 
@@ -124,7 +126,8 @@ final class pgsql extends Base
      * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection, $cursor = null) {
+    public function getErrorInfo($connection, $cursor = null)
+    {
         return \pg_errormessage($connection);
     }
 
@@ -135,7 +138,8 @@ final class pgsql extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection, $cursor = null) {
+    public function getErrorCode($connection, $cursor = null)
+    {
         return null;
     }
 
@@ -146,7 +150,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($connection, $cursor) {
+    public function getNumRows($connection, $cursor)
+    {
         return \pg_numrows($cursor);
     }
 
@@ -157,7 +162,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return array|bool
      */
-    public function fetchRow($connection, $cursor) {
+    public function fetchRow($connection, $cursor)
+    {
         return \pg_fetch_row($cursor);
     }
 
@@ -168,7 +174,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return array|bool
      */
-    public function fetchAssoc($connection, $cursor) {
+    public function fetchAssoc($connection, $cursor)
+    {
         return \pg_fetch_assoc($cursor);
     }
 
@@ -179,7 +186,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return object|bool
      */
-    public function fetchObject($connection, $cursor) {
+    public function fetchObject($connection, $cursor)
+    {
         return \pg_fetch_object($cursor);
     }
 
@@ -190,7 +198,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return bool
      */
-    public function freeCursor($connection, $cursor) {
+    public function freeCursor($connection, $cursor)
+    {
         return \pg_free_result($cursor);
     }
 
@@ -201,7 +210,8 @@ final class pgsql extends Base
      * @param mixed $value
      * @return string
      */
-    public function escapeString($connection, $value) {
+    public function escapeString($connection, $value)
+    {
         return \pg_escape_string($connection, $value);
     }
 
@@ -212,7 +222,8 @@ final class pgsql extends Base
      * @param mixed $value
      * @return string
      */
-    public function reprString($connection, $value) {
+    public function reprString($connection, $value)
+    {
         return '\'' . $this->escapeString($connection, $value) . '\'';
     }
 
@@ -223,8 +234,9 @@ final class pgsql extends Base
      * @param string $value
      * @return string
      */
-    protected function reprField($connection, $value) {
-        return '"' . $value . '"';
+    protected function reprField($connection, $value)
+    {
+        return '"'.$value.'"';
     }
 
     /**
@@ -233,7 +245,8 @@ final class pgsql extends Base
      * @param mixed $cursor
      * @return bool
      */
-    public function rewindCursor($connection, $cursor) {
+    public function rewindCursor($connection, $cursor)
+    {
         return \pg_result_seek($cursor, 0);
     }
 
@@ -244,21 +257,18 @@ final class pgsql extends Base
      *
      * @return  String
      */
-    private function  generateConnectString($params) {
-
+    private function generateConnectString($params)
+    {
         $connString = '';
         if ($params) {
             foreach ($params as $key => $value) {
-
                 if (!$value) {
                     continue;
                 }
-
                 switch ($key) {
                     case 'username':
                         $connString .= 'user=' . $value;
                         break;
-
                     case 'charset':
                         $connString .= 'options=\'--client_encoding=' . $value . '\'';
                         break;
@@ -266,12 +276,9 @@ final class pgsql extends Base
                         $connString .= $key . '=' . $value;
                         break;
                 }
-
                 $connString .= ' ';
             }
         }
-
-        return rtrim($connString);
+        return \rtrim($connString);
     }
-
 }

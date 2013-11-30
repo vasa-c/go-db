@@ -16,8 +16,8 @@ final class assoc extends Base
      *
      * @return mixed | false
      */
-    public function fetchNextRow() {
+    public function fetchNextRow()
+    {
         return $this->implementation->fetchAssoc($this->connection, $this->cursor);
     }
-
 }

@@ -39,7 +39,8 @@ final class sqlite extends Base
      * @param int & $errorCode
      * @return mixed
      */
-    public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
+    public function connect(array $params, &$errorInfo = null, &$errorCode = null)
+    {
         $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
         try {
             $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
@@ -56,7 +57,8 @@ final class sqlite extends Base
      *
      * @param mixed $connection
      */
-    public function close($connection) {
+    public function close($connection)
+    {
         return $connection->close();
     }
 
@@ -67,7 +69,8 @@ final class sqlite extends Base
      * @param string $query
      * @return mixed
      */
-    public function query($connection, $query) {
+    public function query($connection, $query)
+    {
         return @$connection->query($query);
     }
 
@@ -78,8 +81,9 @@ final class sqlite extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection, $cursor = null) {
-        return $connection->lastInsertRowID();;
+    public function getInsertId($connection, $cursor = null)
+    {
+        return $connection->lastInsertRowID();
     }
 
     /**
@@ -89,7 +93,8 @@ final class sqlite extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection, $cursor = null) {
+    public function getAffectedRows($connection, $cursor = null)
+    {
         return $connection->changes();
     }
 
@@ -100,7 +105,8 @@ final class sqlite extends Base
      * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection, $cursor = null) {
+    public function getErrorInfo($connection, $cursor = null)
+    {
         return $connection->lastErrorMsg();
     }
 
@@ -112,7 +118,8 @@ final class sqlite extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection, $cursor = null) {
+    public function getErrorCode($connection, $cursor = null)
+    {
         return $connection->lastErrorCode();
     }
 
@@ -120,11 +127,14 @@ final class sqlite extends Base
     /**
      * @override Base
      *
+     * В sqlite3 нет num_rows
+     *
      * @param mixed $connection
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($connection, $cursor) { // в sqlite3 нет num_rows
+    public function getNumRows($connection, $cursor)
+    {
         return 0;
     }
 
@@ -135,7 +145,8 @@ final class sqlite extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchRow($connection, $cursor) {
+    public function fetchRow($connection, $cursor)
+    {
         return $cursor->fetchArray(\SQLITE3_NUM);
     }
 
@@ -146,7 +157,8 @@ final class sqlite extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchAssoc($connection, $cursor) {
+    public function fetchAssoc($connection, $cursor)
+    {
         return $cursor->fetchArray(\SQLITE3_ASSOC);
     }
 
@@ -156,7 +168,8 @@ final class sqlite extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function freeCursor($connection, $cursor) {
+    public function freeCursor($connection, $cursor)
+    {
         return $cursor->finalize();
     }
 
@@ -167,7 +180,8 @@ final class sqlite extends Base
      * @param scalar $value
      * @return string
      */
-    public function escapeString($connection, $value) {
+    public function escapeString($connection, $value)
+    {
         return $connection->escapeString($value);
     }
 
@@ -178,7 +192,8 @@ final class sqlite extends Base
      * @param scalar $value
      * @return string
      */
-    public function reprString($connection, $value) {
+    public function reprString($connection, $value)
+    {
         return "'".$this->escapeString($connection, $value)."'";
     }
 
@@ -189,7 +204,8 @@ final class sqlite extends Base
      * @param string $value
      * @return string
      */
-    protected function reprField($connection, $value) {
+    protected function reprField($connection, $value)
+    {
         return '"'.$value.'"';
     }
 
@@ -199,7 +215,8 @@ final class sqlite extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function rewindCursor($connection, $cursor) {
+    public function rewindCursor($connection, $cursor)
+    {
         return $cursor->reset(0);
     }
 }

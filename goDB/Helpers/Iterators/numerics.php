@@ -16,7 +16,8 @@ final class numerics extends Base
      *
      * @return mixed | false
      */
-    public function fetchNextRow() {
+    public function fetchNextRow()
+    {
         return $this->implementation->fetchRow($this->connection, $this->cursor);
     }
 }

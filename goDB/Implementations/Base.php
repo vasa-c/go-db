@@ -43,12 +43,13 @@ abstract class Base
 
     /**
      * Получить объект реализации для конкретного адаптера
-     * 
+     *
      * @param string $adapter
      *        адаптер
      * @return \go\DB\Implementations\Base
      */
-    public static function getImplementationForAdapter($adapter) {
+    public static function getImplementationForAdapter($adapter)
+    {
         if (!isset(self::$cacheAdapters[$adapter])) {
             $classname = __NAMESPACE__.'\\'.$adapter;
             self::$cacheAdapters[$adapter] = new $classname();
@@ -59,7 +60,8 @@ abstract class Base
     /**
      * Закрытый конструктор - создание только через getImplementationForAdapter()
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -87,13 +89,14 @@ abstract class Base
 
     /**
      * Проверка структуры параметров подключения
-     * 
+     *
      * @param array $params
      *        параметры подключения
      * @return array
      *         нормализовнные параметры или FALSE при некорректной структуре
      */
-    public function checkParams(array $params) {
+    public function checkParams(array $params)
+    {
         $result = array();
         foreach ($this->paramsReq as $param) {
             if (!array_key_exists($param, $params)) {
@@ -118,7 +121,8 @@ abstract class Base
      * @param mixed $cursor
      * @return bool
      */
-    public function isCursor($connection, $result) {
+    public function isCursor($connection, $result)
+    {
         return ($result !== true);
     }
 
@@ -205,7 +209,8 @@ abstract class Base
      * @param mixed $cursor
      * @return object|false
      */
-    public function fetchObject($connection, $cursor) {
+    public function fetchObject($connection, $cursor)
+    {
         $result = $this->fetchAssoc($connection, $cursor);
         return $result ? (object)$result : false;
     }
@@ -225,7 +230,8 @@ abstract class Base
      * @param scalar $value
      * @return string
      */
-    public function escapeString($connection, $value) {
+    public function escapeString($connection, $value)
+    {
         return \addslashes($value);
     }
 
@@ -236,7 +242,8 @@ abstract class Base
      * @param scalar $value
      * @return string
      */
-    public function reprString($connection, $value) {
+    public function reprString($connection, $value)
+    {
         return '"'.$this->escapeString($connection, $value).'"';
     }
 
@@ -247,7 +254,8 @@ abstract class Base
      * @param scalar $value
      * @return string
      */
-    public function reprInt($connection, $value) {
+    public function reprInt($connection, $value)
+    {
         $value = (int)$value;
         if ($value < 0) {
             $value = '('.$value.')';
@@ -262,7 +270,8 @@ abstract class Base
      * @param scalar $value
      * @return string
      */
-    public function reprFloat($connection, $value) {
+    public function reprFloat($connection, $value)
+    {
         return (0 + $value);
     }
 
@@ -273,7 +282,8 @@ abstract class Base
      * @param scalar $value
      * @return string
      */
-    public function reprBool($connection, $value) {
+    public function reprBool($connection, $value)
+    {
         return $value ? '1' : '0';
     }
 
@@ -283,7 +293,8 @@ abstract class Base
      * @param mixed $connection
      * @return string
      */
-    public function reprNULL($connection) {
+    public function reprNULL($connection)
+    {
         return 'NULL';
     }
 
@@ -294,7 +305,8 @@ abstract class Base
      * @param string $value
      * @return string
      */
-    public function reprTable($connection, $value) {
+    public function reprTable($connection, $value)
+    {
         return $this->reprField($connection, $value);
     }
 
@@ -305,7 +317,8 @@ abstract class Base
      * @param string $value
      * @return string
      */
-    public function reprCol($connection, $value) {
+    public function reprCol($connection, $value)
+    {
         return $this->reprField($connection, $value);
     }
 
@@ -317,7 +330,8 @@ abstract class Base
      * @param array $fields
      * @return string
      */
-    public function reprChainFields($connection, array $fields) {
+    public function reprChainFields($connection, array $fields)
+    {
         $result = array();
         foreach ($fields as $field) {
             $result[] = $this->reprField($connection, $field);
@@ -332,7 +346,8 @@ abstract class Base
      * @param string $value
      * @return string
      */
-    protected function reprField($connection, $value) {
+    protected function reprField($connection, $value)
+    {
         return '"'.$value.'"';
     }
 
@@ -346,7 +361,7 @@ abstract class Base
 
     /**
      * Кэш имплементаторов по адаптерам
-     * 
+     *
      * @var array
      */
     private static $cacheAdapters = array();

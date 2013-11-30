@@ -9,14 +9,15 @@
 
 namespace go\DB\Helpers\Debuggers;
 
-final class Test {
-
+final class Test
+{
     /**
      * @param string $query
      * @param float $duration
      * @param mixed $info
      */
-    public function __invoke($query, $duration, $info) {
+    public function __invoke($query, $duration, $info)
+    {
         $this->query    = $query;
         $this->duration = $duration;
         $this->info     = $info;
@@ -25,21 +26,24 @@ final class Test {
     /**
      * @return string
      */
-    public function getLastQuery() {
+    public function getLastQuery()
+    {
         return $this->query;
     }
 
     /**
      * @return float
      */
-    public function getLastDuration() {
+    public function getLastDuration()
+    {
         return $this->duration;
     }
 
     /**
      * @return mixed
      */
-    public function getLastInfo() {
+    public function getLastInfo()
+    {
         return $this->info;
     }
 

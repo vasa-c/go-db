@@ -21,18 +21,20 @@ class Fetcher implements \go\DB\Result
      * @param mixed $cursor
      *        низкоуровневая реализация курсора
      */
-    public function __construct(Connector $connector, $cursor) {
-        $this->connector      = $connector;
+    public function __construct(Connector $connector, $cursor)
+    {
+        $this->connector = $connector;
         $this->implementation = $connector->getImplementation();
-        $this->connection     = $connector->getConnection();
-        $this->cursor         = $cursor;
-        $this->isCursor       = $this->implementation->isCursor($this->connection, $cursor);
+        $this->connection = $connector->getConnection();
+        $this->cursor = $cursor;
+        $this->isCursor = $this->implementation->isCursor($this->connection, $cursor);
     }
 
     /**
      * Деструктор - очищает результат
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->free();
     }
 
@@ -44,7 +46,8 @@ class Fetcher implements \go\DB\Result
      * @param string $fetch
      * @return mixed
      */
-    public function fetch($fetch) {
+    public function fetch($fetch)
+    {
         $fetch = \explode(':', $fetch, 2);
         $param = isset($fetch[1]) ? \strtolower($fetch[1]) : null;
         $fetch = $fetch[0];
@@ -58,25 +61,26 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      */
-    public function free() {
+    public function free()
+    {
         if ((!$this->isFree) && ($this->isCursor)) {
             $this->implementation->freeCursor($this->connection, $this->cursor);
         }
-        $this->cursor         = false;
+        $this->cursor = false;
         $this->implementation = false;
-        $this->connection     = false;
+        $this->connection = false;
         return true;
     }
 
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function assoc($param = null) {
+    public function assoc($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
         $conn   = $this->connection;
@@ -97,12 +101,12 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param int $param [optional]
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function numerics($param = null) {
+    public function numerics($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
         $conn   = $this->connection;
@@ -123,12 +127,12 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function objects($param = null) {
+    public function objects($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
         $conn   = $this->connection;
@@ -149,11 +153,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function col($param = null) {
+    public function col($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $imp    = $this->implementation;
         $conn   = $this->connection;
@@ -168,14 +172,14 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function vars($param = null) {
+    public function vars($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
-        $imp    = $this->implementation;
-        $conn   = $this->connection;
+        $imp = $this->implementation;
+        $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
         while ($row = $imp->fetchRow($conn, $cursor)) {
@@ -187,12 +191,12 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function iassoc($param = null) {
+    public function iassoc($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return (new Iterators\assoc($this->connector, $this->cursor, $param));
     }
@@ -200,12 +204,12 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param int $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function inumerics($param = null) {
+    public function inumerics($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return (new Iterators\numerics($this->connector, $this->cursor, $param));
     }
@@ -213,12 +217,12 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function iobjects($param = null) {
+    public function iobjects($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return (new Iterators\objects($this->connector, $this->cursor, $param));
     }
@@ -226,11 +230,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function ivars($param = null) {
+    public function ivars($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return (new Iterators\vars($this->connector, $this->cursor, $param));
     }
@@ -238,11 +242,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function icol($param = null) {
+    public function icol($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return (new Iterators\col($this->connector, $this->cursor, $param));
     }
@@ -250,11 +254,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function row($param = null) {
+    public function row($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return $this->implementation->fetchAssoc($this->connection, $this->cursor) ?: null;
     }
@@ -262,11 +266,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function numeric($param = null) {
+    public function numeric($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return $this->implementation->fetchRow($this->connection, $this->cursor) ?: null;
     }
@@ -274,11 +278,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return object
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function object($param = null) {
+    public function object($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return $this->implementation->fetchObject($this->connection, $this->cursor) ?: null;
     }
@@ -286,11 +290,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return string
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function el($param = null) {
+    public function el($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $result = $this->implementation->fetchRow($this->connection, $this->cursor);
         return $result ? $result[0] : null;
@@ -299,11 +303,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return bool
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function bool($param = null) {
+    public function bool($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         $result = $this->implementation->fetchRow($this->connection, $this->cursor);
         return $result ? (bool)$result[0] : null;
@@ -312,11 +316,11 @@ class Fetcher implements \go\DB\Result
     /**
      * @override \go\DB\Result
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return int
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    public function num($param = null) {
+    public function num($param = null)
+    {
         $this->requiredCursor(__FUNCTION__);
         return $this->implementation->getNumRows($this->connection, $this->cursor);
     }
@@ -326,7 +330,8 @@ class Fetcher implements \go\DB\Result
      *
      * @return int
      */
-    public function id($param = null) {
+    public function id($param = null)
+    {
         return $this->implementation->getInsertId($this->connection, $this->cursor);
     }
 
@@ -335,7 +340,8 @@ class Fetcher implements \go\DB\Result
      *
      * @return int
      */
-    public function ar($param = null) {
+    public function ar($param = null)
+    {
         return $this->implementation->getAffectedRows($this->connection, $this->cursor);
     }
 
@@ -344,7 +350,8 @@ class Fetcher implements \go\DB\Result
      *
      * @return mixed
      */
-    public function cursor($param = null) {
+    public function cursor($param = null)
+    {
         return $this->cursor;
     }
 
@@ -353,18 +360,19 @@ class Fetcher implements \go\DB\Result
      *
      * @return \Iterator
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return $this->iassoc();
     }
 
     /**
      * Указание на то, что данный формат действует только для выборок
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $fetch [optional]
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
-    protected function requiredCursor($fetch = null) {
+    protected function requiredCursor($fetch = null)
+    {
         if ((!$this->isCursor) || ($this->isFree)) {
             throw new \go\DB\Exceptions\UnexpectedFetch($fetch);
         }
@@ -380,7 +388,7 @@ class Fetcher implements \go\DB\Result
 
     /**
      * Подключалка к базе
-     * 
+     *
      * @var \go\DB\Helpers\Connector
      */
     protected $connector;

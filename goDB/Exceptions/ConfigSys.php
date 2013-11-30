@@ -12,7 +12,8 @@ namespace go\DB\Exceptions;
 
 final class ConfigSys extends Config
 {
-    public function __construct($message = null) {
+    public function __construct($message = null)
+    {
         $message = 'Error system config'.($message ? (': "'.$message.'"') : '');
         parent::__construct($message, 0);
     }

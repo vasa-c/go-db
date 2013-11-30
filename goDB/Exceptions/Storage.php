@@ -25,7 +25,8 @@ abstract class Storage extends Logic
      * @param string $dbname
      *        ошибочное имя базы
      */
-    public function __construct($dbname) {
+    public function __construct($dbname)
+    {
         $message = str_replace(
             '{{ dbname }}',
             $dbname,
@@ -40,7 +41,8 @@ abstract class Storage extends Logic
      *
      * @return string
      */
-    public function getDBName() {
+    public function getDBName()
+    {
         return $this->dbname;
     }
 

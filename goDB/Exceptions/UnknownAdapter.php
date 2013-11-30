@@ -17,7 +17,8 @@ final class UnknownAdapter extends Config
      * @param string $adapter
      *        название адаптера
      */
-    public function __construct($adapter) {
+    public function __construct($adapter)
+    {
         if ($adapter) {
             $message = 'Unknown adapter "'.$adapter.'"';
             $code    = 1;

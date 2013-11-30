@@ -24,7 +24,8 @@ final class Query extends Logic
      * @param string $errorcode [optional]
      *        код ошибки
      */
-    public function __construct($query, $error, $errorcode = null) {
+    public function __construct($query, $error, $errorcode = null)
+    {
         $this->query = $query;
         $this->error = $error;
         $this->errorcode = $errorcode;
@@ -41,7 +42,8 @@ final class Query extends Logic
      *
      * @return string
      */
-    public function getQuery() {
+    public function getQuery()
+    {
         return $this->query;
     }
 
@@ -50,7 +52,8 @@ final class Query extends Logic
      *
      * @return string
      */
-    public function getError() {
+    public function getError()
+    {
         return $this->error;
     }
 
@@ -59,7 +62,8 @@ final class Query extends Logic
      *
      * @return mixed
      */
-    public function getErrorCode() {
+    public function getErrorCode()
+    {
         return $this->errorcode;
     }
 

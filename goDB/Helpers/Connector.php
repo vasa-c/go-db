@@ -29,7 +29,8 @@ final class Connector
      * @param array $params
      *        параметры подключения
      */
-    public function __construct($adapter, array $params) {
+    public function __construct($adapter, array $params)
+    {
         $this->implementation = \go\DB\Implementations\Base::getImplementationForAdapter($adapter);
         $this->params = $this->implementation->checkParams($params);
         if (!$this->params) {
@@ -42,20 +43,21 @@ final class Connector
     /**
      * Деструктор - уничтожение всех подключений
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->deny();
     }
 
     /**
      * Требование подключения
      *
-     * @throws \go\DB\Exceptions\Connect
-     *         ошибка при подключении
-     *
      * @return bool
      *         было ли подключение установлено именно в этот раз
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка при подключении
      */
-    public function connect() {
+    public function connect()
+    {
         if ($this->connection) {
             $this->countConnections++;
             return false;
@@ -75,7 +77,8 @@ final class Connector
      * @return bool
      *         было ли подключение разорвано именно в этот раз
      */
-    public function close() {
+    public function close()
+    {
         if (!$this->connection) {
             return false;
         }
@@ -93,7 +96,8 @@ final class Connector
      *
      * @return bool
      */
-    public function isConnected() {
+    public function isConnected()
+    {
         return (!empty($this->connection));
     }
 
@@ -103,7 +107,8 @@ final class Connector
      * @param bool $connection
      *        есть ли в этой базе уже подключение
      */
-    public function addLink($connection) {
+    public function addLink($connection)
+    {
         $this->countLinks++;
         if ($connection) {
             $this->countConnections++;
@@ -114,7 +119,8 @@ final class Connector
     /**
      * Удалить ссылку из объекта базы
      */
-    public function removeLink() {
+    public function removeLink()
+    {
         $this->countLinks--;
         if ($this->countLinks == 0) {
             $this->deny();
@@ -127,7 +133,8 @@ final class Connector
      *
      * @return int
      */
-    public function getCountConnections() {
+    public function getCountConnections()
+    {
         return $this->countConnections;
     }
 
@@ -136,7 +143,8 @@ final class Connector
      *
      * @return mixed
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 
@@ -145,14 +153,16 @@ final class Connector
      *
      * @return \go\DB\Implementations\Base
      */
-    public function getImplementation() {
+    public function getImplementation()
+    {
         return $this->implementation;
     }
 
     /**
      * Уничтожение всех подклбчений
      */
-    protected function deny() {
+    protected function deny()
+    {
         if ($this->connection) {
             $this->implementation->close($this->connection);
             $this->connection = null;
@@ -161,7 +171,6 @@ final class Connector
         $this->countConnections = 0;
         return true;
     }
-
 
     /**
      * Внутренняя реализация базы

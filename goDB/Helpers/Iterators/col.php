@@ -16,7 +16,8 @@ final class col extends Base
      *
      * @return mixed | false
      */
-    public function fetchNextRow() {
+    public function fetchNextRow()
+    {
         return $this->implementation->fetchRow($this->connection, $this->cursor);
     }
 
@@ -25,7 +26,8 @@ final class col extends Base
      *
      * @return string
      */
-    public function key() {
+    public function key()
+    {
         if (!$this->nextRow) {
             return false;
         }
@@ -37,7 +39,8 @@ final class col extends Base
      *
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
         return $this->nextRow[0];
     }
 }

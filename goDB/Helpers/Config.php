@@ -21,7 +21,8 @@ final class Config
      * @param string $name
      * @return mixed
      */
-    public static function get($name) {
+    public static function get($name)
+    {
         if (!isset(self::$config[$name])) {
             $filename = __DIR__.'/../_config/'.$name.'.php';
             if (!\file_exists($filename)) {

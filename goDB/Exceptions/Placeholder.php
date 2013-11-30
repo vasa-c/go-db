@@ -25,7 +25,8 @@ abstract class Placeholder extends Templater
      * @param string $placeholder
      *        плейсхолдер на котором случилась ошибка
      */
-    public function __construct($placeholder) {
+    public function __construct($placeholder)
+    {
         $message = str_replace(
             '{{ placeholder }}',
             $placeholder,
@@ -40,7 +41,8 @@ abstract class Placeholder extends Templater
      *
      * @return string
      */
-    public function getPlaceholder() {
+    public function getPlaceholder()
+    {
         return $this->placeholder;
     }
 

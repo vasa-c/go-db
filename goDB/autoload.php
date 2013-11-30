@@ -16,13 +16,14 @@ namespace go\DB;
 
 /**
  * Загрузить класс по имени
- * 
+ *
  * @param string $classname
  *        имя требуемого класса
  * @return bool
  *         был ли загружен класс (FALSE - класс не найден или не относится к go\DB)
  */
-function autoload($classname) {
+function autoload($classname)
+{
     if (\strpos($classname, __NAMESPACE__) !== 0) {
         return false;
     }
@@ -38,6 +39,7 @@ function autoload($classname) {
 /**
  * Зарегистрировать автозагрузчик для goDB
  */
-function autoloadRegister() {
+function autoloadRegister()
+{
     \spl_autoload_register('\go\DB\autoload');
 }

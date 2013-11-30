@@ -25,7 +25,8 @@ abstract class Fetch extends Logic
      * @param string $fetch
      *        формат разбора на котором случилась ошибка
      */
-    public function __construct($fetch) {
+    public function __construct($fetch)
+    {
         $message = str_replace(
             '{{ fetch }}',
             $fetch,
@@ -40,7 +41,8 @@ abstract class Fetch extends Logic
      *
      * @return string
      */
-    public function getFetch() {
+    public function getFetch()
+    {
         return $this->fetch;
     }
 

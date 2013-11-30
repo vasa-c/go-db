@@ -38,7 +38,8 @@ final class mysqlold extends Base
      * @param int & $errorCode
      * @return mixed
      */
-    public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
+    public function connect(array $params, &$errorInfo = null, &$errorCode = null)
+    {
         $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
         if (!$connection) {
             $errorInfo = \mysql_error();
@@ -69,7 +70,8 @@ final class mysqlold extends Base
      *
      * @param mixed $connection
      */
-    public function close($connection) {
+    public function close($connection)
+    {
         return @\mysql_close($connection);
     }
 
@@ -80,7 +82,8 @@ final class mysqlold extends Base
      * @param string $query
      * @return mixed
      */
-    public function query($connection, $query) {
+    public function query($connection, $query)
+    {
         return \mysql_query($query, $connection);
     }
 
@@ -91,7 +94,8 @@ final class mysqlold extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection, $cursor = null) {
+    public function getInsertId($connection, $cursor = null)
+    {
         return \mysql_insert_id($connection);
     }
 
@@ -102,7 +106,8 @@ final class mysqlold extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection, $cursor = null) {
+    public function getAffectedRows($connection, $cursor = null)
+    {
         return \mysql_affected_rows($connection);
     }
 
@@ -113,7 +118,8 @@ final class mysqlold extends Base
      * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection, $cursor = null) {
+    public function getErrorInfo($connection, $cursor = null)
+    {
         return \mysql_error($connection);
     }
 
@@ -124,7 +130,8 @@ final class mysqlold extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection, $cursor = null) {
+    public function getErrorCode($connection, $cursor = null)
+    {
         return \mysql_errno($connection);
     }
 
@@ -135,7 +142,8 @@ final class mysqlold extends Base
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($connection, $cursor) {
+    public function getNumRows($connection, $cursor)
+    {
         return \mysql_num_rows($cursor);
     }
 
@@ -146,7 +154,8 @@ final class mysqlold extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchRow($connection, $cursor) {
+    public function fetchRow($connection, $cursor)
+    {
         return \mysql_fetch_row($cursor);
     }
 
@@ -157,7 +166,8 @@ final class mysqlold extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchAssoc($connection, $cursor) {
+    public function fetchAssoc($connection, $cursor)
+    {
         return \mysql_fetch_assoc($cursor);
     }
 
@@ -168,7 +178,8 @@ final class mysqlold extends Base
      * @param mixed $cursor
      * @return object|false
      */
-    public function fetchObject($connection, $cursor) {
+    public function fetchObject($connection, $cursor)
+    {
         return \mysql_fetch_object($cursor);
     }
 
@@ -178,7 +189,8 @@ final class mysqlold extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function freeCursor($connection, $cursor) {
+    public function freeCursor($connection, $cursor)
+    {
         return \mysql_free_result($cursor);
     }
 
@@ -189,7 +201,8 @@ final class mysqlold extends Base
      * @param scalar $value
      * @return string
      */
-    public function escapeString($connection, $value) {
+    public function escapeString($connection, $value)
+    {
         return \mysql_real_escape_string($value, $connection);
     }
 
@@ -200,7 +213,8 @@ final class mysqlold extends Base
      * @param string $value
      * @return string
      */
-    protected function reprField($connection, $value) {
+    protected function reprField($connection, $value)
+    {
         return '`'.$value.'`';
     }
 
@@ -210,7 +224,8 @@ final class mysqlold extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function rewindCursor($connection, $cursor) {
+    public function rewindCursor($connection, $cursor)
+    {
         return mysql_data_seek($cursor, $connection);
-    }    
+    }
 }

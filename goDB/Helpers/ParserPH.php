@@ -25,13 +25,13 @@ final class ParserPH
     /**
      * Конструктор
      *
-     * @throws \go\DB\Exceptions\UnknownPlaceholder
-     *         неизвестный плейсхолдер
-     *
      * @param string $placeholder
      *        плейсхолдер
+     * @throws \go\DB\Exceptions\UnknownPlaceholder
+     *         неизвестный плейсхолдер
      */
-    public function __construct($placeholder) {
+    public function __construct($placeholder)
+    {
         $this->placeholder = $placeholder;
         $this->parse();
     }
@@ -41,7 +41,8 @@ final class ParserPH
      *
      * @return string
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
@@ -50,14 +51,16 @@ final class ParserPH
      *
      * @return array
      */
-    public function getModifers() {
+    public function getModifers()
+    {
         return $this->modifers;
     }
 
     /**
      * Разбор плейсхолдера
      */
-    private function parse() {
+    private function parse()
+    {
         if (!self::$placeholders) {
             self::loadConfig();
         }
@@ -67,9 +70,9 @@ final class ParserPH
         if ($ph == '') {
             return true;
         }
-        $comp = explode('-', $ph);
-        if (count($comp) > 1) {
-            $type = array_shift($comp);
+        $comp = \explode('-', $ph);
+        if (\count($comp) > 1) {
+            $type = \array_shift($comp);
             if (isset(self::$longs[$type])) {
                 $this->type = self::$longs[$type];
             } elseif (isset(self::$longModifers[$type])) {
@@ -119,14 +122,16 @@ final class ParserPH
      *
      * @throws \go\DB\Exceptions\UnknownPlaceholder
      */
-    private function error() {
+    private function error()
+    {
         throw new \go\DB\Exceptions\UnknownPlaceholder($this->placeholder);
     }
 
     /**
      * Загрузить конфигурацию плейсхолдеров
      */
-    private static function loadConfig() {
+    private static function loadConfig()
+    {
         $config = Config::get('placeholders');
         self::$longs = $config['longs'];
         self::$longModifers = $config['longModifers'];

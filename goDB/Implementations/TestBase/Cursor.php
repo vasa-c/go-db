@@ -17,7 +17,8 @@ final class Cursor
      * @param array $data
      *        данные "выборки"
      */
-    public function __construct(array $data) {
+    public function __construct(array $data)
+    {
         $this->data = $data;
         $this->reset();
     }
@@ -27,7 +28,8 @@ final class Cursor
      *
      * @return array | false
      */
-    public function fetchRow() {
+    public function fetchRow()
+    {
         $row = $this->next();
         return $row ? array_values($row) : false;
     }
@@ -37,7 +39,8 @@ final class Cursor
      *
      * @return array | false
      */
-    public function fetchAssoc() {
+    public function fetchAssoc()
+    {
         $row = $this->next();
         return $row ? $row : false;
     }
@@ -47,7 +50,8 @@ final class Cursor
      *
      * @return array | false
      */
-    public function fetchObject() {
+    public function fetchObject()
+    {
         $row = $this->next();
         return $row ? (object)$row : false;
     }
@@ -55,7 +59,8 @@ final class Cursor
     /**
      * Сброс курсора
      */
-    public function reset() {
+    public function reset()
+    {
         reset($this->data);
         return true;
     }
@@ -65,14 +70,16 @@ final class Cursor
      *
      * @return int
      */
-    public function getNumRows() {
+    public function getNumRows()
+    {
         return count($this->data);
     }
 
     /**
      * @return array
      */
-    private function next() {
+    private function next()
+    {
         $value = current($this->data);
         next($this->data);
         return $value;

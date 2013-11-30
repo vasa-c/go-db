@@ -27,12 +27,13 @@ class Templater
      * @param string $prefix
      *        префикс запроса
      */
-    public function __construct(Connector $connector, $pattern, $data, $prefix) {
+    public function __construct(Connector $connector, $pattern, $data, $prefix)
+    {
         $this->implementation = $connector->getImplementation();
-        $this->connection     = $connector->getConnection();
-        $this->pattern        = $pattern;
-        $this->data           = $data ?: array();
-        $this->prefix         = $prefix;
+        $this->connection = $connector->getConnection();
+        $this->pattern = $pattern;
+        $this->data = $data ?: array();
+        $this->prefix = $prefix;
     }
 
     /**
@@ -44,16 +45,17 @@ class Templater
      * @return string
      *         итоговые запрос
      */
-    public function parse() {
+    public function parse()
+    {
         if (!\is_null($this->query)) {
             return $this->query;
         }
         /* Замена {table} */
-        $query    = \preg_replace_callback('~{(.*?)}~', array($this, '_table'), $this->pattern);
+        $query = \preg_replace_callback('~{(.*?)}~', array($this, 'tableClb'), $this->pattern);
         /* Замена плейсхолдеров */
-        $pattern  = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
-        $callback = array($this, '_placeholder');
-        $query    = \preg_replace_callback($pattern, $callback, $query);
+        $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
+        $callback = array($this, 'placeholderClb');
+        $query = \preg_replace_callback($pattern, $callback, $query);
         if ((!$this->named) && (\count($this->data) > $this->counter)) {
             throw new \go\DB\Exceptions\DataMuch(count($this->data), $this->counter);
         }
@@ -66,14 +68,16 @@ class Templater
      *
      * @return string
      */
-    public function getQuery() {
+    public function getQuery()
+    {
         return $this->query;
     }
 
     /**
      * Замена имени таблицы "{table}"
      */
-    private function _table($matches) {
+    private function tableClb($matches)
+    {
         return $this->implementation->reprTable($this->connection, $this->prefix.$matches[1]);
     }
 
@@ -88,7 +92,8 @@ class Templater
      * @return string
      *         на что его заменить
      */
-    private function _placeholder($matches) {
+    private function placeholderClb($matches)
+    {
         $placeholder = isset($matches[1]) ? $matches[1] : '';
         if (isset($matches[3])) {
             $name = $matches[3];
@@ -124,10 +129,10 @@ class Templater
             $value = $this->data[$this->counter];
         }
         $this->counter++;
-        $parser   = new ParserPH($placeholder);
-        $type     = $parser->getType();
+        $parser = new ParserPH($placeholder);
+        $type = $parser->getType();
         $modifers = $parser->getModifers();
-        $method   = 'replacement_'.$type;
+        $method = 'replacement'.\strtoupper($type);
         return $this->$method($value, $modifers);
     }
 
@@ -138,7 +143,8 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function valueModification($value, array $modifers) {
+    private function valueModification($value, array $modifers)
+    {
         if ($modifers['n'] && is_null($value)) {
             return $this->implementation->reprNULL($this->connection);
         }
@@ -159,7 +165,8 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_($value, array $modifers) {
+    private function replacement($value, array $modifers)
+    {
         return $this->valueModification($value, $modifers);
     }
 
@@ -170,12 +177,13 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_l(array $value, array $modifers) {
+    private function replacementL(array $value, array $modifers)
+    {
         $values = array();
         foreach ($value as $element) {
             $values[] = $this->valueModification($element, $modifers);
         }
-        return implode(', ', $values);
+        return \implode(', ', $values);
     }
 
     /**
@@ -185,14 +193,15 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_s(array $value, array $modifers) {
+    private function replacementS(array $value, array $modifers)
+    {
         $set = array();
         foreach ($value as $col => $element) {
-            $key   = $this->implementation->reprCol($this->connection, $col);
+            $key = $this->implementation->reprCol($this->connection, $col);
             $value = $this->valueModification($element, $modifers);
             $set[] = $key.'='.$value;
         }
-        return implode(', ', $set);
+        return \implode(', ', $set);
     }
 
     /**
@@ -202,10 +211,11 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_v(array $value, array $modifers) {
+    private function replacementV(array $value, array $modifers)
+    {
         $values = array();
         foreach ($value as $v) {
-            $values[] = '('.$this->replacement_l($v, $modifers).')';
+            $values[] = '('.$this->replacementL($v, $modifers).')';
         }
         return implode(', ', $values);
     }
@@ -217,7 +227,8 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_t($value, array $modifers) {
+    private function replacementT($value, array $modifers)
+    {
         return $this->implementation->reprTable($this->connection, $this->prefix.$value);
     }
 
@@ -228,8 +239,9 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_c($value, array $modifers) {
-        if (is_array($value)) {
+    private function replacementC($value, array $modifers)
+    {
+        if (\is_array($value)) {
             $chain = array($this->prefix.$value[0], $value[1]);
             $result = $this->implementation->reprChainFields($this->connection, $chain);
         } else {
@@ -245,15 +257,16 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_xc($value, array $modifers) {
-        if (!is_array($value)) {
-            return $this->replacement_c($value, $modifers);
+    private function replacementXC($value, array $modifers)
+    {
+        if (!\is_array($value)) {
+            return $this->replacementC($value, $modifers);
         }
         $cols = array();
         foreach ($value as $col) {
-            $cols[] = $this->replacement_c($col, $modifers);
+            $cols[] = $this->replacementC($col, $modifers);
         }
-        return implode(',', $cols);
+        return \implode(',', $cols);
     }
 
     /**
@@ -263,7 +276,8 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_e($value, array $modifers) {
+    private function replacementE($value, array $modifers)
+    {
         return $this->implementation->escapeString($this->connection, $value);
     }
 
@@ -274,7 +288,8 @@ class Templater
      * @param array $modifers
      * @return string
      */
-    private function replacement_q($value, array $modifers) {
+    private function replacementQ($value, array $modifers)
+    {
         return $value;
     }
 

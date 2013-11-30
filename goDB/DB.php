@@ -18,16 +18,8 @@ const VERSION = '2.0.2 beta';
 
 abstract class DB
 {
-
-/*** STATIC: ***/
-
     /**
      * Создать объект для доступа к базе
-     *
-     * @throws \go\DB\Exceptions\Config
-     *         неверные конфигурационные параметры
-     * @throws \go\DB\Exceptions\Connect
-     *         ошибка подключения
      *
      * @param array $params
      *        параметры подключения к базе
@@ -35,8 +27,13 @@ abstract class DB
      *        адаптер базы (если не указан в $params)
      * @return \go\DB\DB
      *         объект для доступа к базе
+     * @throws \go\DB\Exceptions\Config
+     *         неверные конфигурационные параметры
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка подключения
      */
-    final public static function create(array $params, $adapter = null) {
+    final public static function create(array $params, $adapter = null)
+    {
         $adapter = isset($params['_adapter']) ? $params['_adapter'] : $adapter;
         $adapter = \strtolower($adapter);
         $classname = __NAMESPACE__.'\\Adapters\\'.$adapter;
@@ -52,34 +49,22 @@ abstract class DB
      *
      * @return array
      */
-    final public static function getAvailableAdapters() {
+    final public static function getAvailableAdapters()
+    {
         if (!self::$availableAdapters) {
-            $A = array();
+            $adapters = array();
             foreach (\glob(__DIR__.'/Adapters/*.php') as $filename) {
                 if (\preg_match('~([a-z0-9]*)\.php$~s', $filename, $matches)) {
-                    $A[] = $matches[1];
+                    $adapters[] = $matches[1];
                 }
             }
-            self::$availableAdapters = $A;
+            self::$availableAdapters = $adapters;
         }
         return self::$availableAdapters;
     }
 
-/*** PUBLIC: ***/
-
     /**
      * Выполнить запрос к базе данных
-     *
-     * @throws \go\DB\Exceptions\Connect
-     *         ошибка при отложенном подключении
-     * @throws \go\DB\Exceptions\Closed
-     *         подключение закрыто
-     * @throws \go\DB\Exceptions\Templater
-     *         ошибка шаблонизатора запроса
-     * @throws \go\DB\Exceptions\Query
-     *         ошибка в запросе
-     * @throws \go\DB\Exceptions\Fetch
-     *         ошибка при разборе результата
      *
      * @param string $pattern
      *        шаблон запроса
@@ -91,8 +76,19 @@ abstract class DB
      *        префикс таблиц для данного конкретного запроса
      * @return \go\DB\Result
      *         результат в заданном формате
+     * @throws \go\DB\Exceptions\Connect
+     *         ошибка при отложенном подключении
+     * @throws \go\DB\Exceptions\Closed
+     *         подключение закрыто
+     * @throws \go\DB\Exceptions\Templater
+     *         ошибка шаблонизатора запроса
+     * @throws \go\DB\Exceptions\Query
+     *         ошибка в запросе
+     * @throws \go\DB\Exceptions\Fetch
+     *         ошибка при разборе результата
      */
-    final public function query($pattern, $data = null, $fetch = null, $prefix = null) {
+    final public function query($pattern, $data = null, $fetch = null, $prefix = null)
+    {
         $query = $this->makeQuery($pattern, $data, $prefix);
         return $this->plainQuery($query, $fetch);
     }
@@ -100,28 +96,28 @@ abstract class DB
     /**
      * Выполнение "чистого" запроса
      *
-     * @throws \go\DB\Exceptions\Connect
-     * @throws \go\DB\Exceptions\Closed
-     * @throws \go\DB\Exceptions\Query
-     * @throws \go\DB\Exceptions\Fetch
-     *
      * @param string $query
      *        SQL-запрос
      * @param string $fetch [optional]
      *        формат представления результата
      * @return \go\DB\Result
      *         результат в заданном формате
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
      */
-    final public function plainQuery($query, $fetch = null) {
+    final public function plainQuery($query, $fetch = null)
+    {
         $this->forcedConnect();
         $implementation = $this->connector->getImplementation();
-        $connection     = $this->connector->getConnection();
-        $duration       = \microtime(true);
-        $cursor         = $implementation->query($connection, $query);
-        $duration       = \microtime(true) - $duration;
+        $connection = $this->connector->getConnection();
+        $duration = \microtime(true);
+        $cursor = $implementation->query($connection, $query);
+        $duration = \microtime(true) - $duration;
         if (!$cursor) {
-            $errorInfo  = $implementation->getErrorInfo($connection);
-            $errorCode  = $implementation->getErrorCode($connection);
+            $errorInfo = $implementation->getErrorInfo($connection);
+            $errorCode = $implementation->getErrorCode($connection);
             throw new Exceptions\Query($query, $errorInfo, $errorCode);
         }
         $this->debugLog($query, $duration, null);
@@ -139,19 +135,19 @@ abstract class DB
      * @example $db->query('SELECT * FROM `table`');
      * @example $db('SELECT * FROM `table`');
      *
-     * @throws \go\DB\Exceptions\Connect
-     * @throws \go\DB\Exceptions\Closed
-     * @throws \go\DB\Exceptions\Templater
-     * @throws \go\DB\Exceptions\Query
-     * @throws \go\DB\Exceptions\Fetch
-     *
      * @param string $pattern
      * @param array $data [optional]
      * @param string $fetch [optional]
      * @param string $prefix [optional]
      * @return \go\DB\Result
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
+     * @throws \go\DB\Exceptions\Templater
+     * @throws \go\DB\Exceptions\Query
+     * @throws \go\DB\Exceptions\Fetch
      */
-    final public function __invoke($pattern, $data = null, $fetch = null, $prefix = null) {
+    final public function __invoke($pattern, $data = null, $fetch = null, $prefix = null)
+    {
         return $this->query($pattern, $data, $fetch, $prefix);
     }
 
@@ -160,7 +156,8 @@ abstract class DB
      *
      * @return bool
      */
-    final public function isConnected() {
+    final public function isConnected()
+    {
         if ($this->hardClosed) {
             return false;
         }
@@ -172,7 +169,8 @@ abstract class DB
      *
      * @return bool
      */
-    final public function isClosed() {
+    final public function isClosed()
+    {
         return $this->hardClosed;
     }
 
@@ -185,7 +183,8 @@ abstract class DB
      * @throws \go\DB\Exceptions\Closed
      *         подключение закрыто "жестким" образом
      */
-    final public function forcedConnect() {
+    final public function forcedConnect()
+    {
         if ($this->hardClosed) {
             throw new Exceptions\Closed();
         }
@@ -200,10 +199,13 @@ abstract class DB
     /**
      * Закрыть соединение
      *
-     * @param bool $soft [optional]
+     * @param boolean $soft [optional]
      *        "мягкое" закрытие: с возможностью восстановления
+     * @return boolean
+     * @todo не помню что
      */
-    final public function close($soft = false) { // @todo close
+    final public function close($soft = false)
+    {
         if ($this->hardClosed) {
             return false;
         }
@@ -221,9 +223,9 @@ abstract class DB
      *
      * @param string $prefix
      */
-    final public function setPrefix($prefix) {
+    final public function setPrefix($prefix)
+    {
         $this->prefix = $prefix;
-        return true;
     }
 
     /**
@@ -231,7 +233,8 @@ abstract class DB
      *
      * @return string
      */
-    final public function getPrefix() {
+    final public function getPrefix()
+    {
         return $this->prefix;
     }
 
@@ -240,17 +243,18 @@ abstract class DB
      *
      * @param callback $callback
      *        обработчик (true - стандартный)
+     * @todo cli
      */
-    final public function setDebug($callback = true) { // @todo cli
+    final public function setDebug($callback = true)
+    {
         if ($callback === true) {
-            if (php_sapi_name() == 'cli') {
+            if (\php_sapi_name() == 'cli') {
                 $callback = new Helpers\Debuggers\OutConsole();
             } else {
                 $callback = new Helpers\Debuggers\OutHtml();
             }
         }
         $this->debugCallback = $callback;
-        return true;
     }
 
     /**
@@ -258,30 +262,31 @@ abstract class DB
      *
      * @return callback
      */
-    final public function getDebug() {
+    final public function getDebug()
+    {
         return $this->debugCallback;
     }
 
     /**
      * Отключить отправку отладочной информации
      */
-    final public function disableDebug() {
+    final public function disableDebug()
+    {
         $this->debugCallback = null;
-        return true;
     }
 
     /**
      * Получить внутреннюю реализацию подключения к базе
      *
-     * @throws \go\DB\Exceptions\Connect
-     * @throws \go\DB\Exceptions\Closed
-     *
      * @param bool $connect
      *        подключиться, если не подключены
      * @return mixed
      *         низкоуровневая реализация или FALSE если ещё не создана
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\Closed
      */
-    final public function getImplementationConnection($connect = true) {
+    final public function getImplementationConnection($connect = true)
+    {
         if ($connect && (!$this->connector->isConnected())) {
             $this->forcedConnect();
         }
@@ -291,16 +296,16 @@ abstract class DB
     /**
      * Сформировать запрос на основании шаблона и данных
      *
-     * @throws \go\DB\Exceptions\Templater
-     *
      * @param string $pattern
      * @param array $data
      * @param string $prefix
      * @return string
+     * @throws \go\DB\Exceptions\Templater
      */
-    public function makeQuery($pattern, $data, $prefix = null) {
+    public function makeQuery($pattern, $data, $prefix = null)
+    {
         $this->forcedConnect();
-        if (is_null($prefix)) {
+        if (\is_null($prefix)) {
             $prefix = $this->prefix;
         }
         $templater = $this->createTemplater($pattern, $data, $prefix);
@@ -308,15 +313,14 @@ abstract class DB
         return $templater->getQuery();
     }
 
-/*** PROTECTED: ***/
-
     /**
      * Скрытый конструктор - извне не создать
      *
      * @param array $params
      *        конфигурационные параметры базы
      */
-    protected function __construct($params) {
+    protected function __construct($params)
+    {
         $this->separateParams($params);
         $this->connector = $this->createConnector();
         if (!$this->paramsSys['lazy']) {
@@ -330,7 +334,8 @@ abstract class DB
     /**
      * Деструктор
      */
-    public final function __destruct() {
+    final public function __destruct()
+    {
         $this->connector->close();
         $this->connector->removeLink();
         $this->connector = null;
@@ -339,7 +344,8 @@ abstract class DB
     /**
      * Обработчик клонирования объекта
      */
-    public function __clone() {
+    public function __clone()
+    {
         $this->connector->addLink($this->connected);
     }
 
@@ -348,7 +354,8 @@ abstract class DB
      *
      * @return \go\DB\Helpers\Connector
      */
-    protected function createConnector() {
+    protected function createConnector()
+    {
         return (new Helpers\Connector($this->paramsSys['adapter'], $this->paramsDB));
     }
 
@@ -360,7 +367,8 @@ abstract class DB
      * @param string $prefix
      * @return \go\DB\Helpers\Templater
      */
-    protected function createTemplater($pattern, $data, $prefix) {
+    protected function createTemplater($pattern, $data, $prefix)
+    {
         return (new Helpers\Templater($this->connector, $pattern, $data, $prefix));
     }
 
@@ -370,23 +378,24 @@ abstract class DB
      * @param mixed $cursor
      * @return \go\DB\Result
      */
-    protected function createFetcher($cursor) {
+    protected function createFetcher($cursor)
+    {
         return (new Helpers\Fetcher($this->connector, $cursor));
     }
 
     /**
-     * Разбор и сортировка параметров на системные и подключения
-     *
-     * @throws \go\DB\Exceptions\ConfigSys
+     * Разбор и сортировка параметров на системные и относящиеся к адаптеру
      *
      * @param array $params
+     * @throws \go\DB\Exceptions\ConfigSys
      */
-    protected function separateParams($params) {
-        $this->paramsDB  = array();
+    protected function separateParams($params)
+    {
+        $this->paramsDB = array();
         $this->paramsSys = \go\DB\Helpers\Config::get('configsys');
         foreach ($params as $name => $value) {
             if ((!empty($name)) && ($name[0] == '_')) {
-                $name = substr($name, 1);
+                $name = \substr($name, 1);
                 if (!\array_key_exists($name, $this->paramsSys)) {
                     throw new Exceptions\ConfigSys('Unknown system param "'.$name.'"');
                 }
@@ -405,14 +414,13 @@ abstract class DB
      * @param float $duration
      * @param mixed $info
      */
-    protected function debugLog($query, $duration, $info) {
+    protected function debugLog($query, $duration, $info)
+    {
         if ($this->debugCallback) {
             \call_user_func($this->debugCallback, $query, $duration, $info);
         }
         return true;
     }
-
-/*** VARS: ***/
 
     /**
      * Кэш списка доступных адаптеров
@@ -475,17 +483,17 @@ abstract class DB
  * Создать объект для доступа к базе
  * (алиас DB::create)
  *
- * @throws \go\DB\Exceptions\Config
- * @throws \go\DB\Exceptions\Connect
- *
  * @param array $params
  *        параметры подключения к базе
  * @param string $adapter [optional]
  *        адаптер базы (если не указан в $params)
  * @return \go\DB\DB
  *         объект для доступа к базе
+ * @throws \go\DB\Exceptions\Config
+ * @throws \go\DB\Exceptions\Connect
  */
-function create(array $params, $adapter = null) {
+function create(array $params, $adapter = null)
+{
     return DB::create($params, $adapter);
 }
 
@@ -493,6 +501,10 @@ function create(array $params, $adapter = null) {
  * Запрос к центральной базе центрального хранилища
  * (алиас Storage::query)
  *
+ * @param string $pattern
+ * @param array $data [optional]
+ * @param string $fetch [optional]
+ * @param string $prefix [optional]
  * @throws \go\DB\Exceptions\StorageDBCentral
  *         нет центральной базы
  * @throws \go\DB\Exceptions\Connect
@@ -500,12 +512,8 @@ function create(array $params, $adapter = null) {
  * @throws \go\DB\Exceptions\Templater
  * @throws \go\DB\Exceptions\Query
  * @throws \go\DB\Exceptions\Fetch
- *
- * @param string $pattern
- * @param array $data [optional]
- * @param string $fetch [optional]
- * @param string $prefix [optional]
  */
-function query($pattern, $data = null, $fetch = null, $prefix = null) {
+function query($pattern, $data = null, $fetch = null, $prefix = null)
+{
     return Storage::getInstance()->query($pattern, $data, $fetch, $prefix);
 }

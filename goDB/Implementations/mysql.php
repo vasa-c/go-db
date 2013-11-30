@@ -40,7 +40,8 @@ final class mysql extends Base
      * @param int & $errorCode
      * @return mixed
      */
-    public function connect(array $params, &$errorInfo = null, &$errorCode = null) {
+    public function connect(array $params, &$errorInfo = null, &$errorCode = null)
+    {
         $host = \explode(':', $params['host'], 2);
         if (!empty($host[1])) {
             $port = $host[1];
@@ -74,7 +75,8 @@ final class mysql extends Base
      *
      * @param mixed $connection
      */
-    public function close($connection) {
+    public function close($connection)
+    {
         return $connection->close();
     }
 
@@ -85,7 +87,8 @@ final class mysql extends Base
      * @param string $query
      * @return mixed
      */
-    public function query($connection, $query) {
+    public function query($connection, $query)
+    {
         return $connection->query($query, \MYSQLI_STORE_RESULT);
     }
 
@@ -96,7 +99,8 @@ final class mysql extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getInsertId($connection, $cursor = null) {
+    public function getInsertId($connection, $cursor = null)
+    {
         return $connection->insert_id;
     }
 
@@ -107,7 +111,8 @@ final class mysql extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getAffectedRows($connection, $cursor = null) {
+    public function getAffectedRows($connection, $cursor = null)
+    {
         return $connection->affected_rows;
     }
 
@@ -118,7 +123,8 @@ final class mysql extends Base
      * @param mixed $cursor [optional]
      * @return string
      */
-    public function getErrorInfo($connection, $cursor = null) {
+    public function getErrorInfo($connection, $cursor = null)
+    {
         return $connection->error;
     }
 
@@ -130,7 +136,8 @@ final class mysql extends Base
      * @param mixed $cursor [optional]
      * @return int
      */
-    public function getErrorCode($connection, $cursor = null) {
+    public function getErrorCode($connection, $cursor = null)
+    {
         return $connection->errno;
     }
 
@@ -142,7 +149,8 @@ final class mysql extends Base
      * @param mixed $cursor
      * @return int
      */
-    public function getNumRows($connection, $cursor) {
+    public function getNumRows($connection, $cursor)
+    {
         return $cursor->num_rows;
     }
 
@@ -153,7 +161,8 @@ final class mysql extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchRow($connection, $cursor) {
+    public function fetchRow($connection, $cursor)
+    {
         return $cursor->fetch_row();
     }
 
@@ -164,7 +173,8 @@ final class mysql extends Base
      * @param mixed $cursor
      * @return array|false
      */
-    public function fetchAssoc($connection, $cursor) {
+    public function fetchAssoc($connection, $cursor)
+    {
         return $cursor->fetch_assoc();
     }
 
@@ -175,7 +185,8 @@ final class mysql extends Base
      * @param mixed $cursor
      * @return object|false
      */
-    public function fetchObject($connection, $cursor) {
+    public function fetchObject($connection, $cursor)
+    {
         return $cursor->fetch_object();
     }
 
@@ -185,7 +196,8 @@ final class mysql extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function freeCursor($connection, $cursor) {
+    public function freeCursor($connection, $cursor)
+    {
         return $cursor->free();
     }
 
@@ -196,7 +208,8 @@ final class mysql extends Base
      * @param scalar $value
      * @return string
      */
-    public function escapeString($connection, $value) {
+    public function escapeString($connection, $value)
+    {
         return $connection->real_escape_string($value);
     }
 
@@ -207,7 +220,8 @@ final class mysql extends Base
      * @param string $value
      * @return string
      */
-    protected function reprField($connection, $value) {
+    protected function reprField($connection, $value)
+    {
         return '`'.$value.'`';
     }
 
@@ -217,7 +231,8 @@ final class mysql extends Base
      * @param mixed $connection
      * @param mixed $cursor
      */
-    public function rewindCursor($connection, $cursor) {
+    public function rewindCursor($connection, $cursor)
+    {
         return $cursor->data_seek(0);
     }
 }

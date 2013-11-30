@@ -21,12 +21,13 @@ abstract class Base implements \Iterator, \Countable
      * @param string $key [optional]
      *        поле используемое в качестве ключа (по умолчанию - порядковый массив)
      */
-    public function __construct(\go\DB\Helpers\Connector $connector, $cursor, $key = null) {
+    public function __construct(\go\DB\Helpers\Connector $connector, $cursor, $key = null)
+    {
         $this->implementation = $connector->getImplementation();
-        $this->connection     = $connector->getConnection();
-        $this->cursor         = $cursor;
-        $this->key            = $key;
-        $this->pointer        = 0;
+        $this->connection = $connector->getConnection();
+        $this->cursor = $cursor;
+        $this->key = $key;
+        $this->pointer = 0;
     }
 
     /**
@@ -34,7 +35,8 @@ abstract class Base implements \Iterator, \Countable
      *
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
         return $this->nextRow;
     }
 
@@ -43,11 +45,12 @@ abstract class Base implements \Iterator, \Countable
      *
      * @return mixed
      */
-    public function key() {
+    public function key()
+    {
         if (!$this->nextRow) {
             return false;
         }
-        if (!is_null($this->key)) {
+        if (!\is_null($this->key)) {
             return $this->nextRow[$this->key];
         }
         return $this->pointer;
@@ -56,7 +59,8 @@ abstract class Base implements \Iterator, \Countable
     /**
      * @override \Iterator
      */
-    public function next() {
+    public function next()
+    {
         $this->nextRow = $this->fetchNextRow();
         $this->pointer++;
     }
@@ -64,7 +68,8 @@ abstract class Base implements \Iterator, \Countable
     /**
      * @override \Iterator
      */
-    public function rewind() {
+    public function rewind()
+    {
         $this->implementation->rewindCursor($this->connection, $this->cursor);
         $this->pointer = 0;
         $this->nextRow = $this->fetchNextRow();
@@ -73,14 +78,16 @@ abstract class Base implements \Iterator, \Countable
     /**
      * @override \Iterator
      */
-    public function valid() {
+    public function valid()
+    {
         return ($this->nextRow !== false);
     }
 
     /**
      * @overrider \Countable
      */
-    public function count() {
+    public function count()
+    {
         return $this->implementation->getNumRows($this->connection, $cursor);
     }
 
@@ -93,14 +100,14 @@ abstract class Base implements \Iterator, \Countable
 
     /**
      * Внутренняя реализация взаимодействия с базой
-     * 
+     *
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
 
     /**
      * Низкоуровневое подключение к базе
-     * 
+     *
      * @var mixed
      */
     protected $connection;
@@ -121,7 +128,7 @@ abstract class Base implements \Iterator, \Countable
 
     /**
      * Указатель на текущую позицию
-     * 
+     *
      * @var string
      */
     protected $pointer;

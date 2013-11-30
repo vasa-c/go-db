@@ -8,7 +8,7 @@
  *
  * <col> - * или через запятую
  * <table> - единственная существующая таблица: "table"
- * 
+ *
  * Все "данные" описаны в $table
  *
  * "столбец" `null` всегда возвращает NULL и не выбирается при SELECT *
@@ -32,7 +32,7 @@ final class Engine
 
     /**
      * Тестовая таблица
-     * 
+     *
      * @var array
      */
     protected $table = array(
@@ -46,8 +46,8 @@ final class Engine
 
     const ERROR_CONNECT  = 1;
     const ERROR_OPERATOR = 2;
-    const ERROR_TABLE    = 3;
-    const ERROR_COL      = 4;
+    const ERROR_TABLE = 3;
+    const ERROR_COL = 4;
 
     /**
      * Выполнения запроса
@@ -55,7 +55,8 @@ final class Engine
      * @param string $query
      * @return \go\DB\Implementations\TestBase\Cursor | bool
      */
-    public function query($query) {
+    public function query($query)
+    {
         $this->errorInfo = null;
         $this->errorCode = null;
         $this->affectedRows = 0;
@@ -80,7 +81,8 @@ final class Engine
     /**
      * Закрыть "подключение"
      */
-    public function close() {
+    public function close()
+    {
         $this->closed = true;
         return true;
     }
@@ -88,42 +90,48 @@ final class Engine
     /**
      * Закрыто ли подключение
      */
-    public function isClosed() {
+    public function isClosed()
+    {
         return $this->closed;
     }
 
     /**
      * @return string
      */
-    public function getErrorInfo() {
+    public function getErrorInfo()
+    {
         return $this->errorInfo;
     }
 
     /**
      * @return int
      */
-    public function getErrorCode() {
+    public function getErrorCode()
+    {
         return $this->errorCode;
     }
 
     /**
      * @return int
      */
-    public function getInsertId() {
+    public function getInsertId()
+    {
         return $this->lastInsertId;
     }
 
     /**
      * @return int
      */
-    public function getAffectedRows() {
+    public function getAffectedRows()
+    {
         return $this->affectedRows;
     }
 
     /**
      * @return \go\DB\Implements\TestBase\Cursor
      */
-    private function select($query) {
+    private function select($query)
+    {
         $pattern = '~^(.*?)FROM (.*?)(LIMIT (.*?))?$~i';
         if (!preg_match($pattern, $query, $matches)) {
             $this->errorInfo = 'Error SELECT query "'.$query.'"';
@@ -174,7 +182,8 @@ final class Engine
     /**
      * @return bool
      */
-    private function insert($query) {
+    private function insert($query)
+    {
         $this->lastInsertId++;
         return true;
     }
@@ -182,7 +191,8 @@ final class Engine
     /**
      * @return bool
      */
-    private function update($query) {
+    private function update($query)
+    {
         $query = \explode('limit', $query, 2);
         if (isset($query[1])) {
             $limit = $query[1];
@@ -200,7 +210,8 @@ final class Engine
     /**
      * @return array
      */
-    private function parseLimit($limit) {
+    private function parseLimit($limit)
+    {
         $limit = \trim($limit);
         if (empty($limit)) {
             return array(

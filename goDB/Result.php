@@ -17,13 +17,12 @@ interface Result extends \IteratorAggregate
     /**
      * Разобрать результат в соответствии с форматом
      *
-     * @throws \go\DB\Exceptions\Fetch
-     *         ошибка при разборе
-     *
      * @param string $fetch
      *        формат разбора
      * @return mixed
      *         результат в заданном формате
+     * @throws \go\DB\Exceptions\Fetch
+     *         ошибка при разборе
      */
     public function fetch($fetch);
 
@@ -35,156 +34,140 @@ interface Result extends \IteratorAggregate
     /**
      * Массив ассоциативных массивов
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      *        поле, используемое в качестве индекса
      *        не указано - порядковый массив
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function assoc($param = null);
 
     /**
      * Массив порядковых массивов
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param int $param [optional]
      *        номер поля, используемого в качестве индекса
      *        не указано - порядковый массив
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function numerics($param = null);
 
     /**
      * Массив объектов
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      *        поле, используемое в качестве индекса
      *        не указано - порядковый массив
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function objects($param = null);
 
     /**
      * Массив значений
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function col($param = null);
 
     /**
      * Список переменных (первое поле - имя переенной, второе - значение)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function vars($param = null);
 
     /**
      * Итератор по assoc
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function iassoc($param = null);
 
     /**
      * Итератор по numerics
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param int $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function inumerics($param = null);
 
     /**
      * Итератор по objects
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @param string $param [optional]
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function iobjects($param = null);
 
     /**
      * Итератор по vars
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function ivars($param = null);
 
     /**
      * Итератор по col
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return Iterator
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function icol($param = null);
 
     /**
      * Ассоциативный массив по одной строке (нет строки - NULL)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function row($param = null);
 
     /**
      * Порядковый массив по одной строке (нет строки - NULL)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return array
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function numeric($param = null);
 
     /**
      * Одна строка в виде объекта (нет строки - NULL)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return object
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function object($param = null);
 
     /**
      * Одно значение из строки (нет строки - NULL)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return string
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function el($param = null);
 
     /**
      * Одно значение из строки в виде bool (нет строки - NULL)
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return bool
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function bool($param = null);
 
     /**
      * Количество строк в результате
      *
-     * @throws \go\DB\Exceptions\UnexpectedFetch
-     *
      * @return int
+     * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function num($param = null);
 
@@ -197,7 +180,7 @@ interface Result extends \IteratorAggregate
 
     /**
      * Количество затронутых запросом строк
-     * 
+     *
      * @return int
      */
     public function ar($param = null);

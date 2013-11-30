@@ -20,7 +20,8 @@ final class Connect extends Runtime
      * @param string $errorcode [optional]
      *        код ошибки
      */
-    public function __construct($error, $errorcode = null) {
+    public function __construct($error, $errorcode = null)
+    {
         parent::__construct($error, $errorcode);
     }
 }

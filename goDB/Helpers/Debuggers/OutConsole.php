@@ -9,15 +9,15 @@
 
 namespace go\DB\Helpers\Debuggers;
 
-final class OutConsole {
-
+final class OutConsole
+{
     /**
      * @param string $query
      * @param float $duration
      * @param mixed $info
      */
-    public function __invoke($query, $duration, $info) {
+    public function __invoke($query, $duration, $info)
+    {
         echo $query.\PHP_EOL;
     }
-
 }
