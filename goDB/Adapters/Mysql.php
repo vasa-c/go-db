@@ -10,7 +10,7 @@
 
 namespace go\DB\Adapters;
 
-final class mysql extends \go\DB\DB
+final class Mysql extends \go\DB\DB
 {
 
 }

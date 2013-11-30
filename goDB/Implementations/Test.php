@@ -1,6 +1,8 @@
 <?php
 /**
- * Надстройка над php_mysqli
+ * Реализация тестового типа БД
+ *
+ * @see TestBase\Engine
  *
  * @package    go\DB
  * @subpackage Implementations
@@ -9,14 +11,14 @@
 
 namespace go\DB\Implementations;
 
-final class mysql extends Base
+final class Test extends Base
 {
     /**
      * Обязательные параметры подключения
      *
      * @var array
      */
-    protected $paramsReq = array('host', 'username', 'password');
+    protected $paramsReq = array('host');
 
     /**
      * Необязательные параметры подключения
@@ -25,49 +27,24 @@ final class mysql extends Base
      *
      * @var array
      */
-    protected $paramsDefault = array(
-        'dbname'  => null,
-        'charset' => null,
-        'port'    => null,
-        'socket'  => null,
-    );
+    protected $paramsDefault = array('port' => 777);
 
     /**
      * @override Base
      *
      * @param array $params
-     * @param string & $errroInfo
-     * @param int & $errorCode
-     * @return mixed
+     * @param string &$errorInfo
+     * @param int &$errorCode
+     * @return bool
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        $host = \explode(':', $params['host'], 2);
-        if (!empty($host[1])) {
-            $port = $host[1];
-        } else {
-            $port = $params['port'];
-        }
-        $host     = $host[0];
-        $user     = $params['username'];
-        $password = $params['password'];
-        $dbname   = $params['dbname'];
-        $socket   = $params['socket'];
-        $connection = @(new \mysqli($host, $user, $password, $dbname, $port, $socket));
-        if ($connection->connect_error) {
-            $this->errorInfo = $connection->connect_error;
-            $this->errorCode = $connection->connect_errno;
+        if ($params['host'] != 'localhost') {
+            $errorInfo = 'Unable connect to "'.$params['host'].'"';
+            $errorCode = TestBase\Engine::ERROR_CONNECT;
             return false;
         }
-        if ($params['charset']) {
-            if (!$connection->set_charset($params['charset'])) {
-                $this->errorInfo = $connection->error;
-                $this->errorCode = $connection->errno;
-                $connection->close();
-                return false;
-            }
-        }
-        return $connection;
+        return (new TestBase\Engine());
     }
 
     /**
@@ -77,7 +54,8 @@ final class mysql extends Base
      */
     public function close($connection)
     {
-        return $connection->close();
+        $connection->close();
+        return true;
     }
 
     /**
@@ -89,7 +67,7 @@ final class mysql extends Base
      */
     public function query($connection, $query)
     {
-        return $connection->query($query, \MYSQLI_STORE_RESULT);
+        return $connection->query($query);
     }
 
     /**
@@ -101,7 +79,7 @@ final class mysql extends Base
      */
     public function getInsertId($connection, $cursor = null)
     {
-        return $connection->insert_id;
+        return $connection->getInsertId();
     }
 
     /**
@@ -113,7 +91,7 @@ final class mysql extends Base
      */
     public function getAffectedRows($connection, $cursor = null)
     {
-        return $connection->affected_rows;
+        return $connection->getAffectedRows();
     }
 
     /**
@@ -125,12 +103,11 @@ final class mysql extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return $connection->error;
+        return $connection->getErrorInfo();
     }
 
-
     /**
-     * @override Base
+     * @override
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
@@ -138,12 +115,11 @@ final class mysql extends Base
      */
     public function getErrorCode($connection, $cursor = null)
     {
-        return $connection->errno;
+        return $connection->getErrorCode();
     }
 
-
     /**
-     * @override Base
+     * @override
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -151,11 +127,11 @@ final class mysql extends Base
      */
     public function getNumRows($connection, $cursor)
     {
-        return $cursor->num_rows;
+        return $cursor->getNumRows();
     }
 
     /**
-     * @override Base
+     * @override
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -163,7 +139,7 @@ final class mysql extends Base
      */
     public function fetchRow($connection, $cursor)
     {
-        return $cursor->fetch_row();
+        return $cursor->fetchRow();
     }
 
     /**
@@ -175,7 +151,7 @@ final class mysql extends Base
      */
     public function fetchAssoc($connection, $cursor)
     {
-        return $cursor->fetch_assoc();
+        return $cursor->fetchAssoc();
     }
 
     /**
@@ -187,7 +163,7 @@ final class mysql extends Base
      */
     public function fetchObject($connection, $cursor)
     {
-        return $cursor->fetch_object();
+        return $cursor->fetchObject();
     }
 
     /**
@@ -198,19 +174,7 @@ final class mysql extends Base
      */
     public function freeCursor($connection, $cursor)
     {
-        return $cursor->free();
-    }
-
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param scalar $value
-     * @return string
-     */
-    public function escapeString($connection, $value)
-    {
-        return $connection->real_escape_string($value);
+        return true;
     }
 
     /**
@@ -226,13 +190,13 @@ final class mysql extends Base
     }
 
     /**
-     * @override Base
+     * Вернуться в начало курсора
      *
      * @param mixed $connection
      * @param mixed $cursor
      */
     public function rewindCursor($connection, $cursor)
     {
-        return $cursor->data_seek(0);
+        return $cursor->reset();
     }
 }

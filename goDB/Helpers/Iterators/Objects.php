@@ -9,7 +9,7 @@
 
 namespace go\DB\Helpers\Iterators;
 
-final class objects extends Base
+final class Objects extends Base
 {
     /**
      * @override Base

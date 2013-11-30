@@ -36,7 +36,7 @@ abstract class DB
     {
         $adapter = isset($params['_adapter']) ? $params['_adapter'] : $adapter;
         $adapter = \strtolower($adapter);
-        $classname = __NAMESPACE__.'\\Adapters\\'.$adapter;
+        $classname = __NAMESPACE__.'\\Adapters\\'.\ucfirst($adapter);
         if (!\class_exists($classname, true)) {
             throw new Exceptions\UnknownAdapter($adapter);
         }
@@ -54,8 +54,8 @@ abstract class DB
         if (!self::$availableAdapters) {
             $adapters = array();
             foreach (\glob(__DIR__.'/Adapters/*.php') as $filename) {
-                if (\preg_match('~([a-z0-9]*)\.php$~s', $filename, $matches)) {
-                    $adapters[] = $matches[1];
+                if (\preg_match('~([a-z0-9]*)\.php$~si', $filename, $matches)) {
+                    $adapters[] = \strtolower($matches[1]);
                 }
             }
             self::$availableAdapters = $adapters;

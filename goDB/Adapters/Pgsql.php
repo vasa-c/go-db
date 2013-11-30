@@ -8,7 +8,7 @@
  */
 namespace go\DB\Adapters;
 
-final class pgsql extends \go\DB\DB
+final class Pgsql extends \go\DB\DB
 {
 
 }

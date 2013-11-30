@@ -1,22 +1,22 @@
 <?php
 /**
- *    Надстройка над php_pgsql
+ * Надстройка над sqlite3
  *
- * @package  go\DB
+ * @package    go\DB
  * @subpackage Implementations
- * @author  Alex Polev
+ * @author     Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Implementations;
 
-final class pgsql extends Base
+final class Sqlite extends Base
 {
     /**
      * Обязательные параметры подключения
      *
      * @var array
      */
-    protected $paramsReq = array();
+    protected $paramsReq = array('filename');
 
     /**
      * Необязательные параметры подключения
@@ -26,18 +26,10 @@ final class pgsql extends Base
      * @var array
      */
     protected $paramsDefault = array(
-        'username' => null,
-        'password' => null,
-        'dbname' => null,
-        'charset' => null,
-        'port' => null,
-        'hostaddr' => null,
-        'connect_timeout' => null,
-        'options' => null,
-        'sslmode' => null,
-        'service' => null,
+        'flags'          => null,
+        'encryption_key' => null,
+        'mysql_quot'     => false,
     );
-
 
     /**
      * @override Base
@@ -49,30 +41,25 @@ final class pgsql extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        if (isset ($params['host'])) {
-            $host = \explode(':', $params['host'], 2);
-            if (!empty($host[1])) {
-                $params['host'] = $host[0];
-                $params['port'] = $host[1];
-            }
-        }
-        $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
-        if (!$connection) {
-            $errorInfo = \error_get_last();
+        $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
+        try {
+            $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
+        } catch (\Exception $e) {
+            $this->errorInfo = $e->getMessage();
+            $this->errorCode = $e->getCode();
             return false;
         }
         return $connection;
     }
 
-
     /**
      * @override Base
+     *
      * @param mixed $connection
-     * @return bool
      */
     public function close($connection)
     {
-        return @\pg_close($connection);
+        return $connection->close();
     }
 
     /**
@@ -84,7 +71,7 @@ final class pgsql extends Base
      */
     public function query($connection, $query)
     {
-        return \pg_query($connection, $query);
+        return @$connection->query($query);
     }
 
     /**
@@ -92,19 +79,11 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
-     * @return mixed
+     * @return int
      */
     public function getInsertId($connection, $cursor = null)
     {
-        $result = @\pg_query($connection, 'SELECT lastval()');
-
-        if (!$result) {
-            return false;
-        }
-
-        $row = pg_fetch_row($result);
-
-        return $row[0];
+        return $connection->lastInsertRowID();
     }
 
     /**
@@ -116,7 +95,7 @@ final class pgsql extends Base
      */
     public function getAffectedRows($connection, $cursor = null)
     {
-        return \pg_affected_rows($cursor);
+        return $connection->changes();
     }
 
     /**
@@ -128,8 +107,9 @@ final class pgsql extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return \pg_errormessage($connection);
+        return $connection->lastErrorMsg();
     }
+
 
     /**
      * @override Base
@@ -140,11 +120,14 @@ final class pgsql extends Base
      */
     public function getErrorCode($connection, $cursor = null)
     {
-        return null;
+        return $connection->lastErrorCode();
     }
+
 
     /**
      * @override Base
+     *
+     * В sqlite3 нет num_rows
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -152,7 +135,7 @@ final class pgsql extends Base
      */
     public function getNumRows($connection, $cursor)
     {
-        return \pg_numrows($cursor);
+        return 0;
     }
 
     /**
@@ -160,11 +143,11 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return array|bool
+     * @return array|false
      */
     public function fetchRow($connection, $cursor)
     {
-        return \pg_fetch_row($cursor);
+        return $cursor->fetchArray(\SQLITE3_NUM);
     }
 
     /**
@@ -172,11 +155,11 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return array|bool
+     * @return array|false
      */
     public function fetchAssoc($connection, $cursor)
     {
-        return \pg_fetch_assoc($cursor);
+        return $cursor->fetchArray(\SQLITE3_ASSOC);
     }
 
     /**
@@ -184,47 +167,34 @@ final class pgsql extends Base
      *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return object|bool
-     */
-    public function fetchObject($connection, $cursor)
-    {
-        return \pg_fetch_object($cursor);
-    }
-
-
-    /**
-     * @override Base
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return bool
      */
     public function freeCursor($connection, $cursor)
     {
-        return \pg_free_result($cursor);
+        return $cursor->finalize();
     }
 
     /**
      * @override Base
      *
      * @param mixed $connection
-     * @param mixed $value
+     * @param scalar $value
      * @return string
      */
     public function escapeString($connection, $value)
     {
-        return \pg_escape_string($connection, $value);
+        return $connection->escapeString($value);
     }
 
     /**
      * @override Base
      *
      * @param mixed $connection
-     * @param mixed $value
+     * @param scalar $value
      * @return string
      */
     public function reprString($connection, $value)
     {
-        return '\'' . $this->escapeString($connection, $value) . '\'';
+        return "'".$this->escapeString($connection, $value)."'";
     }
 
     /**
@@ -241,44 +211,12 @@ final class pgsql extends Base
 
     /**
      * @override Base
+     *
      * @param mixed $connection
      * @param mixed $cursor
-     * @return bool
      */
     public function rewindCursor($connection, $cursor)
     {
-        return \pg_result_seek($cursor, 0);
-    }
-
-    /**
-     * Генерируем строку для подключения к БД
-     *
-     * @param array $params параметры для подключения (@see $this->paramsDefault)
-     *
-     * @return  String
-     */
-    private function generateConnectString($params)
-    {
-        $connString = '';
-        if ($params) {
-            foreach ($params as $key => $value) {
-                if (!$value) {
-                    continue;
-                }
-                switch ($key) {
-                    case 'username':
-                        $connString .= 'user=' . $value;
-                        break;
-                    case 'charset':
-                        $connString .= 'options=\'--client_encoding=' . $value . '\'';
-                        break;
-                    default:
-                        $connString .= $key . '=' . $value;
-                        break;
-                }
-                $connString .= ' ';
-            }
-        }
-        return \rtrim($connString);
+        return $cursor->reset(0);
     }
 }

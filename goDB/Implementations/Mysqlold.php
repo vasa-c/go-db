@@ -1,6 +1,6 @@
 <?php
 /**
- * Надстройка над sqlite3
+ * Надстройка над php_mysql
  *
  * @package    go\DB
  * @subpackage Implementations
@@ -9,14 +9,14 @@
 
 namespace go\DB\Implementations;
 
-final class sqlite extends Base
+final class Mysqlold extends Base
 {
     /**
      * Обязательные параметры подключения
      *
      * @var array
      */
-    protected $paramsReq = array('filename');
+    protected $paramsReq = array('host', 'username', 'password');
 
     /**
      * Необязательные параметры подключения
@@ -26,9 +26,8 @@ final class sqlite extends Base
      * @var array
      */
     protected $paramsDefault = array(
-        'flags'          => null,
-        'encryption_key' => null,
-        'mysql_quot'     => false,
+        'dbname'  => null,
+        'charset' => null,
     );
 
     /**
@@ -41,13 +40,27 @@ final class sqlite extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
-        try {
-            $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
-        } catch (\Exception $e) {
-            $this->errorInfo = $e->getMessage();
-            $this->errorCode = $e->getCode();
+        $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
+        if (!$connection) {
+            $errorInfo = \mysql_error();
+            $errorCode = \mysql_errno();
             return false;
+        }
+        if ($params['dbname']) {
+            if (!@\mysql_select_db($params['dbname'], $connection)) {
+                $errorInfo = \mysql_error($connection);
+                $errorCode = \mysql_errno($connection);
+                @\mysql_close($connection);
+                return false;
+            }
+        }
+        if ($params['charset']) {
+            if (!\mysql_set_charset($params['charset'], $connection)) {
+                $errorInfo = \mysql_error($connection);
+                $errorCode = \mysql_errno($connection);
+                @\mysql_close($connection);
+                return false;
+            }
         }
         return $connection;
     }
@@ -59,7 +72,7 @@ final class sqlite extends Base
      */
     public function close($connection)
     {
-        return $connection->close();
+        return @\mysql_close($connection);
     }
 
     /**
@@ -71,7 +84,7 @@ final class sqlite extends Base
      */
     public function query($connection, $query)
     {
-        return @$connection->query($query);
+        return \mysql_query($query, $connection);
     }
 
     /**
@@ -83,7 +96,7 @@ final class sqlite extends Base
      */
     public function getInsertId($connection, $cursor = null)
     {
-        return $connection->lastInsertRowID();
+        return \mysql_insert_id($connection);
     }
 
     /**
@@ -95,7 +108,7 @@ final class sqlite extends Base
      */
     public function getAffectedRows($connection, $cursor = null)
     {
-        return $connection->changes();
+        return \mysql_affected_rows($connection);
     }
 
     /**
@@ -107,9 +120,8 @@ final class sqlite extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return $connection->lastErrorMsg();
+        return \mysql_error($connection);
     }
-
 
     /**
      * @override Base
@@ -120,14 +132,11 @@ final class sqlite extends Base
      */
     public function getErrorCode($connection, $cursor = null)
     {
-        return $connection->lastErrorCode();
+        return \mysql_errno($connection);
     }
-
 
     /**
      * @override Base
-     *
-     * В sqlite3 нет num_rows
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -135,7 +144,7 @@ final class sqlite extends Base
      */
     public function getNumRows($connection, $cursor)
     {
-        return 0;
+        return \mysql_num_rows($cursor);
     }
 
     /**
@@ -147,7 +156,7 @@ final class sqlite extends Base
      */
     public function fetchRow($connection, $cursor)
     {
-        return $cursor->fetchArray(\SQLITE3_NUM);
+        return \mysql_fetch_row($cursor);
     }
 
     /**
@@ -159,7 +168,19 @@ final class sqlite extends Base
      */
     public function fetchAssoc($connection, $cursor)
     {
-        return $cursor->fetchArray(\SQLITE3_ASSOC);
+        return \mysql_fetch_assoc($cursor);
+    }
+
+    /**
+     * @override Base
+     *
+     * @param mixed $connection
+     * @param mixed $cursor
+     * @return object|false
+     */
+    public function fetchObject($connection, $cursor)
+    {
+        return \mysql_fetch_object($cursor);
     }
 
     /**
@@ -170,7 +191,7 @@ final class sqlite extends Base
      */
     public function freeCursor($connection, $cursor)
     {
-        return $cursor->finalize();
+        return \mysql_free_result($cursor);
     }
 
     /**
@@ -182,19 +203,7 @@ final class sqlite extends Base
      */
     public function escapeString($connection, $value)
     {
-        return $connection->escapeString($value);
-    }
-
-    /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param scalar $value
-     * @return string
-     */
-    public function reprString($connection, $value)
-    {
-        return "'".$this->escapeString($connection, $value)."'";
+        return \mysql_real_escape_string($value, $connection);
     }
 
     /**
@@ -206,7 +215,7 @@ final class sqlite extends Base
      */
     protected function reprField($connection, $value)
     {
-        return '"'.$value.'"';
+        return '`'.$value.'`';
     }
 
     /**
@@ -217,6 +226,6 @@ final class sqlite extends Base
      */
     public function rewindCursor($connection, $cursor)
     {
-        return $cursor->reset(0);
+        return mysql_data_seek($cursor, $connection);
     }
 }

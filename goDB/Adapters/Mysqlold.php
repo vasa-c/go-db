@@ -10,7 +10,7 @@
 
 namespace go\DB\Adapters;
 
-final class mysqlold extends \go\DB\DB
+final class Mysqlold extends \go\DB\DB
 {
 
 }

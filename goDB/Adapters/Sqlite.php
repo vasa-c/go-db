@@ -10,7 +10,7 @@
 
 namespace go\DB\Adapters;
 
-final class sqlite extends \go\DB\DB
+final class Sqlite extends \go\DB\DB
 {
 
     /**

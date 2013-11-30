@@ -51,7 +51,7 @@ abstract class Base
     public static function getImplementationForAdapter($adapter)
     {
         if (!isset(self::$cacheAdapters[$adapter])) {
-            $classname = __NAMESPACE__.'\\'.$adapter;
+            $classname = __NAMESPACE__.'\\'.\ucfirst($adapter);
             self::$cacheAdapters[$adapter] = new $classname();
         }
         return self::$cacheAdapters[$adapter];

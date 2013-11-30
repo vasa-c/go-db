@@ -198,7 +198,7 @@ class Fetcher implements \go\DB\Result
     public function iassoc($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\assoc($this->connector, $this->cursor, $param));
+        return (new Iterators\Assoc($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -211,7 +211,7 @@ class Fetcher implements \go\DB\Result
     public function inumerics($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\numerics($this->connector, $this->cursor, $param));
+        return (new Iterators\Numerics($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -224,7 +224,7 @@ class Fetcher implements \go\DB\Result
     public function iobjects($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\objects($this->connector, $this->cursor, $param));
+        return (new Iterators\Objects($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -236,7 +236,7 @@ class Fetcher implements \go\DB\Result
     public function ivars($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\vars($this->connector, $this->cursor, $param));
+        return (new Iterators\Vars($this->connector, $this->cursor, $param));
     }
 
     /**
@@ -248,7 +248,7 @@ class Fetcher implements \go\DB\Result
     public function icol($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        return (new Iterators\col($this->connector, $this->cursor, $param));
+        return (new Iterators\Col($this->connector, $this->cursor, $param));
     }
 
     /**
