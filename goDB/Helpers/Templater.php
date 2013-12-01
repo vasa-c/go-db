@@ -4,14 +4,14 @@
  *
  * По шаблону и входящим данным формирует итоговый запрос
  *
- * @package    go\DB
+ * @package go\DB
  * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers;
 
-use go\DB\Exceptions as Exceptions;
+use go\DB\Exceptions;
 
 class Templater
 {
@@ -25,7 +25,7 @@ class Templater
      * @param array $data
      *        входные данные
      * @param string $prefix
-     *        префикс запроса
+     *        префикс таблиц для данного запроса
      */
     public function __construct(Connector $connector, $pattern, $data, $prefix)
     {
@@ -39,11 +39,10 @@ class Templater
     /**
      * Шаблонизация запроса
      *
-     * @throws go\DB\Exceptions\Templater
-     *         ошибки при шаблонизации
-     *
      * @return string
      *         итоговые запрос
+     * @throws \go\DB\Exceptions\Templater
+     *         ошибки при шаблонизации
      */
     public function parse()
     {
@@ -57,7 +56,7 @@ class Templater
         $callback = array($this, 'placeholderClb');
         $query = \preg_replace_callback($pattern, $callback, $query);
         if ((!$this->named) && (\count($this->data) > $this->counter)) {
-            throw new \go\DB\Exceptions\DataMuch(count($this->data), $this->counter);
+            throw new Exceptions\DataMuch(count($this->data), $this->counter);
         }
         $this->query = $query;
         return $this->query;
@@ -99,7 +98,7 @@ class Templater
             $name = $matches[3];
             if (empty($name)) {
                 /* Именованный плейсхолдер без имени ("?set:") */
-                throw new \go\DB\Exceptions\UnknownPlaceholder($matches[0]);
+                throw new Exceptions\UnknownPlaceholder($matches[0]);
             }
         } else {
             $name = null;
@@ -112,19 +111,19 @@ class Templater
                 $this->named = true;
             } elseif (!$this->named) {
                 /* Именованный плейсхолдер, хотя уже использовались регулярные */
-                throw new \go\DB\Exceptions\MixedPlaceholder($matches[0]);
+                throw new Exceptions\MixedPlaceholder($matches[0]);
             }
-            if (!array_key_exists($name, $this->data)) {
-                throw new \go\DB\Exceptions\DataNamed($name);
+            if (!\array_key_exists($name, $this->data)) {
+                throw new Exceptions\DataNamed($name);
             }
             $value = $this->data[$name];
         } elseif ($this->named) {
             /* Регулярный плейсхолдер, хотя уже использовались именованные */
-            throw new \go\DB\Exceptions\MixedPlaceholder($matches[0]);
+            throw new Exceptions\MixedPlaceholder($matches[0]);
         } else {
-            if (!array_key_exists($this->counter, $this->data)) {
+            if (!\array_key_exists($this->counter, $this->data)) {
                 /* Данные для регулярных плейсхолдеров закончились */
-                throw new \go\DB\Exceptions\DataNotEnough(count($this->data), $this->counter);
+                throw new Exceptions\DataNotEnough(count($this->data), $this->counter);
             }
             $value = $this->data[$this->counter];
         }
@@ -145,7 +144,7 @@ class Templater
      */
     private function valueModification($value, array $modifers)
     {
-        if ($modifers['n'] && is_null($value)) {
+        if ($modifers['n'] && \is_null($value)) {
             return $this->implementation->reprNULL($this->connection);
         }
         if ($modifers['i']) {
