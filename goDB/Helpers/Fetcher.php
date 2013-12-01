@@ -87,12 +87,16 @@ class Fetcher implements \go\DB\Result
         $cursor = $this->cursor;
         $result = array();
         if ($param) {
-            while ($row = $imp->fetchAssoc($conn, $cursor)) {
+            $row = $imp->fetchAssoc($conn, $cursor);
+            while ($row) {
                 $result[$row[$param]] = $row;
+                $row = $imp->fetchAssoc($conn, $cursor);
             }
         } else {
-            while ($row = $imp->fetchAssoc($conn, $cursor)) {
+            $row = $imp->fetchAssoc($conn, $cursor);
+            while ($row) {
                 $result[] = $row;
+                $row = $imp->fetchAssoc($conn, $cursor);
             }
         }
         return $result;
@@ -108,17 +112,21 @@ class Fetcher implements \go\DB\Result
     public function numerics($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        $imp    = $this->implementation;
-        $conn   = $this->connection;
+        $imp = $this->implementation;
+        $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        if (!is_null($param)) {
-            while ($row = $imp->fetchRow($conn, $cursor)) {
+        if (!\is_null($param)) {
+            $row = $imp->fetchRow($conn, $cursor);
+            while ($row) {
                 $result[$row[$param]] = $row;
+                $row = $imp->fetchRow($conn, $cursor);
             }
         } else {
-            while ($row = $imp->fetchRow($conn, $cursor)) {
+            $row = $row = $imp->fetchRow($conn, $cursor);
+            while ($row) {
                 $result[] = $row;
+                $row = $imp->fetchRow($conn, $cursor);
             }
         }
         return $result;
@@ -134,17 +142,21 @@ class Fetcher implements \go\DB\Result
     public function objects($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        $imp    = $this->implementation;
-        $conn   = $this->connection;
+        $imp = $this->implementation;
+        $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
         if ($param) {
-            while ($row = $imp->fetchObject($conn, $cursor)) {
+            $row = $imp->fetchObject($conn, $cursor);
+            while ($row) {
                 $result[$row->$param] = $row;
+                $row = $imp->fetchObject($conn, $cursor);
             }
         } else {
-            while ($row = $imp->fetchObject($conn, $cursor)) {
+            $row = $imp->fetchObject($conn, $cursor);
+            while ($row) {
                 $result[] = $row;
+                $row = $imp->fetchObject($conn, $cursor);
             }
         }
         return $result;
@@ -159,12 +171,14 @@ class Fetcher implements \go\DB\Result
     public function col($param = null)
     {
         $this->requiredCursor(__FUNCTION__);
-        $imp    = $this->implementation;
-        $conn   = $this->connection;
+        $imp = $this->implementation;
+        $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        while ($row = $imp->fetchRow($conn, $cursor)) {
+        $row = $imp->fetchRow($conn, $cursor);
+        while ($row) {
             $result[] = $row[0];
+            $row = $imp->fetchRow($conn, $cursor);
         }
         return $result;
     }
@@ -182,8 +196,10 @@ class Fetcher implements \go\DB\Result
         $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        while ($row = $imp->fetchRow($conn, $cursor)) {
+        $row = $imp->fetchRow($conn, $cursor);
+        while ($row) {
             $result[$row[0]] = \array_key_exists('1', $row) ? $row[1] : $row[0];
+            $row = $imp->fetchRow($conn, $cursor);
         }
         return $result;
     }
@@ -373,7 +389,7 @@ class Fetcher implements \go\DB\Result
      */
     protected function requiredCursor($fetch = null)
     {
-        if ((!$this->isCursor) || ($this->isFree)) {
+        if ((!$this->isCursor) || $this->isFree) {
             throw new \go\DB\Exceptions\UnexpectedFetch($fetch);
         }
         return true;
