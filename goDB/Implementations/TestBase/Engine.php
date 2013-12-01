@@ -59,6 +59,7 @@ final class Engine
         $this->errorInfo = null;
         $this->errorCode = null;
         $this->affectedRows = 0;
+        $this->log('query: '.$query);
         $query = \strtolower($query);
         $query = \explode(' ', $query, 2);
         $operator = $query[0];
@@ -82,6 +83,7 @@ final class Engine
      */
     public function close()
     {
+        $this->log(__FUNCTION__);
         $this->closed = true;
         return true;
     }
@@ -115,6 +117,7 @@ final class Engine
      */
     public function getInsertId()
     {
+        $this->log(__FUNCTION__);
         return $this->lastInsertId;
     }
 
@@ -123,7 +126,21 @@ final class Engine
      */
     public function getAffectedRows()
     {
+        $this->log(__FUNCTION__);
         return $this->affectedRows;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+    public function resetLogs()
+    {
+        $this->logs = array();
     }
 
     /**
@@ -234,6 +251,14 @@ final class Engine
     }
 
     /**
+     * @param string $log
+     */
+    private function log($log)
+    {
+        $this->logs[] = $log;
+    }
+
+    /**
      * @var string
      */
     private $errorInfo;
@@ -257,4 +282,9 @@ final class Engine
      * @var bool
      */
     private $closed = false;
+
+    /**
+     * @var array
+     */
+    private $logs = array();
 }

@@ -186,4 +186,34 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         $engine->close();
         $this->assertTrue($engine->isClosed());
     }
+
+    /**
+     * @covers go\DB\Implementations\TestBase\Engine::getLogs
+     * @covers go\DB\Implementations\TestBase\Engine::resetLogs
+     */
+    public function testLogs()
+    {
+        $engine = new Engine();
+        $this->assertEmpty($engine->getLogs());
+        $engine->query('INSERT');
+        $engine->getInsertId();
+        $engine->getAffectedRows();
+        $expected = array(
+            'query: INSERT',
+            'getInsertId',
+            'getAffectedRows',
+        );
+        $this->assertEquals($expected, $engine->getLogs());
+        $engine->resetLogs();
+        $this->assertEmpty($engine->getLogs());
+        $engine->close();
+        $engine->close();
+        $engine->query('ERROR');
+        $expected = array(
+            'close',
+            'close',
+            'query: ERROR',
+        );
+        $this->assertEquals($expected, $engine->getLogs());
+    }
 }
