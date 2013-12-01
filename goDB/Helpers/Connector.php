@@ -21,13 +21,12 @@ final class Connector
     /**
      * Конструктор
      *
-     * @throws \go\DB\Exceptions\ConfigConnect
-     *         невеверный формат параметров подключения
-     *
      * @param string $adapter
      *        для какого адаптера
      * @param array $params
      *        параметры подключения
+     * @throws \go\DB\Exceptions\ConfigConnect
+     *         невеверный формат параметров подключения
      */
     public function __construct($adapter, array $params)
     {
@@ -36,7 +35,7 @@ final class Connector
         if (!$this->params) {
             throw new Exceptions\ConfigConnect();
         }
-        $this->countLinks       = 1;
+        $this->countLinks = 1;
         $this->countConnections = 0;
     }
 
@@ -113,7 +112,6 @@ final class Connector
         if ($connection) {
             $this->countConnections++;
         }
-        return true;
     }
 
     /**
@@ -121,11 +119,12 @@ final class Connector
      */
     public function removeLink()
     {
-        $this->countLinks--;
-        if ($this->countLinks == 0) {
-            $this->deny();
+        if ($this->countLinks > 0) {
+            $this->countLinks--;
+            if ($this->countLinks === 0) {
+                $this->deny();
+            }
         }
-        return true;
     }
 
     /**
@@ -167,7 +166,7 @@ final class Connector
             $this->implementation->close($this->connection);
             $this->connection = null;
         }
-        $this->countLinks       = 0;
+        $this->countLinks = 0;
         $this->countConnections = 0;
         return true;
     }
