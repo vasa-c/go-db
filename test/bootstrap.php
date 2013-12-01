@@ -2,7 +2,7 @@
 /**
  * @package    go\DB
  * @subpackage Tests
- * @author Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
+ * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
  */
 
 namespace go\Tests\DB;
