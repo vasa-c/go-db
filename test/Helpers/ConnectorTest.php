@@ -101,6 +101,10 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($connector->isConnected());
         $this->assertEquals(0, $connector->getCountConnections());
         $this->assertTrue($engine->isClosed());
+        $expected = array(
+            'close',
+        );
+        $this->assertEquals($expected, $engine->getLogs());
     }
 
     /**
@@ -134,6 +138,10 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $connector->removeLink();
         $this->assertEquals(0, $connector->getCountConnections());
         $this->assertTrue($engine->isClosed());
+        $expected = array(
+            'close',
+        );
+        $this->assertEquals($expected, $engine->getLogs());
     }
 
     /**
@@ -151,5 +159,9 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($engine->isClosed());
         unset($connector);
         $this->assertTrue($engine->isClosed());
+        $expected = array(
+            'close',
+        );
+        $this->assertEquals($expected, $engine->getLogs());
     }
 }
