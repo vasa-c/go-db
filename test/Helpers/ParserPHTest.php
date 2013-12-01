@@ -1,10 +1,8 @@
 <?php
 /**
- * Тест парсера плейсхолдеров
- *
- * @package    go\DB
- * @subpackage Test
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
+ * @subpakcage Tests
+ * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
  */
 
 namespace go\Tests\DB\Helpers;
@@ -14,7 +12,7 @@ use go\DB\Helpers\ParserPH as ParserPH;
 /**
  * @covers go\DB\Helpers\ParserPH
  */
-class ParserPHTest extends \go\Tests\DB\Base
+class ParserPHTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -30,15 +28,18 @@ class ParserPHTest extends \go\Tests\DB\Base
     public function testParse($placeholder, $expectType, $expectModifers)
     {
         $modifers = self::getModifers();
-        $len = strlen($expectModifers);
+        $len = \strlen($expectModifers);
         for ($i = 0; $i < $len; $i++) {
-            $modifers[$expectModifers[$i]] = true;
+            $modifers[\substr($expectModifers, $i, 1)] = true;
         }
         $parser = new ParserPH($placeholder);
         $this->assertEquals($expectType, $parser->getType());
         $this->assertEquals($modifers, $parser->getModifers());
     }
 
+    /**
+     * @return array
+     */
     public function providerParse()
     {
         return array(
@@ -81,6 +82,10 @@ class ParserPHTest extends \go\Tests\DB\Base
     {
         $parser = new ParserPH($placeholder);
     }
+
+    /**
+     * @return array
+     */
     public function providerUnknownPlaceholder()
     {
         return array(

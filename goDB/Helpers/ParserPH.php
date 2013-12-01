@@ -13,9 +13,9 @@
  * $parser->getModifers(); // вкл/выкл модификаторов: array('n' => true, 'i' => false, ...)
  * </code>
  *
- * @package    go\DB
+ * @package go\DB
  * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers;
