@@ -20,16 +20,15 @@
  * UPDATE [LIMIT i,i]
  * затрагивает affected rows
  *
- * @package    go\DB
+ * @package go\DB
  * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
+ * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Implementations\TestBase;
 
 final class Engine
 {
-
     /**
      * Тестовая таблица
      *
@@ -60,10 +59,10 @@ final class Engine
         $this->errorInfo = null;
         $this->errorCode = null;
         $this->affectedRows = 0;
-        $query    = \strtolower($query);
-        $query    = \explode(' ', $query, 2);
+        $query = \strtolower($query);
+        $query = \explode(' ', $query, 2);
         $operator = $query[0];
-        $query    = isset($query[1]) ? $query[1] : '';
+        $query = isset($query[1]) ? $query[1] : '';
         switch ($operator) {
             case 'select':
                 return $this->select($query);
@@ -133,7 +132,7 @@ final class Engine
     private function select($query)
     {
         $pattern = '~^(.*?)FROM (.*?)(LIMIT (.*?))?$~i';
-        if (!preg_match($pattern, $query, $matches)) {
+        if (!\preg_match($pattern, $query, $matches)) {
             $this->errorInfo = 'Error SELECT query "'.$query.'"';
             $this->errorCode = self::ERROR_TABLE;
         }
@@ -141,20 +140,17 @@ final class Engine
         $table = \trim($matches[2]);
         $limit = isset($matches[4]) ? $matches[4] : null;
         $limit = $this->parseLimit($limit);
-
         $table = \str_replace('`', '', $table);
         if ($table != 'table') {
             $this->errorInfo = 'Table "'.$table.'" not found';
             $this->errorCode = self::ERROR_TABLE;
             return false;
         }
-
         if ($cols == '*') {
             $cols = null;
         } else {
             $cols = \explode(',', \str_replace('`', '', $cols));
         }
-
         $data = array();
         for ($i = $limit['begin']; $i <= $limit['end']; $i++) {
             $row = $this->table[$i];
