@@ -2,14 +2,7 @@
 /**
  * Автозагрузка классов в goDB
  *
- * @example
- * <code>
- * require_once('/path/to/goDB/autoload.php');
- * spl_autoload_register('\go\DB\autoload');
- * </code>
- *
- * @package go\DB
- * @author  Григорьев Олег aka vasa_c (http://blgo.ru/)
+ * @deprecated since version 2.1.0
  */
 
 namespace go\DB;
