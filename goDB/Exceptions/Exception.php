@@ -12,5 +12,18 @@ namespace go\DB\Exceptions;
 
 interface Exception
 {
+    /**
+     * @return array
+     */
+    public function getTrace();
 
+    /**
+     * @return string
+     */
+    public function getFile();
+
+    /**
+     * @return int
+     */
+    public function getLine();
 }
