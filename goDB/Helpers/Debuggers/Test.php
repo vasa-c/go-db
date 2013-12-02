@@ -2,9 +2,9 @@
 /**
  * Тестовый отладчик
  *
- * @package    go\DB
+ * @package go\DB
  * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers\Debuggers;
@@ -18,9 +18,9 @@ final class Test
      */
     public function __invoke($query, $duration, $info)
     {
-        $this->query    = $query;
+        $this->query = $query;
         $this->duration = $duration;
-        $this->info     = $info;
+        $this->info = $info;
     }
 
     /**

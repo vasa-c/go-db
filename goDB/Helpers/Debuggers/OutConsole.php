@@ -2,9 +2,9 @@
 /**
  * Отладчик в консоль
  *
- * @package    go\DB
+ * @package go\DB
  * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers\Debuggers;
