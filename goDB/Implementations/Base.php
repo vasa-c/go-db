@@ -99,13 +99,13 @@ abstract class Base
     {
         $result = array();
         foreach ($this->paramsReq as $param) {
-            if (!array_key_exists($param, $params)) {
+            if (!\array_key_exists($param, $params)) {
                 return false;
             }
             $result[$param] = $params[$param];
         }
         foreach ($this->paramsDefault as $param => $default) {
-            if (array_key_exists($param, $params)) {
+            if (\array_key_exists($param, $params)) {
                 $result[$param] = $params[$param];
             } else {
                 $result[$param] = $default;
@@ -336,7 +336,7 @@ abstract class Base
         foreach ($fields as $field) {
             $result[] = $this->reprField($connection, $field);
         }
-        return implode('.', $result);
+        return \implode('.', $result);
     }
 
     /**
