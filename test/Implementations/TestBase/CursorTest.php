@@ -15,7 +15,7 @@ use go\DB\Implementations\TestBase\Cursor as Cursor;
 final class CursorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetch_assoc
+     * @covers \go\DB\Implementations\TestBase\Cursor::fetchAssoc
      */
     public function testAssoc()
     {
@@ -31,7 +31,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetch_row
+     * @covers \go\DB\Implementations\TestBase\Cursor::fetchRow
      */
     public function testRow()
     {
@@ -47,7 +47,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetch_object
+     * @covers \go\DB\Implementations\TestBase\Cursor::fetchObject
      */
     public function testObject()
     {

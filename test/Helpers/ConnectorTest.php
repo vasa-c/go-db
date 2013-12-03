@@ -112,7 +112,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
      * @covers go\DB\Helpers\Connector::connect
      * @covers go\DB\Helpers\Connector::close
      * @covers go\DB\Helpers\Connector::isConnected
-     * @covers go\DB\Helpers\Connector::getCountConnection
+     * @covers go\DB\Helpers\Connector::getCountConnections
      * @covers go\DB\Helpers\Connector::addLink
      * @covers go\DB\Helpers\Connector::removeLink
      */

@@ -84,8 +84,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engin::query
-     * @covers go\DB\Implementations\TestBase\Engine::getInstertId
+     * @covers go\DB\Implementations\TestBase\Engine::query
+     * @covers go\DB\Implementations\TestBase\Engine::getInsertId
      */
     public function testInsert()
     {

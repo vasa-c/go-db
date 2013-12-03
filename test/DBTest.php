@@ -140,7 +140,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\create()
+     * go\DB\create()
      */
     public function testAliasCreate()
     {
@@ -359,7 +359,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::clone
+     * @covers go\DB\DB::__clone
      */
     public function testClone()
     {

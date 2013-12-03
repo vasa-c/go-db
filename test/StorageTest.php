@@ -165,7 +165,6 @@ class StorageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers go\DB\Storage::query
-     * @covers go\DB\query
      */
     public function testQuery()
     {

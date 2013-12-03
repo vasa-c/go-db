@@ -88,7 +88,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      * @covers go\DB\Implementations\Base::getErrorCode
      * @covers go\DB\Implementations\Base::getNumRows
      * @covers go\DB\Implementations\Base::fetchRow
-     * @covers go\DB\Implementations\Base::fetchAsscoc
+     * @covers go\DB\Implementations\Base::fetchAssoc
      * @covers go\DB\Implementations\Base::fetchObject
      * @covers go\DB\Implementations\Base::rewindCursor
      */
