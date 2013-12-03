@@ -47,5 +47,18 @@ abstract class Logic extends \LogicException implements Exception
         return $this->realLine;
     }
 
-    private $userTrace, $realFile, $realLine;
+    /**
+     * @var array
+     */
+    private $userTrace;
+
+    /**
+     * @var string
+     */
+    private $realFile;
+
+    /**
+     * @var int
+     */
+    private $realLine;
 }

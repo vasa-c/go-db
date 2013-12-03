@@ -8,19 +8,22 @@
 namespace go\Tests\DB\Exceptions;
 
 /**
- * @covers go\DB\Exceptions\Exception
+ * @covers go\DB\Exceptions\Logic
  */
-final class ExceptionTest extends \PHPUnit_Framework_TestCase
+final class LogicTest extends \PHPUnit_Framework_TestCase
 {
-    public function testBacktrace()
+    public function testBacktraceLogic()
     {
         $params = array(
             '_adapter' => 'test',
         );
         try {
+            $line = __LINE__ + 1;
             $db = \go\DB\DB::create($params);
+            $this->fail('not thrown');
         } catch (\go\DB\Exceptions\Config $e) {
             $this->assertEquals(__FILE__, $e->getFile());
+            $this->assertEquals($line, $e->getLine());
         }
     }
 }
