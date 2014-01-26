@@ -1,5 +1,5 @@
 {
-    "name": "go/DB",
+    "name": "go/db",
     "type": "library",
     "description": "Database library",
     "keywords": [
