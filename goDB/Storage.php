@@ -9,7 +9,7 @@
 
 namespace go\DB;
 
-final class Storage
+class Storage
 {
     /**
      * Получить центральный объект хранилища
