@@ -7,9 +7,6 @@
 
 namespace go\Tests\DB\Helpers;
 
-use go\DB\Helpers\Templater as Templater;
-use go\DB\Implementations\test as Implementation;
-
 /**
  * @covers go\DB\Helpers\Templater
  */
@@ -217,6 +214,21 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
                 'SELECT ?cols FROM ?t',
                 array(array('a', 'b', 'c', array('t', 'd')), 'table'),
                 'SELECT `a`,`b`,`c`,`t`.`d` FROM `table`',
+            ),
+            array(
+                'SELECT ?cols FROM ?t',
+                array('single', 'table'),
+                'SELECT `single` FROM `table`',
+            ),
+            array(
+                'SELECT ?cols FROM ?t',
+                array(array(), 'table'),
+                'SELECT * FROM `table`',
+            ),
+            array(
+                'SELECT ?cols FROM ?t',
+                array(true, 'table'),
+                'SELECT * FROM `table`',
             ),
         );
     }

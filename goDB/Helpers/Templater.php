@@ -259,7 +259,13 @@ class Templater
     private function replacementXC($value, array $modifers)
     {
         if (!\is_array($value)) {
+            if ($value === true) {
+                return '*';
+            }
             return $this->replacementC($value, $modifers);
+        }
+        if (empty($value)) {
+            return '*';
         }
         $cols = array();
         foreach ($value as $col) {
