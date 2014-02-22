@@ -299,6 +299,54 @@ class Templater
     }
 
     /**
+     * ?w, ?where
+     *
+     * @param mixed $value
+     * @param array $modifers
+     * @return string
+     */
+    private function replacementW($value, array $modifers)
+    {
+        if ($value === true) {
+            return '1';
+        }
+        if (!\is_array($value)) {
+            return '0';
+        }
+        $stats = array();
+        foreach ($value as $k => $v) {
+            $col = $this->replacementC($k, $modifers);
+            if (\is_array($v)) {
+                if (empty($v)) {
+                    break;
+                }
+                $opts = array();
+                foreach ($v as $opt) {
+                    if (\is_int($opt)) {
+                        $opts[] = $opt;
+                    } else {
+                        $opts[] = $this->replacement($opt, $modifers);
+                    }
+                }
+                $stat = $col.' IN ('.\implode(',', $opts).')';
+            } elseif ($v === null) {
+                $stat = $col.' IS NULL';
+            } elseif ($v === true) {
+                $stat = $col.' IS NOT NULL';
+            } elseif (\is_int($v)) {
+                $stat = $col.'='.$v;
+            } else {
+                $stat = $col.'='.$this->replacement($v, $modifers);
+            }
+            $stats[] = $stat;
+        }
+        if (empty($stats)) {
+            return '1';
+        }
+        return \implode(' AND ', $stats);
+    }
+
+    /**
      * Внутренняя реализация взаимодействия с базой
      *
      * @var \go\DB\Implementations\Base
