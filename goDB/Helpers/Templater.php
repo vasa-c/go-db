@@ -307,11 +307,8 @@ class Templater
      */
     private function replacementW($value, array $modifers)
     {
-        if ($value === true) {
-            return '1';
-        }
         if (!\is_array($value)) {
-            return '0';
+            return ($value !== false) ? '1' : '0';
         }
         $stats = array();
         foreach ($value as $k => $v) {

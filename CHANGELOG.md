@@ -2,6 +2,9 @@
 
 ## dev-master
 
+## 2.0.3
+
+* Table
 * `?where` placeholder for WHERE statement
 * `?cols`: empty array or TRUE is `*`
 * Composer

@@ -314,6 +314,20 @@ abstract class DB
     }
 
     /**
+     * Returns an object for a table access
+     *
+     * @param string $tablename
+     * @return \go\DB\Table
+     */
+    public function getTable($tablename)
+    {
+        if (!isset($this->tables[$tablename])) {
+            $this->tables[$tablename] = new Table($this, $tablename);
+        }
+        return $this->tables[$tablename];
+    }
+
+    /**
      * Скрытый конструктор - извне не создать
      *
      * @param array $params
@@ -477,6 +491,11 @@ abstract class DB
      * @var bool
      */
     protected $hardClosed = false;
+
+    /**
+     * @var array
+     */
+    private $tables = [];
 }
 
 /**
