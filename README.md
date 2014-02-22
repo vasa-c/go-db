@@ -1,6 +1,6 @@
 # go\DB 2.x: работа с различными БД из PHP
 
- * Текущая версия: 2.0.1 beta
+ * Текущая версия: 2.0.3
  * Системные требования: PHP 5.3+
  * Поддерживаемые адаптеры: MySQL, SQLite, PgSQL
  * Документация: https://github.com/vasa-c/go-db/wiki
@@ -28,6 +28,8 @@
  * [Отладочная информация](https://github.com/vasa-c/go-db/wiki/debug)
  * [Отложенное подключение и закрытие соединения](https://github.com/vasa-c/go-db/wiki/connect)
  * [Клонирование объекта базы](https://github.com/vasa-c/go-db/wiki/clone)
+ * [Надстройка над таблицами](https://github.com/vasa-c/go-db/wiki/Table)
+ * [Формат WHERE](https://github.com/vasa-c/go-db/wiki/where) 
  * [Unit-тесты](https://github.com/vasa-c/go-db/wiki/tests)
  * [Написание адаптеров](https://github.com/vasa-c/go-db/wiki/Adapters)
  * [Расширение goDB](https://github.com/vasa-c/go-db/wiki/Extend)
