@@ -141,6 +141,22 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
                 array($set),
                 'INSERT INTO `table` SET `s`=0, `d`=3, `n`=NULL',
             ),
+            array(
+                'UPDATE ?t SET ?s WHERE `id`=?i',
+                array('test', array('x' => array('col' => 'x', 'value' => 1), 'y' => 2), 10),
+                'UPDATE `test` SET `x`=`x`+1, `y`="2" WHERE `id`=10',
+            ),
+            array(
+                'SET ?sn',
+                array(
+                    array(
+                        'a' => array(),
+                        'b' => array('col' => 'x'),
+                        'c' => array('col' => 'x', 'value' => -2),
+                        'd' => array('value' => -3)),
+                ),
+                'SET `a`=NULL, `b`=`x`, `c`=`x`-2, `d`="-3"',
+            ),
         );
     }
 

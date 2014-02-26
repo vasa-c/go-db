@@ -197,8 +197,25 @@ class Templater
         $set = array();
         foreach ($value as $col => $element) {
             $key = $this->implementation->reprCol($this->connection, $col);
-            $value = $this->valueModification($element, $modifers);
-            $set[] = $key.'='.$value;
+            if (\is_array($element)) {
+                $oval = isset($element['value']) ? $element['value'] : null;
+                if (isset($element['col'])) {
+                    $element = $this->replacementC($element['col'], $modifers);
+                    if ($oval !== null) {
+                        $oval = (int)$oval;
+                        if ($oval > 0) {
+                            $element .= '+'.$oval;
+                        } else {
+                            $element .= $oval;
+                        }
+                    }
+                } else {
+                    $element = $this->valueModification($oval, $modifers);
+                }
+            } else {
+                $element = $this->valueModification($element, $modifers);
+            }
+            $set[] = $key.'='.$element;
         }
         return \implode(', ', $set);
     }
