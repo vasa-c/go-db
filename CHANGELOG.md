@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## dev-master
+## 2.0.4
 
 * ?where and custom operation (`WHERE x>y-5)
 * ?set and opertation (`SET x=x+1`)
