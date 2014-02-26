@@ -4,6 +4,7 @@
 
 * ?where and custom operation (`WHERE x>y-5)
 * ?set and opertation (`SET x=x+1`)
+* Storage: custom main name & $storage->getMainDB()
 
 ## 2.0.3
 
