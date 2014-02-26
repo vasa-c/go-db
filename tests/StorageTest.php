@@ -135,7 +135,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
             ),
             'three' => 'one',
         );
-        $storage = new Storage($dbs);
+        return new Storage($dbs);
     }
 
     public function testCentralDB()
@@ -146,6 +146,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $storage->set($db);
         $this->assertTrue($storage->exists());
         $this->assertSame($db, $storage->get());
+        $this->assertSame($db, $storage->getMainDB());
         $storage2 = new Storage();
         $this->setExpectedException('go\DB\Exceptions\StorageDBCentral');
         $storage2('INSERT');
@@ -181,5 +182,18 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $id4 = \go\DB\query('INSERT')->id();
         $this->assertEquals($id3 + 1, $id4);
         Storage::setInstance($instance);
+    }
+
+    public function testMainname()
+    {
+        $storage = new Storage(null, 'base');
+        $dbN = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $dbB = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $storage->set($dbN, '');
+        $storage->set($dbB);
+        $this->assertSame($dbN, $storage->get(''));
+        $this->assertSame($dbB, $storage->get('base'));
+        $this->assertSame($dbB, $storage->get());
+        $this->assertSame($dbB, $storage->getMainDB());
     }
 }

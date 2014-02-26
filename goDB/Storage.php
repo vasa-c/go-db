@@ -71,14 +71,16 @@ class Storage
      *
      * @param array $mparams [optional]
      *        параметры для заполнения (не указаны - пустое хранилище)
+     * @param string $mainname [optional]
      * @throws \go\DB\Exceptions\StorageAssoc
      *         ошибка ассоциации при заполнении
      */
-    public function __construct($mparams = null)
+    public function __construct($mparams = null, $mainname = '')
     {
         if ($mparams) {
             $this->fill($mparams);
         }
+        $this->mainname = (string)$mainname;
         return true;
     }
 
@@ -90,8 +92,11 @@ class Storage
      * @throws \go\DB\Exceptions\StorageNotFound
      *         нет такой базы
      */
-    public function get($name = '')
+    public function get($name = null)
     {
+        if ($name === null) {
+            $name = $this->mainname;
+        }
         if (!isset($this->dbs[$name])) {
             throw new Exceptions\StorageNotFound($name);
         }
@@ -112,8 +117,11 @@ class Storage
      * @throws \go\DB\Exceptions\Config
      * @throws \go\DB\Exceptions\Connect
      */
-    public function create(array $params, $name = '')
+    public function create(array $params, $name = null)
     {
+        if ($name === null) {
+            $name = $this->mainname;
+        }
         $db = \go\DB\DB::create($params);
         $this->set($db, $name);
         return $db;
@@ -124,13 +132,16 @@ class Storage
      *
      * @param \go\DB\DB $db
      *        объект базы
-     * @param string $name
+     * @param string $name [optional]
      *        имя в хранилище
      * @throws \go\DB\Exceptions\StorageEngaged
      *         данное имя уже занято
      */
-    public function set(DB $db, $name = '')
+    public function set(DB $db, $name = null)
     {
+        if ($name === null) {
+            $name = $this->mainname;
+        }
         if (isset($this->dbs[$name])) {
             throw new Exceptions\StorageEngaged($name);
         }
@@ -169,11 +180,14 @@ class Storage
     /**
      * Существует ли уже в хранилище база с указанным именем
      *
-     * @param string $name
+     * @param string $name [optional]
      * @return bool
      */
-    public function exists($name = '')
+    public function exists($name = null)
     {
+        if ($name === null) {
+            $name = $this->mainname;
+        }
         return isset($this->dbs[$name]);
     }
 
@@ -194,10 +208,10 @@ class Storage
      */
     public function __invoke($pattern, $data = null, $fetch = null, $prefix = null)
     {
-        if (!isset($this->dbs[''])) {
+        if (!isset($this->dbs[$this->mainname])) {
             throw new Exceptions\StorageDBCentral('');
         }
-        return $this->dbs['']->query($pattern, $data, $fetch, $prefix);
+        return $this->dbs[$this->mainname]->query($pattern, $data, $fetch, $prefix);
     }
 
     /**
@@ -242,6 +256,15 @@ class Storage
     }
 
     /**
+     * @return \go\DB\DB
+     * @throws \go\DB\Exceptions\StorageNotFound
+     */
+    public function getMainDB()
+    {
+        return $this->get(null);
+    }
+
+    /**
      * Центральное хранилище
      *
      * @var \go\DB\Storage
@@ -254,4 +277,9 @@ class Storage
      * @var array
      */
     private $dbs = array();
+
+    /**
+     * @var string
+     */
+    private $mainname = '';
 }
