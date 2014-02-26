@@ -2,6 +2,8 @@
 
 ## dev-master
 
+* ?where and custom operation (`WHERE `x`>`y`-5)
+
 ## 2.0.3
 
 * #20 Table class

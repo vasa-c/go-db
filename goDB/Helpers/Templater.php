@@ -317,15 +317,39 @@ class Templater
                 if (empty($v)) {
                     break;
                 }
-                $opts = array();
-                foreach ($v as $opt) {
-                    if (\is_int($opt)) {
-                        $opts[] = $opt;
+                if (isset($v['op'])) {
+                    $stat = $col.$v['op'];
+                    $oval = isset($v['value']) ? $v['value'] : null;
+                    if (isset($v['col'])) {
+                        $stat .= $this->replacementC($v['col'], $modifers);
+                        if ($oval) {
+                            $oval = (int)$oval;
+                            if ($oval > 0) {
+                                $stat .= '+'.$oval;
+                            } else {
+                                $stat .= $oval;
+                            }
+                        }
                     } else {
-                        $opts[] = $this->replacement($opt, $modifers);
+                        if ($oval === null) {
+                            $stat .= 'NULL';
+                        } elseif (\is_int($oval)) {
+                            $stat .= $oval;
+                        } else {
+                            $stat .= $this->replacement($oval, $modifers);
+                        }
                     }
+                } else {
+                    $opts = array();
+                    foreach ($v as $opt) {
+                        if (\is_int($opt)) {
+                            $opts[] = $opt;
+                        } else {
+                            $opts[] = $this->replacement($opt, $modifers);
+                        }
+                    }
+                    $stat = $col.' IN ('.\implode(',', $opts).')';
                 }
-                $stat = $col.' IN ('.\implode(',', $opts).')';
             } elseif ($v === null) {
                 $stat = $col.' IS NULL';
             } elseif ($v === true) {

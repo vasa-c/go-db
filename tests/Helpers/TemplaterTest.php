@@ -285,6 +285,26 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
                 array(false),
                 'WHERE 0',
             ),
+            array(
+                'WHERE ?w',
+                array(array('x' => 1, 'y' => array('op' => '<>', 'value' => 'xx'))),
+                'WHERE `x`=1 AND `y`<>"xx"',
+            ),
+            array(
+                'WHERE ?w',
+                array(array('x' => 2, 'y' => array('op' => '<=', 'col' => 'x'))),
+                'WHERE `x`=2 AND `y`<=`x`',
+            ),
+            array(
+                'WHERE ?w',
+                array(array('x' => 2, 'y' => array('op' => '=', 'col' => 'x', 'value' => 3))),
+                'WHERE `x`=2 AND `y`=`x`+3',
+            ),
+            array(
+                'WHERE ?w',
+                array(array('x' => 2, 'y' => array('op' => '<>', 'col' => 'z', 'value' => -5))),
+                'WHERE `x`=2 AND `y`<>`z`-5',
+            ),
         );
     }
 
