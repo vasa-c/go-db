@@ -20,6 +20,8 @@
 
 namespace go\DB\Helpers;
 
+use go\DB\Compat;
+
 final class ParserPH
 {
     /**
@@ -34,6 +36,11 @@ final class ParserPH
     {
         $this->placeholder = $placeholder;
         $this->parse();
+        if (!$this->modifers['n']) {
+            if (Compat::getOpt('null')) {
+                $this->modifers['n'] = true;
+            }
+        }
     }
 
     /**

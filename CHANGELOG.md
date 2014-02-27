@@ -2,6 +2,7 @@
 
 ## dev-master
 
+* Compat: compatibility with older versions
 * Table::select(): $limit argument `[$offset, $limit]`
 
 ## 2.0.4

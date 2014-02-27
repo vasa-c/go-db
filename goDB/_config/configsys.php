@@ -14,4 +14,5 @@ return array(
     'lazy'    => true,
     'prefix'  => '',
     'debug'   => null,
+    'compat'  => [],
 );

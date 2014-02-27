@@ -33,7 +33,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES (?, ?scalar, ?, ?string)',
                 $data,
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", "", "3.5")',
+                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?null, ?null, ?null, ?null)',
@@ -43,7 +43,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES (?i, ?i, ?i, ?i)',
                 $data,
-                'INSERT INTO `table` VALUES (0, 1, 0, 3)',
+                'INSERT INTO `table` VALUES (0, 1, NULL, 3)',
             ),
             array(
                 'INSERT INTO `table` VALUES (?in, ?in, ?in, ?in)',
@@ -79,12 +79,12 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES (?l)',
                 array($list),
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", "", "3.5")',
+                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?list)',
                 array($list),
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", "", "3.5")',
+                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?ln)',
@@ -94,7 +94,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES (?li)',
                 array($list),
-                'INSERT INTO `table` VALUES (0, 1, 0, 3)',
+                'INSERT INTO `table` VALUES (0, 1, NULL, 3)',
             ),
             array(
                 'INSERT INTO `table` VALUES (?lin)',
@@ -129,7 +129,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` SET ?s',
                 array($set),
-                'INSERT INTO `table` SET `s`="стр\"ока", `d`="3.5", `n`=""',
+                'INSERT INTO `table` SET `s`="стр\"ока", `d`="3.5", `n`=NULL',
             ),
             array(
                 'INSERT INTO `table` SET ?set-null',
@@ -184,7 +184,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES ?values;',
                 array($values),
-                'INSERT INTO `table` VALUES ("0", "1", "2"), ("раз", "", "три")',
+                'INSERT INTO `table` VALUES ("0", "1", "2"), ("раз", NULL, "три")',
             ),
             array(
                 'INSERT INTO `table` VALUES ?vn',

@@ -304,6 +304,7 @@ abstract class DB
      */
     public function makeQuery($pattern, $data, $prefix = null)
     {
+        Compat::setCurrentOpts($this->paramsSys['compat']);
         $this->forcedConnect();
         if (\is_null($prefix)) {
             $prefix = $this->prefix;
