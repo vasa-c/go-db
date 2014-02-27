@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## dev-master
+## 2.1.0
 
 * Compat: compatibility with older versions
 * Table::select(): $limit argument `[$offset, $limit]`
