@@ -278,7 +278,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $res->col());
         $this->assertSame('SELECT "id" FROM "pr_test" WHERE 1 ORDER BY "id" ASC LIMIT 0,3', $last);
         $expected = array(3, 4, 5);
-        $res = $table->select('id', null, 'id', 3, 2);
+        $res = $table->select('id', null, 'id', [3, 2]);
         $this->assertEquals($expected, $res->col());
         $this->assertSame('SELECT "id" FROM "pr_test" WHERE 1 ORDER BY "id" ASC LIMIT 2,3', $last);
     }

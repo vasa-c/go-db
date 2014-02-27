@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## dev-master
+
+* Table::select(): $limit argument `[$offset, $limit]`
+
 ## 2.0.4
 
 * ?where and custom operation (`WHERE x>y-5)

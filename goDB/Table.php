@@ -160,10 +160,9 @@ class Table
      * @param mixed $where [optional]
      * @param mixed $order [optional]
      * @param mixed $limit [optional]
-     * @param mixed $offset [optional]
      * @return \go\DB\Result
      */
-    public function select($cols = null, $where = true, $order = null, $limit = null, $offset = null)
+    public function select($cols = null, $where = true, $order = null, $limit = null)
     {
         if ($cols === null) {
             $cols = true;
@@ -183,9 +182,15 @@ class Table
             $pattern .= ' ORDER BY ?c ASC';
             $data[] = $order;
         }
-        if ($limit) {
+        if ($limit !== null) {
+            if (\is_array($limit)) {
+                $offset = isset($limit[1]) ? $limit[1] : 0;
+                $limit = $limit[0];
+            } else {
+                $offset = 0;
+            }
             $pattern .= ' LIMIT ?i,?i';
-            $data[] = $offset ?: 0;
+            $data[] = $offset;
             $data[] = $limit;
         }
         return $this->db->query($pattern, $data);
