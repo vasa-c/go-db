@@ -385,6 +385,32 @@ class Templater
     }
 
     /**
+     * ?o, ?order
+     *
+     * @param mixed $value
+     * @param array $modifers
+     * @return string
+     */
+    private function replacementO($value, array $modifers)
+    {
+        if (!\is_array($value)) {
+            return $this->replacementC($value, $modifers);
+        }
+        $stats = [];
+        foreach ($value as $k => $v) {
+            if (\is_int($k)) {
+                $c = $v;
+                $s = 'ASC';
+            } else {
+                $c = $k;
+                $s = $v ? 'ASC' : 'DESC';
+            }
+            $stats[] = $this->replacementC($c, $modifers).' '.$s;
+        }
+        return \implode(',', $stats);
+    }
+
+    /**
      * Внутренняя реализация взаимодействия с базой
      *
      * @var \go\DB\Implementations\Base

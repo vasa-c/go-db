@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## dev-master
+
+* #25: ?order: placeholder for ORDER BY statement
+
 ## 2.1.0
 
 * Compat: compatibility with older versions

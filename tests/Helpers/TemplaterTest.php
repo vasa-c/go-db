@@ -325,6 +325,46 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * ?o, ?order
+     * @dataProvider providerOrder
+     */
+    public function testOrder($pattern, $data, $expected, $prefix = null)
+    {
+        $templater = $this->createTemplater($pattern, $data, $prefix);
+        $templater->parse();
+        $this->assertEquals($expected, $templater->getQuery());
+    }
+
+    /**
+     * @return array
+     */
+    public function providerOrder()
+    {
+        return array(
+            array(
+                'ORDER BY ?o',
+                array('id'),
+                'ORDER BY `id`',
+            ),
+            array(
+                'ORDER BY ?order;',
+                array(array('a', 'b', 'c')),
+                'ORDER BY `a` ASC,`b` ASC,`c` ASC',
+            ),
+            array(
+                'ORDER BY ?order',
+                array(array('a' => false, 'b' => true, 'c' => false)),
+                'ORDER BY `a` DESC,`b` ASC,`c` DESC',
+            ),
+            array(
+                'ORDER BY ?order',
+                array(array(array('t', 'a'), 'b' => false)),
+                'ORDER BY `t`.`a` ASC,`b` DESC',
+            ),
+        );
+    }
+
+    /**
      * ?e, ?escape
      * @dataProvider providerEscape
      */
