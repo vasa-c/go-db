@@ -10,9 +10,9 @@ namespace go\Tests\DB\Helpers\Fetchers;
 use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
- * @covers go\DB\Helpers\Fetcher
+ * @coversDefaultClass go\DB\Helpers\Fetchers\Cursor
  */
-class FetcherTest extends \PHPUnit_Framework_TestCase
+class CursorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * assoc, numerics, objects, col, vars

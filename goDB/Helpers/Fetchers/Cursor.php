@@ -7,6 +7,7 @@ namespace go\DB\Helpers\Fetchers;
 
 use go\DB\Helpers\Connector;
 use go\DB\Helpers\Iterators;
+use \go\DB\Exceptions\UnexpectedFetch;
 
 /**
  * The fetcher from a db-cursor
@@ -299,7 +300,7 @@ class Cursor extends Base
     protected function requiredCursor($fetch = null)
     {
         if ((!$this->isCursor) || $this->isFree) {
-            throw new \go\DB\Exceptions\UnexpectedFetch($fetch);
+            throw new UnexpectedFetch($fetch);
         }
         return true;
     }
