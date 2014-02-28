@@ -2,22 +2,24 @@
 
 ## dev-master
 
+## 2.1.1 (28.02.2014)
+
 * #26: Table: use column map
 * #25: ?order: placeholder for ORDER BY statement
 * #24: ?col use key: `?col:field`
 
-## 2.1.0
+## 2.1.0 (27.02.2014)
 
 * Compat: compatibility with older versions
 * Table::select(): $limit argument `[$offset, $limit]`
 
-## 2.0.4
+## 2.0.4 (26.02.2014)
 
 * ?where and custom operation (`WHERE x>y-5)
 * ?set and opertation (`SET x=x+1`)
 * Storage: custom main name & $storage->getMainDB()
 
-## 2.0.3
+## 2.0.3 (22.02.2014)
 
 * #20 Table class
 * #17 `?where` placeholder for WHERE statement
@@ -26,7 +28,7 @@
 * Class Storage is not final
 * Refactoring of unit tests
 
-## 2.0.2
+## 2.0.2 (26.01.2014)
 
 * #14 New autoload: Autoloader:register()
 * #12 Fix connector for PgSQL
