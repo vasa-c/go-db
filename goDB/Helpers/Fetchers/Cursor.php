@@ -135,10 +135,18 @@ class Cursor extends Base
         $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        $row = $imp->fetchRow($conn, $cursor);
-        while ($row) {
-            $result[] = $row[0];
+        if ($param) {
+            $row = $imp->fetchAssoc($conn, $cursor);
+            while ($row) {
+                $result[] = $row[$param];
+                $row = $imp->fetchAssoc($conn, $cursor);
+            }
+        } else {
             $row = $imp->fetchRow($conn, $cursor);
+            while ($row) {
+                $result[] = $row[0];
+                $row = $imp->fetchRow($conn, $cursor);
+            }
         }
         return $result;
     }

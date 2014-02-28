@@ -4,6 +4,7 @@
 
 * #26: Table: use column map
 * #25: ?order: placeholder for ORDER BY statement
+* #24: ?col use key: `?col:field`
 
 ## 2.1.0
 

@@ -114,6 +114,21 @@ class CursorTest extends \PHPUnit_Framework_TestCase
                     4 => (object)array('b' => 4, 'a' => 4),
                 ),
             ),
+            array(
+                $query,
+                'col',
+                array(3, 4, 4),
+            ),
+            array(
+                $query,
+                'col:b',
+                array(3, 4, 4),
+            ),
+            array(
+                $query,
+                'col:a',
+                array(2, 3, 4),
+            ),
         );
     }
 
