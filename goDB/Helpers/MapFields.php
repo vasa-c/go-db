@@ -29,7 +29,7 @@ class MapFields
     public function col($col)
     {
         if (\is_string($col) && (isset($this->map[$col]))) {
-            return $this->map[$col];
+            $col = $this->map[$col];
         }
         return $col;
     }
@@ -47,6 +47,8 @@ class MapFields
                 }
             }
             unset($col);
+        } elseif ((\is_string($cols) && (isset($this->map[$cols])))) {
+            $cols = $this->map[$cols];
         }
         return $cols;
     }
@@ -155,6 +157,14 @@ class MapFields
             $item[$k] = $v;
         }
         return $item;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMap()
+    {
+        return $this->map;
     }
 
     /**

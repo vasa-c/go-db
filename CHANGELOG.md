@@ -2,6 +2,7 @@
 
 ## dev-master
 
+* #26: Table: use column map
 * #25: ?order: placeholder for ORDER BY statement
 
 ## 2.1.0

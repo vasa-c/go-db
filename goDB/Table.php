@@ -7,6 +7,9 @@
 
 namespace go\DB;
 
+use go\DB\Helpers\MapFields;
+use go\DB\Helpers\Fetchers\Arr as ArrFetcher;
+
 /**
  * Access to a specified table
  */
@@ -19,11 +22,16 @@ class Table
      *        a database of the table
      * @param string $tablename
      *        the table name
+     * @param array $map [optional]
+     *        a field map
      */
-    public function __construct(\go\DB\DB $db, $tablename)
+    public function __construct(\go\DB\DB $db, $tablename, array $map = null)
     {
         $this->db = $db;
         $this->name = $tablename;
+        if (!empty($map)) {
+            $this->map = new MapFields($map);
+        }
     }
 
     /**
@@ -59,6 +67,9 @@ class Table
         if (empty($set)) {
             return null;
         }
+        if ($this->map) {
+            $set = $this->map->set($set);
+        }
         $pattern = 'INSERT INTO ?t (?cols) VALUES (?ln)';
         $data = array($this->name, \array_keys($set), \array_values($set));
         return $this->db->query($pattern, $data)->id();
@@ -83,6 +94,12 @@ class Table
         if (empty($sets)) {
             return;
         }
+        if ($this->map) {
+            foreach ($sets as &$set) {
+                $set = $this->map->set($set);
+            }
+            unset($set);
+        }
         if (isset($sets[0])) {
             $first = $sets[0];
         } else {
@@ -102,6 +119,9 @@ class Table
     {
         if (empty($set)) {
             return null;
+        }
+        if ($this->map) {
+            $set = $this->map->set($set);
         }
         $pattern = 'REPLACE INTO ?t (?cols) VALUES (?ln)';
         $data = array($this->name, \array_keys($set), \array_values($set));
@@ -124,6 +144,12 @@ class Table
         }
         if (empty($sets)) {
             return;
+        }
+        if ($this->map) {
+            foreach ($sets as &$set) {
+                $set = $this->map->set($set);
+            }
+            unset($set);
         }
         if (isset($sets[0])) {
             $first = $sets[0];
@@ -148,6 +174,10 @@ class Table
         if (empty($set)) {
             return 0;
         }
+        if ($this->map) {
+            $set = $this->map->set($set);
+            $where = $this->map->where($where);
+        }
         $pattern = 'UPDATE ?t SET ?sn WHERE ?w';
         $data = array($this->name, $set, $where);
         return $this->db->query($pattern, $data)->ar();
@@ -164,6 +194,11 @@ class Table
      */
     public function select($cols = null, $where = true, $order = null, $limit = null)
     {
+        if ($this->map) {
+            $cols = $this->map->cols($cols);
+            $where = $this->map->where($where);
+            $order = $this->map->order($order);
+        }
         if ($cols === null) {
             $cols = true;
         }
@@ -193,7 +228,13 @@ class Table
             $data[] = $offset;
             $data[] = $limit;
         }
-        return $this->db->query($pattern, $data);
+        $fetcher = $this->db->query($pattern, $data);
+        if ($this->map) {
+            $data = $fetcher->assoc();
+            $data = $this->map->assoc($data);
+            $fetcher = new ArrFetcher($data);
+        }
+        return $fetcher;
     }
 
     /**
@@ -206,6 +247,9 @@ class Table
     public function delete($where = null)
     {
         $pattern = 'DELETE FROM ?t WHERE ?w';
+        if ($this->map) {
+            $where = $this->map->where($where);
+        }
         $data = array($this->name, $where);
         return $this->db->query($pattern, $data)->ar();
     }
@@ -231,13 +275,27 @@ class Table
     {
         if ($col !== null) {
             $p = '?c';
+            if ($this->map) {
+                $col = $this->map->col($col);
+            }
         } else {
             $p = '?q';
             $col = 1;
         }
+        if ($this->map) {
+            $where = $this->map->where($where);
+        }
         $pattern = 'SELECT COUNT('.$p.') FROM ?t WHERE ?w';
         $data = array($col, $this->name, $where);
         return $this->db->query($pattern, $data)->el();
+    }
+
+    /**
+     * @return \go\DB\Helpers\MapFields
+     */
+    public function getMap()
+    {
+        return $this->map;
     }
 
     /**
@@ -249,4 +307,9 @@ class Table
      * @var \go\DB\DB
      */
     private $db;
+
+    /**
+     * @var \go\DB\Helpers\MapFields
+     */
+    private $map;
 }

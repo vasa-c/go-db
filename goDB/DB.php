@@ -320,14 +320,12 @@ abstract class DB
      * Returns an object for a table access
      *
      * @param string $tablename
+     * @param array $map [optional]
      * @return \go\DB\Table
      */
-    public function getTable($tablename)
+    public function getTable($tablename, array $map = null)
     {
-        if (!isset($this->tables[$tablename])) {
-            $this->tables[$tablename] = new Table($this, $tablename);
-        }
-        return $this->tables[$tablename];
+        return new Table($this, $tablename, $map);
     }
 
     /**
@@ -494,11 +492,6 @@ abstract class DB
      * @var bool
      */
     protected $hardClosed = false;
-
-    /**
-     * @var array
-     */
-    private $tables = [];
 }
 
 /**

@@ -27,11 +27,11 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
      * @covers ::where
      * @covers ::assoc
      * @covers ::row
-     * @dataProvider provider
+     * @dataProvider providerMap
      * @param mixed $value
      * @param mixed $expected
      */
-    public function test($method, $value, $expected)
+    public function testMap($method, $value, $expected)
     {
         $map = new MapFields($this->map);
         $this->assertEquals($expected, $map->$method($value));
@@ -40,7 +40,7 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function provider()
+    public function providerMap()
     {
         return [
             [
@@ -67,6 +67,11 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
                 'cols',
                 ['one', ['t', 'two'], 'three'],
                 ['o', ['t', 'two'], 'three'],
+            ],
+            [
+                'cols',
+                'one',
+                'o',
             ],
             [
                 'set',
@@ -145,5 +150,14 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
                 null,
             ],
         ];
+    }
+
+    /**
+     * @covers ::getMap
+     */
+    public function testGetMap()
+    {
+        $map = new MapFields($this->map);
+        $this->assertEquals($this->map, $map->getMap());
     }
 }

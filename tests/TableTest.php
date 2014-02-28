@@ -20,10 +20,10 @@ class TableTest extends \PHPUnit_Framework_TestCase
      */
     private $createSQL = '
         CREATE TABLE `pr_test` (
-            `id` INTEGER,
+            `id_s` INTEGER,
             `a` INTEGER,
-            `b` INTEGER,
-            PRIMARY KEY (`id`)
+            `b_s` INTEGER,
+            PRIMARY KEY (`id_s`)
         );
     ';
 
@@ -36,6 +36,14 @@ class TableTest extends \PHPUnit_Framework_TestCase
         [3, 1, 6],
         [4, 2, 8],
         [5, 2, 10],
+    ];
+
+    /**
+     * @var array
+     */
+    private $map = [
+        'id' => 'id_s',
+        'b' => 'b_s',
     ];
 
     /**
@@ -71,10 +79,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $db = $this->createDB(false);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $this->assertInstanceOf('go\DB\Table', $table);
-        $this->assertSame($table, $db->getTable('test'));
-        $this->assertNotSame($table, $db->getTable('unk'));
     }
 
     /**
@@ -102,8 +108,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testGetCount()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
-        $db->query('UPDATE `pr_test` SET `b`=NULL WHERE `id`=3');
+        $table = $db->getTable('test', $this->map);
+        $db->query('UPDATE `pr_test` SET `b_s`=NULL WHERE `id_s`=3');
         $this->assertSame(5, $table->getCount());
         $this->assertSame(5, $table->getCount('a'));
         $this->assertSame(4, $table->getCount('b'));
@@ -117,11 +123,11 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $id = $table->insert(array('a' => 5, 'b' => 6));
         $this->assertNotEmpty($id);
-        $row = $db->query('SELECT `id`,`a`,`b` FROM `pr_test` WHERE `id`=?i', array($id))->row();
-        $this->assertEquals(array('id' => $id, 'a' => 5, 'b' => 6), $row);
+        $row = $db->query('SELECT `id_s`,`a`,`b_s` FROM `pr_test` WHERE `id_s`=?i', array($id))->row();
+        $this->assertEquals(array('id_s' => $id, 'a' => 5, 'b_s' => 6), $row);
     }
 
 
@@ -131,7 +137,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testMultiInsert()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $values = array(
             array(
                 'a' => 2,
@@ -143,7 +149,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             ),
         );
         $table->multiInsert($values, false);
-        $actual = $db->query('SELECT `a`,`b` FROM `pr_test` WHERE `id`>5')->vars();
+        $actual = $db->query('SELECT `a`,`b_s` FROM `pr_test` WHERE `id_s`>5')->vars();
         $expected = array(
             2 => 4,
             3 => 6,
@@ -158,7 +164,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testMultiReplace()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $values = array(
             array(
                 'id' => 2,
@@ -170,7 +176,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             ),
         );
         $table->multiReplace($values, false);
-        $actual = $db->query('SELECT `id`,`a` FROM `pr_test`')->vars();
+        $actual = $db->query('SELECT `id_s`,`a` FROM `pr_test`')->vars();
         $expected = array(
             1 => 1,
             2 => 17,
@@ -188,9 +194,9 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $table->update(array('b' => 11), array('a' => 2));
-        $actual = $db->query('SELECT `id`,`b` FROM `pr_test`')->vars();
+        $actual = $db->query('SELECT `id_s`,`b_s` FROM `pr_test`')->vars();
         $expected = array(
             1 => 2,
             2 => 4,
@@ -207,7 +213,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $db = $this->createDB(true);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $this->assertEquals(2, $table->delete(array('a' => 2)));
         $this->assertEquals(3, $db->query('SELECT COUNT(1) FROM `pr_test`')->el());
         $this->assertEquals(3, $table->delete());
@@ -226,7 +232,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             $last = $query;
         };
         $db->setDebug($debug);
-        $table = $db->getTable('test');
+        $table = $db->getTable('test', $this->map);
         $expected = array(
             1 => array('id' => 1, 'a' => 1, 'b' => 2),
             2 => array('id' => 2, 'a' => 1, 'b' => 4),
@@ -245,7 +251,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         );
         $res = $table->select(array('a', 'b'));
         $this->assertEquals($expected, $res->assoc('b'));
-        $this->assertSame('SELECT "a","b" FROM "pr_test" WHERE 1', $last);
+        $this->assertSame('SELECT "a","b_s" FROM "pr_test" WHERE 1', $last);
         $expected = array(
             2 => array('b' => 2),
             4 => array('b' => 4),
@@ -254,7 +260,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             10 => array('b' => 10),
         );
         $res = $table->select('b');
-        $this->assertSame('SELECT "b" FROM "pr_test" WHERE 1', $last);
+        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1', $last);
         $this->assertEquals($expected, $res->assoc('b'));
         $expected = array(
             8 => array('b' => 8),
@@ -262,7 +268,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         );
         $res = $table->select('b', array('a' => 2));
         $this->assertEquals($expected, $res->assoc('b'));
-        $this->assertSame('SELECT "b" FROM "pr_test" WHERE "a"=2', $last);
+        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE "a"=2', $last);
         $expected = array(
             array('b' => 8),
             array('b' => 10),
@@ -272,14 +278,28 @@ class TableTest extends \PHPUnit_Framework_TestCase
         );
         $res = $table->select(array('b'), true, array('a' => false, 'b' => true));
         $this->assertEquals($expected, $res->assoc());
-        $this->assertSame('SELECT "b" FROM "pr_test" WHERE 1 ORDER BY "a" DESC,"b" ASC', $last);
+        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1 ORDER BY "a" DESC,"b_s" ASC', $last);
         $expected = array(1, 2, 3);
         $res = $table->select('id', null, 'id', 3);
         $this->assertEquals($expected, $res->col());
-        $this->assertSame('SELECT "id" FROM "pr_test" WHERE 1 ORDER BY "id" ASC LIMIT 0,3', $last);
+        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 0,3', $last);
         $expected = array(3, 4, 5);
         $res = $table->select('id', null, 'id', [3, 2]);
         $this->assertEquals($expected, $res->col());
-        $this->assertSame('SELECT "id" FROM "pr_test" WHERE 1 ORDER BY "id" ASC LIMIT 2,3', $last);
+        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 2,3', $last);
+    }
+
+    /**
+     * @covers ::getMap
+     */
+    public function testGetMap()
+    {
+        $db = $this->createDB(false);
+        $table = $db->getTable('test', $this->map);
+        $map = $table->getMap();
+        $this->assertInstanceOf('go\DB\Helpers\MapFields', $map);
+        $this->assertEquals($this->map, $map->getMap());
+        $table = $db->getTable('test');
+        $this->assertNull($table->getMap());
     }
 }
