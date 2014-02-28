@@ -16,6 +16,8 @@ namespace go\DB;
 
 const VERSION = '2.0.2 beta';
 
+use go\DB\Helpers\Fetchers\Cursor as CursorFetcher;
+
 abstract class DB
 {
     /**
@@ -395,7 +397,7 @@ abstract class DB
      */
     protected function createFetcher($cursor)
     {
-        return (new Helpers\Fetcher($this->connector, $cursor));
+        return (new CursorFetcher($this->connector, $cursor));
     }
 
     /**

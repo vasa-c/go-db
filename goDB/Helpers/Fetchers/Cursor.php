@@ -1,25 +1,27 @@
 <?php
 /**
- * Реализация представления результата запроса
- *
- * @package    go\Db
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\Db
  */
 
-namespace go\DB\Helpers;
+namespace go\DB\Helpers\Fetchers;
 
-use go\DB\Exceptions as Exceptions;
+use go\DB\Helpers\Connector;
+use go\DB\Helpers\Iterators;
 
-class Fetcher implements \go\DB\Result
+/**
+ * The fetcher from a db-cursor
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
+class Cursor extends Base
 {
     /**
-     * Конструктор
+     * Constructor
      *
      * @param \go\DB\Helpers\Connector $connector
-     *        подключалка (подключение должно быть установлено)
+     *        connector (connection must be established)
      * @param mixed $cursor
-     *        низкоуровневая реализация курсора
+     *        low-level implementation of the cursor
      */
     public function __construct(Connector $connector, $cursor)
     {
@@ -31,35 +33,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * Деструктор - очищает результат
-     */
-    public function __destruct()
-    {
-        $this->free();
-    }
-
-    /**
-     * @override \go\DB\Result
-     *
-     * @throws \go\DB\Exceptions\Fetch
-     *
-     * @param string $fetch
-     * @return mixed
-     */
-    public function fetch($fetch)
-    {
-        $fetch = \explode(':', $fetch, 2);
-        $param = isset($fetch[1]) ? \strtolower($fetch[1]) : null;
-        $fetch = $fetch[0];
-        $fetches = Config::get('fetch');
-        if (!isset($fetches[$fetch])) {
-            throw new Exceptions\UnknownFetch($fetch);
-        }
-        return $this->$fetch($param);
-    }
-
-    /**
-     * @override \go\DB\Result
+     * {@inheritdoc}
      */
     public function free()
     {
@@ -73,11 +47,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param string $param [optional]
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function assoc($param = null)
     {
@@ -103,11 +73,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param int $param [optional]
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function numerics($param = null)
     {
@@ -133,11 +99,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param string $param [optional]
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function objects($param = null)
     {
@@ -163,10 +125,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function col($param = null)
     {
@@ -184,10 +143,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function vars($param = null)
     {
@@ -205,11 +161,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param string $param [optional]
-     * @return Iterator
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function iassoc($param = null)
     {
@@ -218,11 +170,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param int $param [optional]
-     * @return Iterator
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function inumerics($param = null)
     {
@@ -231,11 +179,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @param string $param [optional]
-     * @return Iterator
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function iobjects($param = null)
     {
@@ -244,10 +188,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return Iterator
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function ivars($param = null)
     {
@@ -256,10 +197,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return Iterator
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function icol($param = null)
     {
@@ -268,10 +206,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function row($param = null)
     {
@@ -280,10 +215,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return array
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function numeric($param = null)
     {
@@ -292,10 +224,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return object
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function object($param = null)
     {
@@ -304,10 +233,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return string
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function el($param = null)
     {
@@ -317,10 +243,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return bool
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function bool($param = null)
     {
@@ -330,10 +253,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return int
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     public function num($param = null)
     {
@@ -342,9 +262,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function id($param = null)
     {
@@ -352,9 +270,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function ar($param = null)
     {
@@ -362,9 +278,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function cursor($param = null)
     {
@@ -372,9 +286,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * @override \go\DB\Result
-     *
-     * @return \Iterator
+     * {@inheritdoc}
      */
     public function getIterator()
     {
@@ -382,10 +294,7 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * Указание на то, что данный формат действует только для выборок
-     *
-     * @param string $fetch [optional]
-     * @throws \go\DB\Exceptions\UnexpectedFetch
+     * {@inheritdoc}
      */
     protected function requiredCursor($fetch = null)
     {
@@ -396,45 +305,31 @@ class Fetcher implements \go\DB\Result
     }
 
     /**
-     * Внутренняя реализация результата (курсора) для конкретного адаптера
-     *
      * @var mixed
      */
     protected $cursor;
 
     /**
-     * Подключалка к базе
-     *
      * @var \go\DB\Helpers\Connector
      */
     protected $connector;
 
     /**
-     * Внутренняя реализация подключения к базе
-     *
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
 
     /**
-     * Низкоуровневое подключение
-     *
      * @var mixed
      */
     protected $connection;
 
     /**
-     * Является ли $cursor результатом выборки (курсором)
-     *
-     * (для SELECT - является, для INSERT - нет)
-     *
      * @var bool
      */
     protected $isCursor;
 
     /**
-     * Освобождён ли уже результат
-     *
      * @var bool
      */
     protected $isFree = false;

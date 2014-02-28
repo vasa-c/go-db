@@ -5,9 +5,9 @@
  * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
  */
 
-namespace go\Tests\DB\Helpers;
+namespace go\Tests\DB\Helpers\Fetchers;
 
-use go\DB\Helpers\Fetcher as Fetcher;
+use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
  * @covers go\DB\Helpers\Fetcher
