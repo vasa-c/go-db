@@ -2,6 +2,8 @@
 
 ## dev-master
 
+* Fixed PHP5.4 array syntax (5.3 compatibility)
+
 ## 2.1.1 (28.02.2014)
 
 * #26: Table: use column map

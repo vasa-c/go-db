@@ -17,11 +17,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    private $data = [
-        ['id' => 1, 'a' => 5, 'b' => 10],
-        ['id' => 2, 'a' => 15, 'b' => 5],
-        ['id' => 3, 'a' => 25, 'b' => null],
-    ];
+    private $data = array(
+        array('id' => 1, 'a' => 5, 'b' => 10),
+        array('id' => 2, 'a' => 15, 'b' => 5),
+        array('id' => 3, 'a' => 25, 'b' => null),
+    );
 
     /**
      *
@@ -42,17 +42,17 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssoc()
     {
-        $expected = [
-            ['id' => 1, 'a' => 5, 'b' => 10],
-            ['id' => 2, 'a' => 15, 'b' => 5],
-            ['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            array('id' => 1, 'a' => 5, 'b' => 10),
+            array('id' => 2, 'a' => 15, 'b' => 5),
+            array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $this->assertEquals($expected, $this->fetcher->assoc());
-        $expected = [
-            5 => ['id' => 1, 'a' => 5, 'b' => 10],
-            15 => ['id' => 2, 'a' => 15, 'b' => 5],
-            25 => ['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            5 => array('id' => 1, 'a' => 5, 'b' => 10),
+            15 => array('id' => 2, 'a' => 15, 'b' => 5),
+            25 => array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $this->assertEquals($expected, $this->fetcher->assoc('a'));
     }
 
@@ -61,17 +61,17 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testNumerics()
     {
-        $expected = [
-            [1, 5, 10],
-            [2, 15, 5],
-            [3, 25, null],
-        ];
+        $expected = array(
+            array(1, 5, 10),
+            array(2, 15, 5),
+            array(3, 25, null),
+        );
         $this->assertEquals($expected, $this->fetcher->numerics());
-        $expected = [
-            5 => [1, 5, 10],
-            15 => [2, 15, 5],
-            25 => [3, 25, null],
-        ];
+        $expected = array(
+            5 => array(1, 5, 10),
+            15 => array(2, 15, 5),
+            25 => array(3, 25, null),
+        );
         $this->assertEquals($expected, $this->fetcher->numerics(1));
     }
 
@@ -80,17 +80,17 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testObjects()
     {
-        $expected = [
-            (object)['id' => 1, 'a' => 5, 'b' => 10],
-            (object)['id' => 2, 'a' => 15, 'b' => 5],
-            (object)['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            (object)array('id' => 1, 'a' => 5, 'b' => 10),
+            (object)array('id' => 2, 'a' => 15, 'b' => 5),
+            (object)array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $this->assertEquals($expected, $this->fetcher->objects());
-        $expected = [
-            5 => (object)['id' => 1, 'a' => 5, 'b' => 10],
-            15 => (object)['id' => 2, 'a' => 15, 'b' => 5],
-            25 => (object)['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            5 => (object)array('id' => 1, 'a' => 5, 'b' => 10),
+            15 => (object)array('id' => 2, 'a' => 15, 'b' => 5),
+            25 => (object)array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $this->assertEquals($expected, $this->fetcher->objects('a'));
 
     }
@@ -100,9 +100,9 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testCol()
     {
-        $expected = [1, 2, 3];
+        $expected = array(1, 2, 3);
         $this->assertEquals($expected, $this->fetcher->col());
-        $expected = [1, 2, 3];
+        $expected = array(1, 2, 3);
         $this->assertEquals($expected, $this->fetcher->col('a'));
     }
 
@@ -111,9 +111,9 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testVars()
     {
-        $expected = [1 => 5, 2 => 15, 3 => 25];
+        $expected = array(1 => 5, 2 => 15, 3 => 25);
         $this->assertEquals($expected, $this->fetcher->vars());
-        $expected = [1 => 5, 2 => 15, 3 => 25];
+        $expected = array(1 => 5, 2 => 15, 3 => 25);
         $this->assertEquals($expected, $this->fetcher->vars('a'));
     }
 
@@ -122,19 +122,19 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testIassoc()
     {
-        $expected = [
-            ['id' => 1, 'a' => 5, 'b' => 10],
-            ['id' => 2, 'a' => 15, 'b' => 5],
-            ['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            array('id' => 1, 'a' => 5, 'b' => 10),
+            array('id' => 2, 'a' => 15, 'b' => 5),
+            array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $actual = $this->fetcher->iassoc();
         $this->assertInstanceOf('Traversable', $actual);
         $this->assertEquals($expected, \iterator_to_array($actual));
-        $expected = [
-            5 => ['id' => 1, 'a' => 5, 'b' => 10],
-            15 => ['id' => 2, 'a' => 15, 'b' => 5],
-            25 => ['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            5 => array('id' => 1, 'a' => 5, 'b' => 10),
+            15 => array('id' => 2, 'a' => 15, 'b' => 5),
+            25 => array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $actual = $this->fetcher->iassoc('a');
         $this->assertEquals($expected, \iterator_to_array($actual));
     }
@@ -144,19 +144,19 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testINumerics()
     {
-        $expected = [
-            [1, 5, 10],
-            [2, 15, 5],
-            [3, 25, null],
-        ];
+        $expected = array(
+            array(1, 5, 10),
+            array(2, 15, 5),
+            array(3, 25, null),
+        );
         $actual = $this->fetcher->inumerics();
         $this->assertInstanceOf('Traversable', $actual);
         $this->assertEquals($expected, \iterator_to_array($actual));
-        $expected = [
-            5 => [1, 5, 10],
-            15 => [2, 15, 5],
-            25 => [3, 25, null],
-        ];
+        $expected = array(
+            5 => array(1, 5, 10),
+            15 => array(2, 15, 5),
+            25 => array(3, 25, null),
+        );
         $actual = $this->fetcher->inumerics(1);
         $this->assertEquals($expected, \iterator_to_array($actual));
     }
@@ -166,11 +166,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testIvars()
     {
-        $expected = [1 => 5, 2 => 15, 3 => 25];
+        $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars();
         $this->assertInstanceOf('Traversable', $actual);
         $this->assertEquals($expected, $this->fetcher->vars());
-        $expected = [1 => 5, 2 => 15, 3 => 25];
+        $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars('a');
         $this->assertEquals($expected, $this->fetcher->vars('a'));
     }
@@ -180,11 +180,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testICol()
     {
-        $expected = [1, 2, 3];
+        $expected = array(1, 2, 3);
         $actual = $this->fetcher->icol();
         $this->assertInstanceOf('Traversable', $actual);
         $this->assertEquals($expected, \iterator_to_array($actual));
-        $expected = [1, 2, 3];
+        $expected = array(1, 2, 3);
         $this->fetcher->icol('a');
         $this->assertEquals($expected, \iterator_to_array($actual));
     }
@@ -194,7 +194,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testRow()
     {
-        $expected = ['id' => 1, 'a' => 5, 'b' => 10];
+        $expected = array('id' => 1, 'a' => 5, 'b' => 10);
         $this->assertEquals($expected, $this->fetcher->row());
         $fetcher = new Arr([]);
         $this->assertNull($fetcher->row());
@@ -205,7 +205,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testNumeric()
     {
-        $expected = [1, 5, 10];
+        $expected = array(1, 5, 10);
         $this->assertEquals($expected, $this->fetcher->numeric());
         $fetcher = new Arr([]);
         $this->assertNull($fetcher->numeric());
@@ -216,7 +216,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testObject()
     {
-        $expected = (object)['id' => 1, 'a' => 5, 'b' => 10];
+        $expected = (object)array('id' => 1, 'a' => 5, 'b' => 10);
         $this->assertEquals($expected, $this->fetcher->object());
         $fetcher = new Arr([]);
         $this->assertNull($fetcher->object());
@@ -286,11 +286,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetch()
     {
-        $expected = [
-            5 => ['id' => 1, 'a' => 5, 'b' => 10],
-            15 => ['id' => 2, 'a' => 15, 'b' => 5],
-            25 => ['id' => 3, 'a' => 25, 'b' => null],
-        ];
+        $expected = array(
+            5 => array('id' => 1, 'a' => 5, 'b' => 10),
+            15 => array('id' => 2, 'a' => 15, 'b' => 5),
+            25 => array('id' => 3, 'a' => 25, 'b' => null),
+        );
         $this->assertEquals($expected, $this->fetcher->fetch('assoc:a'));
     }
 

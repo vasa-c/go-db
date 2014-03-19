@@ -48,12 +48,12 @@ class Compat
     /**
      * @var array
      */
-    private static $opts = [
+    private static $opts = array(
         'null' => true,
-    ];
+    );
 
     /**
      * @var array
      */
-    private static $current = [];
+    private static $current = array();
 }

@@ -396,7 +396,7 @@ class Templater
         if (!\is_array($value)) {
             return $this->replacementC($value, $modifers);
         }
-        $stats = [];
+        $stats = array();
         foreach ($value as $k => $v) {
             if (\is_int($k)) {
                 $c = $v;

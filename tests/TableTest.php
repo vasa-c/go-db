@@ -30,21 +30,21 @@ class TableTest extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    private $rows = [
-        [1, 1, 2],
-        [2, 1, 4],
-        [3, 1, 6],
-        [4, 2, 8],
-        [5, 2, 10],
-    ];
+    private $rows = array(
+        array(1, 1, 2),
+        array(2, 1, 4),
+        array(3, 1, 6),
+        array(4, 2, 8),
+        array(5, 2, 10),
+    );
 
     /**
      * @var array
      */
-    private $map = [
+    private $map = array(
         'id' => 'id_s',
         'b' => 'b_s',
-    ];
+    );
 
     /**
      * @param boolean $fill [optional]
@@ -284,7 +284,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $res->col());
         $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 0,3', $last);
         $expected = array(3, 4, 5);
-        $res = $table->select('id', null, 'id', [3, 2]);
+        $res = $table->select('id', null, 'id', array(3, 2));
         $this->assertEquals($expected, $res->col());
         $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 2,3', $last);
     }

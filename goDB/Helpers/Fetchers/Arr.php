@@ -94,7 +94,7 @@ class Arr extends Base
      */
     public function col($param = null)
     {
-        $result = [];
+        $result = array();
         foreach ($this->data as $item) {
             $item = \array_values($item);
             $result[] = $item[0];
@@ -107,7 +107,7 @@ class Arr extends Base
      */
     public function vars($param = null)
     {
-        $result = [];
+        $result = array();
         foreach ($this->data as $item) {
             $item = \array_values($item);
             $result[$item[0]] = $item[1];

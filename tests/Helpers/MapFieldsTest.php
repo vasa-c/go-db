@@ -15,10 +15,10 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
     /**
      * @var go\DB\Helpers\MapFields
      */
-    private $map = [
+    private $map = array(
         'one' => 'o',
         'two' => 't',
-    ];
+    );
 
     /**
      * @covers ::col
@@ -42,114 +42,114 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
      */
     public function providerMap()
     {
-        return [
-            [
+        return array(
+            array(
                 'col',
                 'one',
                 'o',
-            ],
-            [
+            ),
+            array(
                 'col',
                 'three',
                 'three',
-            ],
-            [
+            ),
+            array(
                 'col',
-                ['t', 'one'],
-                ['t', 'one'],
-            ],
-            [
+                array('t', 'one'),
+                array('t', 'one'),
+            ),
+            array(
                 'cols',
                 null,
                 null,
-            ],
-            [
+            ),
+            array(
                 'cols',
-                ['one', ['t', 'two'], 'three'],
-                ['o', ['t', 'two'], 'three'],
-            ],
-            [
+                array('one', array('t', 'two'), 'three'),
+                array('o', array('t', 'two'), 'three'),
+            ),
+            array(
                 'cols',
                 'one',
                 'o',
-            ],
-            [
+            ),
+            array(
                 'set',
-                ['one' => 1, 'two' => 2, 'three' => 3],
-                ['o' => 1, 't' => 2, 'three' => 3],
-            ],
-            [
+                array('one' => 1, 'two' => 2, 'three' => 3),
+                array('o' => 1, 't' => 2, 'three' => 3),
+            ),
+            array(
                 'set',
-                ['one' => 1, 'two' => 2, 'three' => 3],
-                ['o' => 1, 't' => 2, 'three' => 3],
-            ],
-            [
+                array('one' => 1, 'two' => 2, 'three' => 3),
+                array('o' => 1, 't' => 2, 'three' => 3),
+            ),
+            array(
                 'set',
-                ['one' => ['col' => 'one', 'value' => 1], 'two' => ['value' => 2]],
-                ['o' => ['col' => 'o', 'value' => 1], 't' => ['value' => 2]],
-            ],
-            [
+                array('one' => array('col' => 'one', 'value' => 1), 'two' => array('value' => 2)),
+                array('o' => array('col' => 'o', 'value' => 1), 't' => array('value' => 2)),
+            ),
+            array(
                 'where',
                 true,
                 true,
-            ],
-            [
+            ),
+            array(
                 'where',
-                ['one' => 1, 'two' => [1, 2, 3]],
-                ['o' => 1, 't' => [1, 2, 3]],
-            ],
-            [
+                array('one' => 1, 'two' => array(1, 2, 3)),
+                array('o' => 1, 't' => array(1, 2, 3)),
+            ),
+            array(
                 'where',
-                ['one' => ['op' => '=', 'col' => 'two', 'value' => 3], 'three' => [1, 2, 3]],
-                ['o' => ['op' => '=', 'col' => 't', 'value' => 3], 'three' => [1, 2, 3]],
-            ],
-            [
+                array('one' => array('op' => '=', 'col' => 'two', 'value' => 3), 'three' => array(1, 2, 3)),
+                array('o' => array('op' => '=', 'col' => 't', 'value' => 3), 'three' => array(1, 2, 3)),
+            ),
+            array(
                 'order',
                 null,
                 null,
-            ],
-            [
+            ),
+            array(
                 'order',
                 'one',
                 'o',
-            ],
-            [
+            ),
+            array(
                 'order',
                 'three',
                 'three',
-            ],
-            [
+            ),
+            array(
                 'order',
-                ['one', 'four', 'two'],
-                ['o', 'four', 't'],
-            ],
-            [
+                array('one', 'four', 'two'),
+                array('o', 'four', 't'),
+            ),
+            array(
                 'order',
-                ['one', 'four', 'two' => true],
-                ['o', 'four', 't' => true],
-            ],
-            [
+                array('one', 'four', 'two' => true),
+                array('o', 'four', 't' => true),
+            ),
+            array(
                 'assoc',
-                [
-                    ['id' => 1, 'o' => 2, 't' => 3],
-                    ['id' => 4, 'o' => 5, 't' => 6],
-                ],
-                [
-                    ['id' => 1, 'one' => 2, 'two' => 3],
-                    ['id' => 4, 'one' => 5, 'two' => 6],
-                ],
-            ],
-            [
+                array(
+                    array('id' => 1, 'o' => 2, 't' => 3),
+                    array('id' => 4, 'o' => 5, 't' => 6),
+                ),
+                array(
+                    array('id' => 1, 'one' => 2, 'two' => 3),
+                    array('id' => 4, 'one' => 5, 'two' => 6),
+                ),
+            ),
+            array(
                 'row',
-                ['id' => 1, 'o' => 2, 't' => 3],
-                ['id' => 1, 'one' => 2, 'two' => 3],
-            ],
-            [
+                array('id' => 1, 'o' => 2, 't' => 3),
+                array('id' => 1, 'one' => 2, 'two' => 3),
+            ),
+            array(
                 'row',
                 null,
                 null,
-            ],
-        ];
+            ),
+        );
     }
 
     /**

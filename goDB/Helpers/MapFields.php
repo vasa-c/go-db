@@ -127,9 +127,9 @@ class MapFields
         if (!$this->flip) {
             $this->flip = \array_flip($this->map);
         }
-        $result = [];
+        $result = array();
         foreach ($rows as $row) {
-            $item = [];
+            $item = array();
             foreach ($row as $k => $v) {
                 $k = isset($this->flip[$k]) ? $this->flip[$k] : $k;
                 $item[$k] = $v;
@@ -151,7 +151,7 @@ class MapFields
         if (!$this->flip) {
             $this->flip = \array_flip($this->map);
         }
-        $item = [];
+        $item = array();
         foreach ($row as $k => $v) {
             $k = isset($this->flip[$k]) ? $this->flip[$k] : $k;
             $item[$k] = $v;
