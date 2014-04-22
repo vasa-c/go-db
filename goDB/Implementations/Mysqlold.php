@@ -165,6 +165,6 @@ final class Mysqlold extends Base
      */
     public function rewindCursor($connection, $cursor)
     {
-        return \mysql_data_seek($cursor, $connection);
+        return \mysql_data_seek($cursor, 0);
     }
 }
