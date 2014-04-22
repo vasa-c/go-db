@@ -9,4 +9,4 @@ namespace go\Tests\DB;
 require(__DIR__.'/../goDB/Autoloader.php');
 
 \go\DB\Autoloader::register();
-\go\DB\Autoloader::registerForTests(__NAMESPACE__, __DIR__.'/DB');
+\go\DB\Autoloader::registerForTests(__NAMESPACE__, __DIR__);
