@@ -2,10 +2,11 @@
 
 ## dev-master
 
+* MySQL: parameter "host" is optional ("localhost" by default)
+* SQLite: parameter "filename" is optional (in memory database by default)
 * Fixed PHP5.4 array syntax (5.3 compatibility)
 * Small code review
 * Comments translated to English
-* MySQL: parameter "host" is optional ("localhost" by default)
 * Unit tests for real databases
 
 ## 2.1.1 (28.02.2014)

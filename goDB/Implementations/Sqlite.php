@@ -15,15 +15,16 @@ final class Sqlite extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array('filename');
+    protected $paramsReq = array();
 
     /**
      * {@inheritdoc}
      */
     protected $paramsDefault = array(
-        'flags'          => null,
+        'filename' => ':memory:',
+        'flags' => null,
         'encryption_key' => null,
-        'mysql_quot'     => false,
+        'mysql_quot' => false,
     );
 
     /**
