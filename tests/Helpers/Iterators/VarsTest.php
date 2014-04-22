@@ -9,6 +9,7 @@ namespace go\Tests\DB\Helpers\Iterators;
 use go\DB\Helpers\Iterators;
 use go\DB\Helpers\Connector;
 use go\DB\Implementations\TestBase\Cursor;
+use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
  * @coversDefaultClass go\DB\Helpers\Iterators\Vars
@@ -28,7 +29,7 @@ class VarsTest extends \PHPUnit_Framework_TestCase
         $connector->connect();
         $cursor = new Cursor($data);
 
-        $iterator = new Iterators\Vars($connector, $cursor);
+        $iterator = new Iterators\Vars($connector, new Fetcher($connector, $cursor));
         $result = \iterator_to_array($iterator);
         $expected = array(
             1 => 'One',
@@ -38,7 +39,8 @@ class VarsTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $result);
 
-        $iterator = new Iterators\Vars($connector, $cursor, 'name');
+        $cursor->reset();
+        $iterator = new Iterators\Vars($connector, new Fetcher($connector, $cursor), 'name');
         $result = \iterator_to_array($iterator);
         $expected = array(
             1 => 'One',

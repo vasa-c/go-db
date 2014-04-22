@@ -5,6 +5,9 @@
 
 namespace go\DB\Helpers\Iterators;
 
+use \go\DB\Helpers\Connector;
+use \go\DB\Helpers\Fetchers\Base as FetcherBase;
+
 /**
  * The iterator for query result
  *
@@ -17,16 +20,17 @@ abstract class Base implements \Iterator, \Countable
      *
      * @param \go\DB\Helpers\Connector $connector
      *        the connector (the connection must be established)
-     * @param mixed $cursor
-     *        the low-level cursor implementation
+     * @param \go\DB\Helpers\Fetchers\Base $ncursor
+     *        the aggregator of low-level cursor implementation
      * @param string $key [optional]
      *        a field which used as a key in a result array (numerics array by default)
      */
-    public function __construct(\go\DB\Helpers\Connector $connector, $cursor, $key = null)
+    public function __construct(Connector $connector, FetcherBase $ncursor, $key = null)
     {
         $this->implementation = $connector->getImplementation();
         $this->connection = $connector->getConnection();
-        $this->cursor = $cursor;
+        $this->ncursor = $ncursor;
+        $this->cursor = $ncursor->cursor();
         $this->key = $key;
         $this->pointer = 0;
     }
@@ -48,7 +52,7 @@ abstract class Base implements \Iterator, \Countable
         if (!$this->nextRow) {
             return false;
         }
-        if (!\is_null($this->key)) {
+        if ($this->key !== null) {
             return $this->nextRow[$this->key];
         }
         return $this->pointer;
@@ -59,7 +63,6 @@ abstract class Base implements \Iterator, \Countable
      */
     public function next()
     {
-        $this->nextRow = $this->fetchNextRow();
         $this->pointer++;
     }
 
@@ -68,9 +71,10 @@ abstract class Base implements \Iterator, \Countable
      */
     public function rewind()
     {
-        $this->implementation->rewindCursor($this->connection, $this->cursor);
-        $this->pointer = 0;
-        $this->nextRow = $this->fetchNextRow();
+        if ($this->pointer !== 0) {
+            $this->implementation->rewindCursor($this->connection, $this->cursor);
+            $this->pointer = 0;
+        }
     }
 
     /**
@@ -78,7 +82,8 @@ abstract class Base implements \Iterator, \Countable
      */
     public function valid()
     {
-        return ($this->nextRow !== false);
+        $this->nextRow = $this->fetchNextRow();
+        return (!empty($this->nextRow));
     }
 
     /**
@@ -86,7 +91,7 @@ abstract class Base implements \Iterator, \Countable
      */
     public function count()
     {
-        return $this->implementation->getNumRows($this->connection, $cursor);
+        return $this->implementation->getNumRows($this->connection, $this->cursor);
     }
 
     /**
@@ -112,6 +117,11 @@ abstract class Base implements \Iterator, \Countable
     protected $cursor;
 
     /**
+     * @var \go\DB\Helpers\Fetchers\Base
+     */
+    protected $ncursor;
+
+    /**
      * @var string|null
      */
     protected $key;
@@ -121,7 +131,7 @@ abstract class Base implements \Iterator, \Countable
      *
      * @var string
      */
-    protected $pointer;
+    protected $pointer = 0;
 
     /**
      * @var mixed

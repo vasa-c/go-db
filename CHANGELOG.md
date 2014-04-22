@@ -2,6 +2,7 @@
 
 ## dev-master
 
+* Fixed iterators
 * MySQL: parameter "host" is optional ("localhost" by default)
 * SQLite: parameter "filename" is optional (in memory database by default)
 * Fixed PHP5.4 array syntax (5.3 compatibility)
