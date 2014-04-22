@@ -2,6 +2,8 @@
 
 ## dev-master
 
+## 2.2.0 (22.04.2014)
+
 * #7: Fixed iterators
 * Small code review
 * Comments translated to English
