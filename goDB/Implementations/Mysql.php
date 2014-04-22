@@ -15,16 +15,17 @@ final class Mysql extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array('host', 'username', 'password');
+    protected $paramsReq = array('username', 'password');
 
     /**
      * {@inheritdoc}
      */
     protected $paramsDefault = array(
-        'dbname'  => null,
+        'host' => 'localhost',
+        'dbname' => null,
         'charset' => null,
-        'port'    => null,
-        'socket'  => null,
+        'port' => null,
+        'socket' => null,
     );
 
     /**
