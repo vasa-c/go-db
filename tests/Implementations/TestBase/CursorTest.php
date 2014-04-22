@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Implementations\TestBase;
@@ -10,12 +9,13 @@ namespace go\Tests\DB\Implementations\TestBase;
 use go\DB\Implementations\TestBase\Cursor as Cursor;
 
 /**
- * @covers \go\DB\Implementations\TestBase\Cursor
+ * @coversDefaultClass \go\DB\Implementations\TestBase\Cursor
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class CursorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetchAssoc
+     * @covers ::fetchAssoc
      */
     public function testAssoc()
     {
@@ -31,7 +31,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetchRow
+     * @covers ::fetchRow
      */
     public function testRow()
     {
@@ -47,7 +47,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::fetchObject
+     * @covers ::fetchObject
      */
     public function testObject()
     {
@@ -63,7 +63,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::reset
+     * @covers ::reset
      */
     public function testReset()
     {
@@ -82,7 +82,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\Implementations\TestBase\Cursor::getNumRows
+     * @covers ::getNumRows
      */
     public function testGetNumRows()
     {

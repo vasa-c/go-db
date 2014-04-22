@@ -1,7 +1,15 @@
 <?php
+/**
+ * @package go\DB
+ */
 
 namespace go\DB\Exceptions\Helpers;
 
+/**
+ * The helper for truncate a backtrace
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 class Backtrace
 {
     /**

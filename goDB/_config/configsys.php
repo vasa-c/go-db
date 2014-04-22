@@ -1,18 +1,24 @@
 <?php
 /**
- * Системные параметры базы
+ * The defaults for system parameters
  *
- * имя => значение по умолчанию
- *
- * @package    go\DB
- * @subpackage config
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 
 return array(
+    /* The adapter name */
     'adapter' => null,
-    'lazy'    => true,
+    
+    /* The flag of lazy connection */
+    'lazy' => true,
+
+    /* The table prefix */
     'prefix'  => '',
-    'debug'   => null,
+
+    /* The debug handler */
+    'debug' => null,
+
+    /* The compatibility options */
     'compat'  => array(),
 );

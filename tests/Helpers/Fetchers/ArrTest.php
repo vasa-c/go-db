@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers\Fetchers;
@@ -11,6 +10,7 @@ use go\DB\Helpers\Fetchers\Arr;
 
 /**
  * @coversDefaultClass go\DB\Helpers\Fetchers\Arr
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ArrTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,6 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     );
 
     /**
-     *
      * @var \go\DB\Helpers\Fetchers\Arr
      */
     private $fetcher;
@@ -295,7 +294,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__constructor
+     * @covers ::__construct
      */
     public function testConstruct()
     {

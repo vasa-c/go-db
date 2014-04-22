@@ -1,16 +1,19 @@
 <?php
 /**
- * Исключение: неизвестный плейсхолдер
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a placeholder is unknown
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class UnknownPlaceholder extends Placeholder
 {
+    /**
+     * {@inheritdoc}
+     */
     protected $MESSAGE_PATTERN = 'Unknown placeholder "{{ placeholder }}"';
 }

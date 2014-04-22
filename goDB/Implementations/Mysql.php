@@ -1,29 +1,24 @@
 <?php
 /**
- * Надстройка над php_mysqli
- *
- * @package    go\DB
- * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Implementations;
 
+/**
+ * The adapter for php_mysqli
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Mysql extends Base
 {
     /**
-     * Обязательные параметры подключения
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsReq = array('host', 'username', 'password');
 
     /**
-     * Необязательные параметры подключения
-     *
-     * параметр => значение по умолчанию
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsDefault = array(
         'dbname'  => null,
@@ -33,12 +28,7 @@ final class Mysql extends Base
     );
 
     /**
-     * @override Base
-     *
-     * @param array $params
-     * @param string & $errroInfo
-     * @param int & $errorCode
-     * @return mixed
+     * {@inheritdoc}
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
@@ -48,11 +38,11 @@ final class Mysql extends Base
         } else {
             $port = $params['port'];
         }
-        $host     = $host[0];
-        $user     = $params['username'];
+        $host = $host[0];
+        $user = $params['username'];
         $password = $params['password'];
-        $dbname   = $params['dbname'];
-        $socket   = $params['socket'];
+        $dbname = $params['dbname'];
+        $socket = $params['socket'];
         $connection = @(new \mysqli($host, $user, $password, $dbname, $port, $socket));
         if ($connection->connect_error) {
             $this->errorInfo = $connection->connect_error;
@@ -71,9 +61,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
+     * {@inheritdoc}
      */
     public function close($connection)
     {
@@ -81,11 +69,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $query
-     * @return mixed
+     * {@inheritdoc}
      */
     public function query($connection, $query)
     {
@@ -93,11 +77,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getInsertId($connection, $cursor = null)
     {
@@ -105,11 +85,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getAffectedRows($connection, $cursor = null)
     {
@@ -117,37 +93,23 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return string
+     * {@inheritdoc}
      */
     public function getErrorInfo($connection, $cursor = null)
     {
         return $connection->error;
     }
 
-
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getErrorCode($connection, $cursor = null)
     {
         return $connection->errno;
     }
 
-
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return int
+     * {@inheritdoc}
      */
     public function getNumRows($connection, $cursor)
     {
@@ -155,11 +117,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchRow($connection, $cursor)
     {
@@ -167,11 +125,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchAssoc($connection, $cursor)
     {
@@ -179,11 +133,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return object|false
+     * {@inheritdoc}
      */
     public function fetchObject($connection, $cursor)
     {
@@ -191,10 +141,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function freeCursor($connection, $cursor)
     {
@@ -202,11 +149,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param scalar $value
-     * @return string
+     * {@inheritdoc}
      */
     public function escapeString($connection, $value)
     {
@@ -214,11 +157,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $value
-     * @return string
+     * {@inheritdoc}
      */
     protected function reprField($connection, $value)
     {
@@ -226,10 +165,7 @@ final class Mysql extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function rewindCursor($connection, $cursor)
     {

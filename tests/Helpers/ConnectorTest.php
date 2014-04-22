@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers;
@@ -10,12 +9,13 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\Connector;
 
 /**
- * @covers go\DB\Helpers\Connector
+ * @coversDefaultClass go\DB\Helpers\Connector
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ConnectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Helpers\Connector::__construct
+     * @covers ::__construct
      */
     public function testConstruct()
     {
@@ -27,7 +27,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::__construct
+     * @covers ::__construct
      * @expectedException go\DB\Exceptions\ConfigConnect
      */
     public function testConstructInvalidConfig()
@@ -39,7 +39,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::connect
+     * @covers ::connect
      */
     public function testConnect()
     {
@@ -58,7 +58,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::connect
+     * @covers ::connect
      * @expectedException go\DB\Exceptions\Connect
      */
     public function testConnectErrorConfig()
@@ -71,8 +71,8 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::close
-     * @covers go\DB\Helpers\Connector::isConnected
+     * @covers ::close
+     * @covers ::isConnected
      */
     public function testClose()
     {
@@ -108,13 +108,13 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::__construct
-     * @covers go\DB\Helpers\Connector::connect
-     * @covers go\DB\Helpers\Connector::close
-     * @covers go\DB\Helpers\Connector::isConnected
-     * @covers go\DB\Helpers\Connector::getCountConnections
-     * @covers go\DB\Helpers\Connector::addLink
-     * @covers go\DB\Helpers\Connector::removeLink
+     * @covers ::__construct
+     * @covers ::connect
+     * @covers ::close
+     * @covers ::isConnected
+     * @covers ::getCountConnections
+     * @covers ::addLink
+     * @covers ::removeLink
      */
     public function testShare()
     {
@@ -145,7 +145,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Helpers\Connector::__destruct
+     * @covers ::__destruct
      */
     public function testDestructor()
     {

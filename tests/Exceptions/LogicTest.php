@@ -1,14 +1,15 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Exceptions;
 
 /**
- * @covers go\DB\Exceptions\Logic
+ * @coversDefaultClass go\DB\Exceptions\Logic
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class LogicTest extends \PHPUnit_Framework_TestCase
 {

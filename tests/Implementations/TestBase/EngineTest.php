@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Implementations\TestBase;
@@ -10,12 +9,13 @@ namespace go\Tests\DB\Implementations\TestBase;
 use go\DB\Implementations\TestBase\Engine as Engine;
 
 /**
- * @covers go\DB\Implementations\TestBase\Engine
+ * @coversDefaultClass go\DB\Implementations\TestBase\Engine
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class EngineTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
+     * @covers ::query
      * @dataProvider providerSelect
      */
     public function testSelect($query, $expected)
@@ -84,8 +84,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getInsertId
+     * @covers ::query
+     * @covers ::getInsertId
      */
     public function testInsert()
     {
@@ -103,8 +103,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getAffectedRows
+     * @covers ::query
+     * @covers ::getAffectedRows
      */
     public function testUpdate()
     {
@@ -125,8 +125,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getErrorCode
+     * @covers ::query
+     * @covers ::getErrorCode
      */
     public function testErrorOperator()
     {
@@ -136,8 +136,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getErrorCode
+     * @covers ::query
+     * @covers ::getErrorCode
      */
     public function testErrorTable()
     {
@@ -147,8 +147,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getErrorCode
+     * @covers ::query
+     * @covers ::getErrorCode
      */
     public function testErrorCol()
     {
@@ -158,9 +158,9 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::query
-     * @covers go\DB\Implementations\TestBase\Engine::getErrorInfo
-     * @covers go\DB\Implementations\TestBase\Engine::getErrorCode
+     * @covers ::query
+     * @covers ::getErrorInfo
+     * @covers ::getErrorCode
      */
     public function testErrorInfo()
     {
@@ -176,8 +176,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::close
-     * @covers go\DB\Implementations\TestBase\Engine::isClosed
+     * @covers ::close
+     * @covers ::isClosed
      */
     public function testClose()
     {
@@ -188,8 +188,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\TestBase\Engine::getLogs
-     * @covers go\DB\Implementations\TestBase\Engine::resetLogs
+     * @covers ::getLogs
+     * @covers ::resetLogs
      */
     public function testLogs()
     {

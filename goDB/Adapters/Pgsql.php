@@ -1,10 +1,15 @@
 <?php
 /**
- * Адаптер pgsql (надстройка над php_pgsql)
+ * @package go\DB
+ */
+
+namespace go\DB\Adapters;
+
+/**
+ * The PostgreSQL adapter
  *
- * @package    go\DB
- * @subpackage Adapters
- * @author     Alex Polev
+ * @author Alex Polev
+ * @uses php_pgsql
  */
 namespace go\DB\Adapters;
 

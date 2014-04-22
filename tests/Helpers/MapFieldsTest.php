@@ -1,6 +1,7 @@
 <?php
 /**
  * @package go\DB
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers;
@@ -9,6 +10,7 @@ use go\DB\Helpers\MapFields;
 
 /**
  * @coversDefaultClass go\DB\Helpers\MapFields
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class MapFieldsTest extends \PHPUnit_Framework_TestCase
 {

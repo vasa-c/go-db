@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: имя базы занято в хранилище
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: adatabase with this name is already engaged in this storage
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class StorageEngaged extends Storage
 {
     protected $MESSAGE_PATTERN = 'Name "{{ dbname }}" already engaged in Storage';

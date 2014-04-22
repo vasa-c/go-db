@@ -1,25 +1,26 @@
 <?php
 /**
- * Итераторы в качестве результата
- *
- * @package    go\DB
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Helpers\Iterators;
 
+/**
+ * The iterator for query result
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Base implements \Iterator, \Countable
 {
     /**
-     * Конструктор
+     * The constructor
      *
      * @param \go\DB\Helpers\Connector $connector
-     *        подключалка (подключение должно быть установлено)
+     *        the connector (the connection must be established)
      * @param mixed $cursor
-     *        низкоуровневый курсор
+     *        the low-level cursor implementation
      * @param string $key [optional]
-     *        поле используемое в качестве ключа (по умолчанию - порядковый массив)
+     *        a field which used as a key in a result array (numerics array by default)
      */
     public function __construct(\go\DB\Helpers\Connector $connector, $cursor, $key = null)
     {
@@ -31,9 +32,7 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @override \Iterator
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function current()
     {
@@ -41,10 +40,9 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @override \Iterator
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
+
     public function key()
     {
         if (!$this->nextRow) {
@@ -57,7 +55,7 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @override \Iterator
+     * {@inheritdoc}
      */
     public function next()
     {
@@ -66,7 +64,7 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @override \Iterator
+     * {@inheritdoc}
      */
     public function rewind()
     {
@@ -76,7 +74,7 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @override \Iterator
+     * {@inheritdoc}
      */
     public function valid()
     {
@@ -84,7 +82,7 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * @overrider \Countable
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -92,50 +90,40 @@ abstract class Base implements \Iterator, \Countable
     }
 
     /**
-     * Извлечь очередную строку из выборки
+     * Extracts a next row from the result
      *
      * @return mixed | false
      */
     abstract protected function fetchNextRow();
 
     /**
-     * Внутренняя реализация взаимодействия с базой
-     *
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
 
     /**
-     * Низкоуровневое подключение к базе
-     *
      * @var mixed
      */
     protected $connection;
 
     /**
-     * Низкоуровневый курсор
-     *
      * @var mixed
      */
     protected $cursor;
 
     /**
-     * Поле, используемое в качестве ключа
-     *
-     * @var string | null
+     * @var string|null
      */
     protected $key;
 
     /**
-     * Указатель на текущую позицию
+     * The pointer to the current position
      *
      * @var string
      */
     protected $pointer;
 
     /**
-     * Следующая строка в последовательности
-     *
      * @var mixed
      */
     protected $nextRow;

@@ -13,6 +13,8 @@ namespace go\DB;
 class Compat
 {
     /**
+     * Sets a compatibility option
+     *
      * @param string $key
      * @param mixed $value
      */
@@ -22,6 +24,8 @@ class Compat
     }
 
     /**
+     * Sets a list of compatibility options for the current connection
+     *
      * @param array $opts
      */
     public static function setCurrentOpts(array $opts)
@@ -30,6 +34,8 @@ class Compat
     }
 
     /**
+     * Returns a compatibility option by its key
+     *
      * @param string $key
      * @param mixed $default [optional]
      * @return mixed

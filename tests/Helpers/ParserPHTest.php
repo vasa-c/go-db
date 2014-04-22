@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers;
@@ -10,20 +9,17 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\ParserPH as ParserPH;
 
 /**
- * @covers go\DB\Helpers\ParserPH
+ * @coversDefaultClass go\DB\Helpers\ParserPH
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ParserPHTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * @dataProvider providerParse
-     *
      * @param string $placeholder
-     *        исходный плейсхолдер
      * @param string $expectedType
-     *        его ожидаемый тип
      * @param string $expectedModifer
-     *        список его ожидаемых модификаторов
      */
     public function testParse($placeholder, $expectType, $expectModifers)
     {

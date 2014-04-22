@@ -1,51 +1,50 @@
 <?php
 /**
- * Абстракция над конкретной низкоуровневой реализацией доступа к базе
- *
- * Например, если адаптер MySQL является надстройкой над php_mysql, то
- * для этого наследуется класс от Base, который делегирует вызовы mysql_* функциям.
- *
- * Объект данного класса не содержит никаких индивидуальных свойств.
- * Переменные подключения и курсора передаются в методы в виде аргументов.
- *
- * Все публичные методы данного класса теоретически абстрактные
- * и подлежат переопределению в потомках, но некоторые функции уже определены, так как
- * их поведение одинаково для большинства драйверов.
- *
- * Никаких исключений данные методы не выбрасывают. В случае ошибки возвращается FALSE.
- *
  * @package    go\DB
- * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Implementations;
 
+/**
+ * The abstraction on a concrete low-level implementation database access
+ *
+ * For example, the MySQL-adapter is an abstraction under php_mysql.
+ * To do this, the Base-class inherited and its child delegates calls to mysqli_* functions.
+ *
+ * The implementation instance don't contains individual properties.
+ * Methods receives a connection and a cursor as arguments.
+ *
+ * All public method of this class is abstract (theoretically).
+ * But some of its is already defined because many drivers have same behaviour.
+ *
+ * Methods returns FALSE in case of an error (not exception).
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Base
 {
     /**
-     * Обязательные параметры подключения
-     * (переопределяются у потомков)
+     * The list of required connection parameters
+     * (for override)
      *
      * @var array
      */
     protected $paramsReq = array();
 
     /**
-     * Необязательные параметры подключения
-     * (переопределяются у потомков)
+     * The list of optional connection parameters
+     * (for override)
      *
-     * параметр => значение по умолчанию
+     * a parameter name => default value
      *
      * @var array
      */
     protected $paramsDefault = array();
 
     /**
-     * Получить объект реализации для конкретного адаптера
+     * Creates an instance for the specified adapter
      *
      * @param string $adapter
-     *        адаптер
      * @return \go\DB\Implementations\Base
      */
     public static function getImplementationForAdapter($adapter)
@@ -58,42 +57,39 @@ abstract class Base
     }
 
     /**
-     * Закрытый конструктор - создание только через getImplementationForAdapter()
+     * The hidden constructor. Building only by getImplementationForAdapter()
      */
     protected function __construct()
     {
     }
 
     /**
-     * Подключение к серверу БД и выбор базы
+     * Connects to a databse server and selects the specific database
      *
-     * Так как при ошибке не возвращается подключение, нет возможности
-     * узнать информацию об ошибках через getErrorInfo() и getErrrorCode().
-     * Поэтому для этого используются аргументы по ссылке
+     * The error information cannot find by getErrorInfo (because a connection don't returns).
+     * For this used arguments by references.
      *
      * @param array $params
-     *        параметры подключения
      * @param string & $errroInfo
      * @param int & $errorCode
      * @return mixed
-     *         реализация подключения или FALSE при ошибке
+     *         an implementation of connection or FALSE if error
      */
     abstract public function connect(array $params, &$errorInfo = null, &$errorCode = null);
 
     /**
-     * Закрыть подключение к серверу
+     * Closes the connection
      *
      * @param mixed $connection
      */
     abstract public function close($connection);
 
     /**
-     * Проверка структуры параметров подключения
+     * Validates and normalizes connection parameters
      *
      * @param array $params
-     *        параметры подключения
      * @return array
-     *         нормализовнные параметры или FALSE при некорректной структуре
+     *         normalized parameters or FALSE if parameters is invalid
      */
     public function checkParams(array $params)
     {
@@ -115,7 +111,7 @@ abstract class Base
     }
 
     /**
-     * Является ли результат запроса курсором (результатом выборки)
+     * Checks if a query result is a cursor (SELECT)
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -127,18 +123,18 @@ abstract class Base
     }
 
     /**
-     * Выполнение запроса к базе
+     * Performs a query to the database
      *
      * @param mixed $connection
      * @param string $query
-     *        SQL-запрос
+     *        the sql query
      * @return mixed
-     *         курсор результата для выборки, TRUE для других запросов, FALSE - ошибка
+     *         a cursor for SELECT, TRUE for other, FALSE for error
      */
     abstract public function query($connection, $query);
 
     /**
-     * Получить последний авто-инкремент (или аналог для баз без него)
+     * Returns a last autoincrement (or its analog)
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
@@ -147,7 +143,7 @@ abstract class Base
     abstract public function getInsertId($connection, $cursor = null);
 
     /**
-     * Получить количество строк, затронутых запросом
+     * Returns the number of rows who affected by the last query
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
@@ -156,7 +152,7 @@ abstract class Base
     abstract public function getAffectedRows($connection, $cursor = null);
 
     /**
-     * Получить описание последней ошибки
+     * Returns a last error description
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
@@ -166,7 +162,7 @@ abstract class Base
 
 
     /**
-     * Получить код последней ошибки
+     * Returns a last error code
      *
      * @param mixed $connection
      * @param mixed $cursor [optional]
@@ -176,7 +172,7 @@ abstract class Base
 
 
     /**
-     * Получить количество строк в выборке
+     * Returns the number of the result rows
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -185,7 +181,7 @@ abstract class Base
     abstract public function getNumRows($connection, $cursor);
 
     /**
-     * Получить очередную строку в виде порядкового массива
+     * Returns a next line as a numerics array
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -194,7 +190,7 @@ abstract class Base
     abstract public function fetchRow($connection, $cursor);
 
     /**
-     * Получить очередную строку в виде ассоциативного массива
+     * Returns a next line as an associative array
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -203,7 +199,7 @@ abstract class Base
     abstract public function fetchAssoc($connection, $cursor);
 
     /**
-     * Получить очередную строку в виде объекта
+     * Returns a next line as a object
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -216,7 +212,7 @@ abstract class Base
     }
 
     /**
-     * Освободить курсор
+     * Frees the cursor
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -224,7 +220,7 @@ abstract class Base
     abstract public function freeCursor($connection, $cursor);
 
     /**
-     * Экранирование спецсимволов в строке
+     * Escapes special symbols in a string
      *
      * @param mixed $connection
      * @param scalar $value
@@ -236,7 +232,7 @@ abstract class Base
     }
 
     /**
-     * Представление строки, как данного
+     * Represents a string as a data
      *
      * @param mixed $connection
      * @param scalar $value
@@ -248,7 +244,7 @@ abstract class Base
     }
 
     /**
-     * Представление целого числа, как данного
+     * Represents a integer number as a data
      *
      * @param mixed $connection
      * @param scalar $value
@@ -264,7 +260,7 @@ abstract class Base
     }
 
     /**
-     * Представление вещественного числа, как данного
+     * Represents a float number as a data
      *
      * @param mixed $connection
      * @param scalar $value
@@ -276,7 +272,7 @@ abstract class Base
     }
 
     /**
-     * Представление логического значения
+     * Represents a boolean value as a data
      *
      * @param mixed $connection
      * @param scalar $value
@@ -288,7 +284,7 @@ abstract class Base
     }
 
     /**
-     * Представление NULL'а
+     * Represents NULL as a data
      *
      * @param mixed $connection
      * @return string
@@ -299,7 +295,7 @@ abstract class Base
     }
 
     /**
-     * Представление таблицы
+     * Represents a table
      *
      * @param mixed $connection
      * @param string $value
@@ -311,7 +307,7 @@ abstract class Base
     }
 
     /**
-     * Представление столбца
+     * Represents a column
      *
      * @param mixed $connection
      * @param string $value
@@ -323,8 +319,8 @@ abstract class Base
     }
 
     /**
-     * Представление цепочки полей
-     * Например: db.table.col
+     * Represents a fields chain
+     * For example: db.table.col
      *
      * @param mixed $connection
      * @param array $fields
@@ -340,7 +336,7 @@ abstract class Base
     }
 
     /**
-     * Представление поля (таблицы или столбца)
+     * Represents a field (a table or a column)
      *
      * @param mixed $connection
      * @param string $value
@@ -352,7 +348,7 @@ abstract class Base
     }
 
     /**
-     * Вернуться в начало курсора
+     * Go to the start of the cursor
      *
      * @param mixed $connection
      * @param mixed $cursor
@@ -360,7 +356,7 @@ abstract class Base
     abstract public function rewindCursor($connection, $cursor);
 
     /**
-     * Кэш имплементаторов по адаптерам
+     * The cache of instances (an adapter => an object)
      *
      * @var array
      */

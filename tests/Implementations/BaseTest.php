@@ -1,19 +1,19 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Implementations;
 
 /**
- * @covers go\DB\Implementations\Base
+ * @coversDefaultClass go\DB\Implementations\Base
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Implementations\Base::getImplementationForAdapter
+     * @covers ::getImplementationForAdapter
      */
     public function testCreate()
     {
@@ -23,7 +23,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\Base::checkParams
+     * @covers ::checkParams
      * @dataProvider providerCheckParams
      */
     public function testCheckParams($params, $expected)
@@ -54,7 +54,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\Base::connect()
+     * @covers ::connect()
      */
     public function testConnect()
     {
@@ -69,7 +69,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\Base::close()
+     * @covers ::close()
      */
     public function testClose()
     {
@@ -80,17 +80,17 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\Base::query
-     * @covers go\DB\Implementations\Base::isCursor
-     * @covers go\DB\Implementations\Base::getInsertId
-     * @covers go\DB\Implementations\Base::getAffectedRows
-     * @covers go\DB\Implementations\Base::getErrorInfo
-     * @covers go\DB\Implementations\Base::getErrorCode
-     * @covers go\DB\Implementations\Base::getNumRows
-     * @covers go\DB\Implementations\Base::fetchRow
-     * @covers go\DB\Implementations\Base::fetchAssoc
-     * @covers go\DB\Implementations\Base::fetchObject
-     * @covers go\DB\Implementations\Base::rewindCursor
+     * @covers ::query
+     * @covers ::isCursor
+     * @covers ::getInsertId
+     * @covers ::getAffectedRows
+     * @covers ::getErrorInfo
+     * @covers ::getErrorCode
+     * @covers ::getNumRows
+     * @covers ::fetchRow
+     * @covers ::fetchAssoc
+     * @covers ::fetchObject
+     * @covers ::rewindCursor
      */
     public function testQuery()
     {
@@ -118,14 +118,14 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\Implementations\Base::escapeString
-     * @covers go\DB\Implementations\Base::reprString
-     * @covers go\DB\Implementations\Base::reprInt
-     * @covers go\DB\Implementations\Base::reprBool
-     * @covers go\DB\Implementations\Base::reprNULL
-     * @covers go\DB\Implementations\Base::reprTable
-     * @covers go\DB\Implementations\Base::reprCol
-     * @covers go\DB\Implementations\Base::reprChainFields
+     * @covers ::escapeString
+     * @covers ::reprString
+     * @covers ::reprInt
+     * @covers ::reprBool
+     * @covers ::reprNULL
+     * @covers ::reprTable
+     * @covers ::reprCol
+     * @covers ::reprChainFields
      */
     public function testRepr()
     {

@@ -1,15 +1,15 @@
 <?php
 /**
- * Базовое Runtime-исключение при работе с библиотекой
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * The basic runtime-exception of the library
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Runtime extends \RuntimeException implements Exception
 {
     public function __construct($message, $code = null, $previous = null)

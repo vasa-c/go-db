@@ -1,37 +1,35 @@
 <?php
 /**
- * "Движок" тестовой базы
- *
- * Тестовая база принимает три вида запроса:
- *
- * SELECT <col> FROM <table> [LIMIT i,i]
- *
- * <col> - * или через запятую
- * <table> - единственная существующая таблица: "table"
- *
- * Все "данные" описаны в $table
- *
- * "столбец" `null` всегда возвращает NULL и не выбирается при SELECT *
- *
- * INSERT
- * просто увеличивает автоинкремент. Ничего в "данные" не добавляет
- * автоикремент каждый раз начинается с начала
- *
- * UPDATE [LIMIT i,i]
- * затрагивает affected rows
- *
  * @package go\DB
- * @subpackage Implementations
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Implementations\TestBase;
 
+/**
+ * The "engine" of the test database
+ *
+ * It understands three types of queries
+ *
+ * 1. SELECT <col> FROM <table> [LIMIT i,i]
+ *
+ * <col> - * or a comma-separated list
+ * <table> - only table "table"
+ *
+ * All data is defined in $table
+ *
+ * The "column" `null` always contain NULL (and don't returns in SELECT *)
+ *
+ * 2. INSERT
+ * Just increment autoincrement.
+ *
+ * 3. UPDATE [LIMIT i,i]
+ * It affects to "affected rows" value
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Engine
 {
     /**
-     * Тестовая таблица
-     *
      * @var array
      */
     protected $table = array(
@@ -49,7 +47,7 @@ final class Engine
     const ERROR_COL = 4;
 
     /**
-     * Выполнения запроса
+     * Performs a query
      *
      * @param string $query
      * @return \go\DB\Implementations\TestBase\Cursor | bool
@@ -79,7 +77,7 @@ final class Engine
     }
 
     /**
-     * Закрыть "подключение"
+     * Closes a "connection"
      */
     public function close()
     {
@@ -89,7 +87,9 @@ final class Engine
     }
 
     /**
-     * Закрыто ли подключение
+     * Checks if a connection is closed
+     *
+     * @return bool
      */
     public function isClosed()
     {

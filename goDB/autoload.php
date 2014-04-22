@@ -1,6 +1,6 @@
 <?php
 /**
- * Автозагрузка классов в goDB
+ * Autoload for the library
  *
  * @deprecated since version 2.1.0
  */
@@ -8,12 +8,12 @@
 namespace go\DB;
 
 /**
- * Загрузить класс по имени
+ * Loads a class by its name
  *
  * @param string $classname
- *        имя требуемого класса
+ *        the class name
  * @return bool
- *         был ли загружен класс (FALSE - класс не найден или не относится к go\DB)
+ *         TRUE if the class has been loaded
  */
 function autoload($classname)
 {
@@ -21,7 +21,7 @@ function autoload($classname)
         return false;
     }
     $localname = \substr($classname, \strlen(__NAMESPACE__));
-    $filename  = __DIR__.\str_replace('\\', '/', $localname.'.php');
+    $filename = __DIR__.\str_replace('\\', '/', $localname.'.php');
     if (!\file_exists($filename)) {
         return false;
     }
@@ -30,7 +30,7 @@ function autoload($classname)
 }
 
 /**
- * Зарегистрировать автозагрузчик для goDB
+ * Registers an autoloader for the library
  */
 function autoloadRegister()
 {

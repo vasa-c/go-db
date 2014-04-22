@@ -1,22 +1,21 @@
 <?php
 /**
- * Исключение: ошибка конфигурации - неизвестный адаптер (или не указан)
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: an adapter is unknown
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class UnknownAdapter extends Config
 {
     /**
-     * Конструктор
-     * 
+     * The constructor
+     *
      * @param string $adapter
-     *        название адаптера
      */
     public function __construct($adapter)
     {

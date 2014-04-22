@@ -1,29 +1,24 @@
 <?php
 /**
- * Надстройка над php_mysql
- *
- * @package    go\DB
- * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Implementations;
 
+/**
+ * The adapter for php_mysql (deprecated)
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Mysqlold extends Base
 {
     /**
-     * Обязательные параметры подключения
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsReq = array('host', 'username', 'password');
 
     /**
-     * Необязательные параметры подключения
-     *
-     * параметр => значение по умолчанию
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsDefault = array(
         'dbname'  => null,
@@ -31,12 +26,7 @@ final class Mysqlold extends Base
     );
 
     /**
-     * @override Base
-     *
-     * @param array $params
-     * @param string & $errroInfo
-     * @param int & $errorCode
-     * @return mixed
+     * {@inheritdoc}
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
@@ -66,9 +56,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
+     * {@inheritdoc}
      */
     public function close($connection)
     {
@@ -76,11 +64,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $query
-     * @return mixed
+     * {@inheritdoc}
      */
     public function query($connection, $query)
     {
@@ -88,11 +72,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getInsertId($connection, $cursor = null)
     {
@@ -100,11 +80,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getAffectedRows($connection, $cursor = null)
     {
@@ -112,11 +88,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return string
+     * {@inheritdoc}
      */
     public function getErrorInfo($connection, $cursor = null)
     {
@@ -124,11 +96,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getErrorCode($connection, $cursor = null)
     {
@@ -136,11 +104,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return int
+     * {@inheritdoc}
      */
     public function getNumRows($connection, $cursor)
     {
@@ -148,11 +112,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchRow($connection, $cursor)
     {
@@ -160,11 +120,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchAssoc($connection, $cursor)
     {
@@ -172,11 +128,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return object|false
+     * {@inheritdoc}
      */
     public function fetchObject($connection, $cursor)
     {
@@ -184,10 +136,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function freeCursor($connection, $cursor)
     {
@@ -195,11 +144,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param scalar $value
-     * @return string
+     * {@inheritdoc}
      */
     public function escapeString($connection, $value)
     {
@@ -207,11 +152,7 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $value
-     * @return string
+     * {@inheritdoc}
      */
     protected function reprField($connection, $value)
     {
@@ -219,13 +160,10 @@ final class Mysqlold extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function rewindCursor($connection, $cursor)
     {
-        return mysql_data_seek($cursor, $connection);
+        return \mysql_data_seek($cursor, $connection);
     }
 }

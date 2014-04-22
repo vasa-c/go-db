@@ -1,8 +1,6 @@
 <?php
 /**
- * @package    go\DB
- * @subpackage Storage
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB;
@@ -12,20 +10,22 @@ use go\DB\Helpers\Fetchers\Arr as ArrFetcher;
 
 /**
  * Access to a specified table
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class Table
 {
     /**
-     * Constructor
+     * The constructor
      *
      * @param \go\DB\DB $db
-     *        a database of the table
+     *        the database of the table
      * @param string $tablename
      *        the table name
      * @param array $map [optional]
-     *        a field map
+     *        a field map (a field => a real column name)
      */
-    public function __construct(\go\DB\DB $db, $tablename, array $map = null)
+    public function __construct(DB $db, $tablename, array $map = null)
     {
         $this->db = $db;
         $this->name = $tablename;
@@ -55,10 +55,10 @@ class Table
     }
 
     /**
-     * Insert a row to the table
+     * Inserts a row to the table
      *
      * @param array $set
-     *        the data for set
+     *        the data for set (a field => a value)
      * @return int
      *         ID of the row
      */
@@ -79,9 +79,9 @@ class Table
      * Multi insert
      *
      * @param array $sets
-     *        a list of rows
+     *        a list of the rows
      * @param bool $imp [optional]
-     *        multi insert is implemented in this db
+     *        TRUE if multi-insert is implemented in this db
      */
     public function multiInsert(array $sets, $imp = true)
     {
@@ -111,9 +111,10 @@ class Table
     }
 
     /**
-     * Replace a row
+     * Replaces or inserts a row
      *
      * @param array $set
+     * @return int
      */
     public function replace(array $set)
     {
@@ -133,6 +134,7 @@ class Table
      *
      * @param array $sets
      * @param bool $imp
+     *        TRUE if multi-insert is implemented in this db
      */
     public function multiReplace(array $sets, $imp = true)
     {
@@ -162,12 +164,12 @@ class Table
     }
 
     /**
-     * Update the table
+     * Updates the table
      *
      * @param array $set
      * @param mixed $where [optional]
      * @return int
-     *         affected rows
+     *         number of affected rows
      */
     public function update(array $set, $where = true)
     {
@@ -184,7 +186,7 @@ class Table
     }
 
     /**
-     * Select from the table
+     * Selects rows from the table
      *
      * @param mixed $cols [optional]
      * @param mixed $where [optional]
@@ -238,11 +240,11 @@ class Table
     }
 
     /**
-     * Delete from the table
+     * Deletes rows from the table
      *
      * @param mixed $where
      * @return int
-     *         affected rows
+     *         number of affected rows
      */
     public function delete($where = null)
     {
@@ -255,7 +257,7 @@ class Table
     }
 
     /**
-     * Truncate the table
+     * Truncates the table
      */
     public function truncate()
     {
@@ -291,6 +293,8 @@ class Table
     }
 
     /**
+     * Returns a columns map object
+     *
      * @return \go\DB\Helpers\MapFields
      */
     public function getMap()
@@ -299,16 +303,22 @@ class Table
     }
 
     /**
+     * The table name
+     *
      * @var string
      */
     private $name;
 
     /**
+     * The database instance
+     *
      * @var \go\DB\DB
      */
     private $db;
 
     /**
+     * The field-to-column map
+     *
      * @var \go\DB\Helpers\MapFields
      */
     private $map;

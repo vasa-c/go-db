@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Exceptions;
@@ -10,15 +9,16 @@ namespace go\Tests\DB\Exceptions;
 use go\DB\Exceptions\Query;
 
 /**
- * @covers go\DB\Exceptions\Query
+ * @coversDefaultClass go\DB\Exceptions\Query
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class QueryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Exceptions\Query::__construct
-     * @covers go\DB\Exceptions\Query::getQuery
-     * @covers go\DB\Exceptions\Query::getError
-     * @covers go\DB\Exceptions\Query::getErrorCode
+     * @covers ::__construct
+     * @covers ::getQuery
+     * @covers ::getError
+     * @covers ::getErrorCode
      */
     public function testGetMethods()
     {

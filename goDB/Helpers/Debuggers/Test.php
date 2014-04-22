@@ -1,14 +1,15 @@
 <?php
 /**
- * Тестовый отладчик
- *
  * @package go\DB
- * @subpackage Helpers
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers\Debuggers;
 
+/**
+ * The test debugger
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Test
 {
     /**

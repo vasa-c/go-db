@@ -1,38 +1,48 @@
 <?php
 /**
- * goDB2: библиотека для работы с реляционными базами данных из PHP
+ * goDB2: the library for working with relational databases (for PHP)
  *
  * @package go\DB
- * @link    https://github.com/vasa-c/go-db source
- * @link    https://github.com/vasa-c/go-db/wiki documentation
- * @version 2.0.2 beta
- * @author  Григорьев Олег aka vasa_c (http://blgo.ru/)
- * @license MIT (http://www.opensource.org/licenses/mit-license.php)
- * @uses    PHP >= 5.3
- * @uses    для каждого адаптера свои расширения
+ * @license https://raw.github.com/vasa-c/go-db/master/LICENSE MIT
+ * @link https://github.com/vasa-c/go-db source
+ * @link https://github.com/vasa-c/go-db/wiki documentation
+ * @uses PHP >= 5.3
+ * @uses specific dependencies for a specific adapters
  */
 
 namespace go\DB;
 
-const VERSION = '2.0.2 beta';
-
 use go\DB\Helpers\Fetchers\Cursor as CursorFetcher;
+use go\DB\Helpers\Connector;
+use go\DB\Helpers\Templater;
+use go\DB\Helpers\Config;
+use go\DB\Exceptions\UnknownAdapter;
+use go\DB\Exceptions\Query;
+use go\DB\Exceptions\Closed;
+use go\DB\Exceptions\ConfigSys;
+use go\DB\Helpers\Debuggers\OutConsole as DebuggerOutConsole;
+use go\DB\Helpers\Debuggers\OutHtml as DebuggerOutHtml;
 
+/**
+ * The basic class of database adapters
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class DB
 {
     /**
-     * Создать объект для доступа к базе
+     * Creates an instance for database access
      *
      * @param array $params
-     *        параметры подключения к базе
+     *        database connection parameters
      * @param string $adapter [optional]
-     *        адаптер базы (если не указан в $params)
+     *        a name of a db-adapter (if it not specified in $params)
      * @return \go\DB\DB
-     *         объект для доступа к базе
+     *         the instance for database access
      * @throws \go\DB\Exceptions\Config
-     *         неверные конфигурационные параметры
+     *         parameters is invalid
      * @throws \go\DB\Exceptions\Connect
-     *         ошибка подключения
+     *         a connection error
      */
     final public static function create(array $params, $adapter = null)
     {
@@ -40,14 +50,14 @@ abstract class DB
         $adapter = \strtolower($adapter);
         $classname = __NAMESPACE__.'\\Adapters\\'.\ucfirst($adapter);
         if (!\class_exists($classname, true)) {
-            throw new Exceptions\UnknownAdapter($adapter);
+            throw new UnknownAdapter($adapter);
         }
         $params['_adapter'] = $adapter;
         return (new $classname($params));
     }
 
     /**
-     * Получить список доступных адаптеров
+     * Returns the list of available adapters
      *
      * @return array
      */
@@ -66,28 +76,28 @@ abstract class DB
     }
 
     /**
-     * Выполнить запрос к базе данных
+     * Performs a query on the database
      *
      * @param string $pattern
-     *        шаблон запроса
+     *        the query pattern
      * @param array $data [optional]
-     *        входящие данные для запроса
+     *        the incoming data for the query pattern
      * @param string $fetch [optional]
-     *        формат представления результата
+     *        the result format
      * @param string $prefix [optional]
-     *        префикс таблиц для данного конкретного запроса
+     *        a table prefix for the current query
      * @return \go\DB\Result
-     *         результат в заданном формате
+     *         the query result in specified format
      * @throws \go\DB\Exceptions\Connect
-     *         ошибка при отложенном подключении
+     *         an error of lazy connection
      * @throws \go\DB\Exceptions\Closed
-     *         подключение закрыто
+     *         the connection is closed
      * @throws \go\DB\Exceptions\Templater
-     *         ошибка шаблонизатора запроса
+     *         an error of the templating system ($pattern or $data is invalid)
      * @throws \go\DB\Exceptions\Query
-     *         ошибка в запросе
+     *         an error of the query
      * @throws \go\DB\Exceptions\Fetch
-     *         ошибка при разборе результата
+     *         the result format is invalid for this query type
      */
     final public function query($pattern, $data = null, $fetch = null, $prefix = null)
     {
@@ -96,18 +106,22 @@ abstract class DB
     }
 
     /**
-     * Выполнение "чистого" запроса
+     * Performs a "plain" query
      *
      * @param string $query
-     *        SQL-запрос
+     *        a plain query
      * @param string $fetch [optional]
-     *        формат представления результата
+     *        the result format
      * @return \go\DB\Result
-     *         результат в заданном формате
+     *         the query result in specified format
      * @throws \go\DB\Exceptions\Connect
+     *         an error of lazy connection
      * @throws \go\DB\Exceptions\Closed
+     *         the connection is closed
      * @throws \go\DB\Exceptions\Query
+     *         an error of the query
      * @throws \go\DB\Exceptions\Fetch
+     *         the result format is invalid for this query type
      */
     final public function plainQuery($query, $fetch = null)
     {
@@ -120,20 +134,20 @@ abstract class DB
         if (!$cursor) {
             $errorInfo = $implementation->getErrorInfo($connection);
             $errorCode = $implementation->getErrorCode($connection);
-            throw new Exceptions\Query($query, $errorInfo, $errorCode);
+            throw new Query($query, $errorInfo, $errorCode);
         }
         $this->debugLog($query, $duration, null);
         $fetcher = $this->createFetcher($cursor);
-        if (is_null($fetch)) {
+        if ($fetch === null) {
             return $fetcher;
         }
         return $fetcher->fetch($fetch);
     }
 
     /**
-     * Вызов объекта, как функции - переадресация на query()
+     * @alias for query()
      *
-     * Следующие два примера идентичны:
+     * The next examples are identical:
      * @example $db->query('SELECT * FROM `table`');
      * @example $db('SELECT * FROM `table`');
      *
@@ -154,7 +168,7 @@ abstract class DB
     }
 
     /**
-     * Установлено ли соединение фактически
+     * Checks if connection is actually established
      *
      * @return bool
      */
@@ -167,7 +181,7 @@ abstract class DB
     }
 
     /**
-     * Закрыто ли соединение
+     * Chick if connection is closed (hard)
      *
      * @return bool
      */
@@ -176,19 +190,20 @@ abstract class DB
         return $this->hardClosed;
     }
 
-
     /**
-     * Принудительно установить соединение, если оно ещё не установлено
+     * Forced establishes a connection (if its is not establishes)
      *
+     * @return bool
+     *         a connection has been established at this time
      * @throws \go\DB\Exceptions\Connect
-     *         ошибка подключения
+     *         a connection error
      * @throws \go\DB\Exceptions\Closed
-     *         подключение закрыто "жестким" образом
+     *         a connection has been closed (hard)
      */
     final public function forcedConnect()
     {
         if ($this->hardClosed) {
-            throw new Exceptions\Closed();
+            throw new Closed();
         }
         if ($this->connected) {
             return false;
@@ -199,29 +214,28 @@ abstract class DB
     }
 
     /**
-     * Закрыть соединение
+     * Closes a connection
      *
      * @param boolean $soft [optional]
-     *        "мягкое" закрытие: с возможностью восстановления
+     *        uses "soft" closing (it is possible to restore)
      * @return boolean
-     * @todo не помню что
+     *         a connection has been closed at this time
      */
     final public function close($soft = false)
     {
         if ($this->hardClosed) {
             return false;
         }
-        $result = false;
-        if ($this->connected) {
-            $result = $this->connector->close();
-            $this->connected = false;
-        }
         $this->hardClosed = !$soft;
-        return $result;
+        if (!$this->connected) {
+            return false;
+        }
+        $this->connected = false;
+        return $this->connector->close();
     }
 
     /**
-     * Установить префикс таблиц
+     * Sets the prefix for tables
      *
      * @param string $prefix
      */
@@ -231,7 +245,7 @@ abstract class DB
     }
 
     /**
-     * Получить префикс таблиц
+     * Returns the prefix for tables
      *
      * @return string
      */
@@ -241,26 +255,25 @@ abstract class DB
     }
 
     /**
-     * Установить обработчик отладочной информации
+     * Sets a handler for the debug info
      *
-     * @param callback $callback
-     *        обработчик (true - стандартный)
-     * @todo cli
+     * @param callable $callback
+     *        a callback($query, $duration, $info) or TRUE for the standard handler or NULL for disable
      */
     final public function setDebug($callback = true)
     {
         if ($callback === true) {
-            if (\php_sapi_name() == 'cli') {
-                $callback = new Helpers\Debuggers\OutConsole();
+            if (\php_sapi_name() === 'cli') {
+                $callback = new DebuggerOutConsole();
             } else {
-                $callback = new Helpers\Debuggers\OutHtml();
+                $callback = new DebuggerOutHtml();
             }
         }
         $this->debugCallback = $callback;
     }
 
     /**
-     * Получить обработчик отладочной информации
+     * Returns a debug handler
      *
      * @return callback
      */
@@ -270,7 +283,7 @@ abstract class DB
     }
 
     /**
-     * Отключить отправку отладочной информации
+     * Disables the debug info output
      */
     final public function disableDebug()
     {
@@ -278,12 +291,12 @@ abstract class DB
     }
 
     /**
-     * Получить внутреннюю реализацию подключения к базе
+     * Returns a low-level connection implementation (adapter depended)
      *
      * @param bool $connect
-     *        подключиться, если не подключены
+     *        force connect
      * @return mixed
-     *         низкоуровневая реализация или FALSE если ещё не создана
+     *         an implementation or FALSE if it is not created
      * @throws \go\DB\Exceptions\Connect
      * @throws \go\DB\Exceptions\Closed
      */
@@ -296,19 +309,24 @@ abstract class DB
     }
 
     /**
-     * Сформировать запрос на основании шаблона и данных
+     * Creates a query by a pattern and an incoming data
      *
      * @param string $pattern
+     *        a query pattern
      * @param array $data
+     *        an incoming data for the pattern
      * @param string $prefix
+     *        a prefix for tables
      * @return string
+     *         the plain query
      * @throws \go\DB\Exceptions\Templater
+     *         an error of templating system
      */
     public function makeQuery($pattern, $data, $prefix = null)
     {
         Compat::setCurrentOpts($this->paramsSys['compat']);
         $this->forcedConnect();
-        if (\is_null($prefix)) {
+        if ($prefix === null) {
             $prefix = $this->prefix;
         }
         $templater = $this->createTemplater($pattern, $data, $prefix);
@@ -320,8 +338,11 @@ abstract class DB
      * Returns an object for a table access
      *
      * @param string $tablename
+     *        a table name
      * @param array $map [optional]
+     *        a map (a key => a real table column)
      * @return \go\DB\Table
+     *         a "table" instance
      */
     public function getTable($tablename, array $map = null)
     {
@@ -329,10 +350,12 @@ abstract class DB
     }
 
     /**
-     * Скрытый конструктор - извне не создать
+     * The hidden constructor (for instance create use a static method create())
      *
      * @param array $params
-     *        конфигурационные параметры базы
+     *        a database configuration
+     * @thorws go\DB\Exceptions\Connect
+     * @throws go\DB\Exceptions\ConfigConnect
      */
     protected function __construct($params)
     {
@@ -347,7 +370,7 @@ abstract class DB
     }
 
     /**
-     * Деструктор
+     * The destructor
      */
     final public function __destruct()
     {
@@ -357,7 +380,7 @@ abstract class DB
     }
 
     /**
-     * Обработчик клонирования объекта
+     * Cloning the instance
      */
     public function __clone()
     {
@@ -365,17 +388,17 @@ abstract class DB
     }
 
     /**
-     * Создать объект подключения к базе
+     * Creates an instance for a database connect
      *
      * @return \go\DB\Helpers\Connector
      */
     protected function createConnector()
     {
-        return (new Helpers\Connector($this->paramsSys['adapter'], $this->paramsDB));
+        return (new Connector($this->paramsSys['adapter'], $this->paramsDB));
     }
 
     /**
-     * Создать шаблонизатор запроса
+     * Creates a templating for a query
      *
      * @param string $pattern
      * @param array $data
@@ -384,11 +407,11 @@ abstract class DB
      */
     protected function createTemplater($pattern, $data, $prefix)
     {
-        return (new Helpers\Templater($this->connector, $pattern, $data, $prefix));
+        return (new Templater($this->connector, $pattern, $data, $prefix));
     }
 
     /**
-     * Создать объект представления результата
+     * Creates an instance for a result representation
      *
      * @param mixed $cursor
      * @return \go\DB\Result
@@ -399,7 +422,7 @@ abstract class DB
     }
 
     /**
-     * Разбор и сортировка параметров на системные и относящиеся к адаптеру
+     * Analysis parameters and separates its to system and adapter-depending
      *
      * @param array $params
      * @throws \go\DB\Exceptions\ConfigSys
@@ -407,12 +430,12 @@ abstract class DB
     protected function separateParams($params)
     {
         $this->paramsDB = array();
-        $this->paramsSys = \go\DB\Helpers\Config::get('configsys');
+        $this->paramsSys = Config::get('configsys');
         foreach ($params as $name => $value) {
-            if ((!empty($name)) && ($name[0] == '_')) {
+            if (\substr($name, 0, 1) === '_') {
                 $name = \substr($name, 1);
                 if (!\array_key_exists($name, $this->paramsSys)) {
-                    throw new Exceptions\ConfigSys('Unknown system param "'.$name.'"');
+                    throw new ConfigSys('Unknown system param "'.$name.'"');
                 }
                 $this->paramsSys[$name] = $value;
             } else {
@@ -423,7 +446,7 @@ abstract class DB
     }
 
     /**
-     * Отправка запроса в отладчик
+     * Sends a debug info to the handler
      *
      * @param string $query
      * @param float $duration
@@ -438,56 +461,56 @@ abstract class DB
     }
 
     /**
-     * Кэш списка доступных адаптеров
+     * The list of avaliable adapters (cache)
      *
      * @var array
      */
     private static $availableAdapters;
 
     /**
-     * Объект-подключалка
+     * The connection instance
      *
      * @var \go\DB\Helpers\Connector
      */
     protected $connector;
 
     /**
-     * Системные параметры
+     * System parameters
      *
      * @var array
      */
     protected $paramsSys;
 
     /**
-     * Параметры подключения к базе
+     * Connection parameters
      *
      * @var array
      */
     protected $paramsDB;
 
     /**
-     * Текущий префикс имён таблиц
+     * The current table prefix
      *
      * @var string
      */
     protected $prefix;
 
     /**
-     * Отладчик запросов
+     * The debug handler
      *
      * @var callback
      */
     protected $debugCallback;
 
     /**
-     * Установлено ли подключение для данного объекта базы
+     * Flag: the connection is established
      *
      * @var bool
      */
     protected $connected = false;
 
     /**
-     * Закрыто ли подключение жёстким образом
+     * Flag: the connection is closed (hard)
      *
      * @var bool
      */
@@ -495,15 +518,11 @@ abstract class DB
 }
 
 /**
- * Создать объект для доступа к базе
- * (алиас DB::create)
+ * @alias \go\DB\DB::create
  *
  * @param array $params
- *        параметры подключения к базе
  * @param string $adapter [optional]
- *        адаптер базы (если не указан в $params)
  * @return \go\DB\DB
- *         объект для доступа к базе
  * @throws \go\DB\Exceptions\Config
  * @throws \go\DB\Exceptions\Connect
  */
@@ -513,15 +532,13 @@ function create(array $params, $adapter = null)
 }
 
 /**
- * Запрос к центральной базе центрального хранилища
- * (алиас Storage::query)
+ * @alias \go\DB\Storage::query
  *
  * @param string $pattern
  * @param array $data [optional]
  * @param string $fetch [optional]
  * @param string $prefix [optional]
  * @throws \go\DB\Exceptions\StorageDBCentral
- *         нет центральной базы
  * @throws \go\DB\Exceptions\Connect
  * @throws \go\DB\Exceptions\Closed
  * @throws \go\DB\Exceptions\Templater

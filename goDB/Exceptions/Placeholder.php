@@ -1,29 +1,28 @@
 <?php
 /**
- * Исключение: ошибка плейсхолдера
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a placeholder from the pattern is invalid
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Placeholder extends Templater
 {
     /**
-     * Шаблон сообщения, переопределяется у потомков
+     * The error message pattern
      *
      * @var string
      */
     protected $MESSAGE_PATTERN;
 
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $placeholder
-     *        плейсхолдер на котором случилась ошибка
      */
     public function __construct($placeholder)
     {
@@ -37,8 +36,6 @@ abstract class Placeholder extends Templater
     }
 
     /**
-     * Получить ошибочный плейсхолдер
-     *
      * @return string
      */
     public function getPlaceholder()
@@ -46,5 +43,8 @@ abstract class Placeholder extends Templater
         return $this->placeholder;
     }
 
+    /**
+     * @var string
+     */
     protected $placeholder;
 }

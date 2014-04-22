@@ -1,31 +1,34 @@
 <?php
 /**
- * Шаблонизатор запроса
- *
- * По шаблону и входящим данным формирует итоговый запрос
- *
  * @package go\DB
- * @subpackage Helpers
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers;
 
-use go\DB\Exceptions;
+use go\DB\Exceptions\DataMuch;
+use go\DB\Exceptions\DataNotEnough;
+use go\DB\Exceptions\DataNamed;
+use go\DB\Exceptions\UnknownPlaceholder;
+use go\DB\Exceptions\MixedPlaceholder;
 
+/**
+ * The query templating system
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 class Templater
 {
     /**
-     * Конструктор
+     * The constructor
      *
      * @param \go\DB\Helpers\Connector $connector
-     *        подключалка к базе (подключение должно быть установлено)
+     *        a database connector (a connection must be established)
      * @param string $pattern
-     *        шаблон запроса
+     *        a query pattern
      * @param array $data
-     *        входные данные
+     *        an incoming data for the pattern
      * @param string $prefix
-     *        префикс таблиц для данного запроса
+     *        a prefix for tables
      */
     public function __construct(Connector $connector, $pattern, $data, $prefix)
     {
@@ -37,33 +40,30 @@ class Templater
     }
 
     /**
-     * Шаблонизация запроса
+     * The query templating
      *
      * @return string
-     *         итоговые запрос
+     *         the result query
      * @throws \go\DB\Exceptions\Templater
-     *         ошибки при шаблонизации
      */
     public function parse()
     {
-        if (!\is_null($this->query)) {
+        if ($this->query !== null) {
             return $this->query;
         }
-        /* Замена {table} */
         $query = \preg_replace_callback('~{(.*?)}~', array($this, 'tableClb'), $this->pattern);
-        /* Замена плейсхолдеров */
         $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
         $callback = array($this, 'placeholderClb');
         $query = \preg_replace_callback($pattern, $callback, $query);
         if ((!$this->named) && (\count($this->data) > $this->counter)) {
-            throw new Exceptions\DataMuch(count($this->data), $this->counter);
+            throw new DataMuch(count($this->data), $this->counter);
         }
         $this->query = $query;
         return $this->query;
     }
 
     /**
-     * Получить итоговый запрос
+     * Returns the result query
      *
      * @return string
      */
@@ -73,7 +73,7 @@ class Templater
     }
 
     /**
-     * Замена имени таблицы "{table}"
+     * Replaces "{table}" to a table name
      */
     private function tableClb($matches)
     {
@@ -81,15 +81,11 @@ class Templater
     }
 
     /**
-     * Callback обработки запроса
-     *
-     * @throws \go\DB\Exceptions\Templaters
-     *         ошибка при разборе
+     * Replaces a next placeholder in the pattern
      *
      * @param array $matches
-     *        параметры очередного плейсхолдера
      * @return string
-     *         на что его заменить
+     * @throws \go\DB\Exceptions\Templaters
      */
     private function placeholderClb($matches)
     {
@@ -97,12 +93,12 @@ class Templater
         if (isset($matches[3])) {
             $name = $matches[3];
             if (empty($name)) {
-                /* Именованный плейсхолдер без имени ("?set:") */
-                throw new Exceptions\UnknownPlaceholder($matches[0]);
+                /* There is a named placeholder without name ("?set:") */
+                throw new UnknownPlaceholder($matches[0]);
             }
         } else {
             $name = null;
-            if ($placeholder == '?') { // ?? - вставка вопросительного знака
+            if ($placeholder == '?') { // "??" for question mark
                 return '?';
             }
         }
@@ -110,20 +106,20 @@ class Templater
             if ($this->counter == 0) {
                 $this->named = true;
             } elseif (!$this->named) {
-                /* Именованный плейсхолдер, хотя уже использовались регулярные */
-                throw new Exceptions\MixedPlaceholder($matches[0]);
+                /* There is a named placeholder although already used regular */
+                throw new MixedPlaceholder($matches[0]);
             }
             if (!\array_key_exists($name, $this->data)) {
-                throw new Exceptions\DataNamed($name);
+                throw new DataNamed($name);
             }
             $value = $this->data[$name];
         } elseif ($this->named) {
-            /* Регулярный плейсхолдер, хотя уже использовались именованные */
-            throw new Exceptions\MixedPlaceholder($matches[0]);
+            /* There is a regular placeholder although already used named */
+            throw new MixedPlaceholder($matches[0]);
         } else {
             if (!\array_key_exists($this->counter, $this->data)) {
-                /* Данные для регулярных плейсхолдеров закончились */
-                throw new Exceptions\DataNotEnough(count($this->data), $this->counter);
+                /* Data for regular placeholders is ended */
+                throw new DataNotEnough(count($this->data), $this->counter);
             }
             $value = $this->data[$this->counter];
         }
@@ -136,7 +132,7 @@ class Templater
     }
 
     /**
-     * Преобразование скалярного значения в соответствии с модификаторами плейсхолдера
+     * Converts a scalar value in conformity with the modifiers list
      *
      * @param mixed $value
      * @param array $modifers
@@ -411,57 +407,41 @@ class Templater
     }
 
     /**
-     * Внутренняя реализация взаимодействия с базой
-     *
      * @var \go\DB\Implementations\Base
      */
     protected $implementation;
 
     /**
-     * Низкоуровневое подключение к базе
-     *
      * @var mixed
      */
     protected $connection;
 
     /**
-     * Шаблон запроса
-     *
      * @var string
      */
     protected $pattern;
 
     /**
-     * Входные данные
-     *
      * @var array
      */
     protected $data;
 
     /**
-     * Префикс таблиц для данного запроса
-     *
      * @var string
      */
     protected $prefix;
 
     /**
-     * Итоговый запрос
-     *
      * @var string
      */
     protected $query;
 
     /**
-     * Счётчик обработанных плейсхолдеров
-     *
      * @var int
      */
     protected $counter = 0;
 
     /**
-     * Именованные плейсхолдеры используются в запросе или нет
-     *
      * @var bool
      */
     protected $named = false;

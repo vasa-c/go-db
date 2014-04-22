@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers\Fetchers;
@@ -11,6 +10,7 @@ use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
  * @coversDefaultClass go\DB\Helpers\Fetchers\Cursor
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class CursorTest extends \PHPUnit_Framework_TestCase
 {

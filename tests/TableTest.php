@@ -1,17 +1,16 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB;
 
 use go\DB\DB;
-use go\DB\Table;
 
 /**
  * @coversDefaultClass go\DB\Table
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class TableTest extends \PHPUnit_Framework_TestCase
 {
@@ -94,7 +93,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getDatabase
+     * @covers ::getDB
      */
     public function testGetDB()
     {

@@ -1,16 +1,19 @@
 <?php
 /**
- * Исключение: смешанные регулярные и именованные плейсхолдеры
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a pattern contain regular and named placeholders
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class MixedPlaceholder extends Placeholder
 {
+    /**
+     * {@inheritdoc}
+     */
     protected $MESSAGE_PATTERN = 'Mixed placeholder "{{ placeholder }}"';
 }

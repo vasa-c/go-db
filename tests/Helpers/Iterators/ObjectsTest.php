@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers\Iterators;
@@ -12,7 +11,8 @@ use go\DB\Helpers\Connector;
 use go\DB\Implementations\TestBase\Cursor;
 
 /**
- * @covers go\DB\Helpers\Iterators\Objects
+ * @cov@coversDefaultClassers go\DB\Helpers\Iterators\Objects
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ObjectsTest extends \PHPUnit_Framework_TestCase
 {

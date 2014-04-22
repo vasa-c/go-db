@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers\Debuggers;
@@ -10,15 +9,16 @@ namespace go\Tests\DB\Helpers\Debuggers;
 use go\DB\Helpers\Debuggers\Test;
 
 /**
- * @covers go\DB\Helpers\Debuggers\Test
+ * @coversDefaultClass go\DB\Helpers\Debuggers\Test
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class TestTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Helpers\Debuggers\Test::__invoke
-     * @covers go\DB\Helpers\Debuggers\Test::getLastQuery
-     * @covers go\DB\Helpers\Debuggers\Test::getLastDuration
-     * @covers go\DB\Helpers\Debuggers\Test::getLastInfo
+     * @covers ::__invoke
+     * @covers ::getLastQuery
+     * @covers ::getLastDuration
+     * @covers ::getLastInfo
      */
     public function testTest()
     {

@@ -1,12 +1,11 @@
 <?php
 /**
- * Конфигурация форматов представления результата
+ * The list of result formats
  *
- * формат => для выборки или нет
+ * a format name => TRUE, if it intended for SELECT
  *
- * @package    go\DB
- * @subpackage config
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 
 return array(

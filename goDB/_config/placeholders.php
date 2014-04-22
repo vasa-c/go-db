@@ -1,19 +1,18 @@
 <?php
 /**
- * Конфигурация шаблонизатора запросов
+ * The placeholders configuration
  *
- * @package    go\DB
- * @subpackage config
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 
 return array(
-    /* Список плейсхолдеров (основная краткая форма) */
+    /* The list of placeholders (the main short form) */
     'placeholders' => array(
         '', 'l', 's', 'v', 't', 'c', 'e', 'q', 'w', 'xc', 'o',
     ),
 
-    /* Список длинных синонимов */
+    /* The list of long synonyms */
     'longs' => array(
         'string' => '',
         'scalar' => '',
@@ -29,12 +28,12 @@ return array(
         'order'  => 'o',
     ),
 
-    /* Список модификаторов (основная краткая форма) */
+    /* The list of modifiers (the main short form) */
     'modifers' => array(
         'n', 'i', 'f', 'b',
     ),
 
-    /* Список длинных синонимов модификаторов */
+    /* The list of long synonyms of modifiers */
     'longModifers' => array(
         'null'  => 'n',
         'int'   => 'i',

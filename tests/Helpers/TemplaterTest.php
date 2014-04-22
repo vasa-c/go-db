@@ -1,14 +1,14 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers;
 
 /**
- * @covers go\DB\Helpers\Templater
+ * @coversDefaultClass go\DB\Helpers\Templater
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class TemplaterTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,17 +28,17 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      */
     public function providerScalar()
     {
-        $data = array('стр"ока', 1, null, '3.5');
+        $data = array('str"ing', 1, null, '3.5');
         return array(
             array(
                 'INSERT INTO `table` VALUES (?, ?scalar, ?, ?string)',
                 $data,
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?null, ?null, ?null, ?null)',
                 $data,
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?i, ?i, ?i, ?i)',
@@ -53,7 +53,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` VALUES (?string, ?scalar-int, ?scalar-null, ?scalar-int-null)',
                 $data,
-                'INSERT INTO `table` VALUES ("стр\"ока", 1, NULL, 3)',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, 3)',
             ),
         );
     }
@@ -74,22 +74,22 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      */
     public function providerList()
     {
-        $list = array('стр"ока', 1, null, '3.5');
+        $list = array('str"ing', 1, null, '3.5');
         return array(
             array(
                 'INSERT INTO `table` VALUES (?l)',
                 array($list),
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?list)',
                 array($list),
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?ln)',
                 array($list),
-                'INSERT INTO `table` VALUES ("стр\"ока", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
             ),
             array(
                 'INSERT INTO `table` VALUES (?li)',
@@ -121,7 +121,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     public function providerSet()
     {
         $set = array(
-            's' => 'стр"ока',
+            's' => 'str"ing',
             'd' => '3.5',
             'n' => null,
         );
@@ -129,12 +129,12 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'INSERT INTO `table` SET ?s',
                 array($set),
-                'INSERT INTO `table` SET `s`="стр\"ока", `d`="3.5", `n`=NULL',
+                'INSERT INTO `table` SET `s`="str\"ing", `d`="3.5", `n`=NULL',
             ),
             array(
                 'INSERT INTO `table` SET ?set-null',
                 array($set),
-                'INSERT INTO `table` SET `s`="стр\"ока", `d`="3.5", `n`=NULL',
+                'INSERT INTO `table` SET `s`="str\"ing", `d`="3.5", `n`=NULL',
             ),
             array(
                 'INSERT INTO `table` SET ?sin',
@@ -178,18 +178,18 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     {
         $values = array(
             array(0, 1, 2),
-            array('раз', null, 'три'),
+            array('one', null, 'three'),
         );
         return array(
             array(
                 'INSERT INTO `table` VALUES ?values;',
                 array($values),
-                'INSERT INTO `table` VALUES ("0", "1", "2"), ("раз", NULL, "три")',
+                'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
             ),
             array(
                 'INSERT INTO `table` VALUES ?vn',
                 array($values),
-                'INSERT INTO `table` VALUES ("0", "1", "2"), ("раз", NULL, "три")',
+                'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
             ),
             array(
                 'INSERT INTO `table` VALUES ?values-bool-null',
@@ -415,7 +415,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * ?? - вставка вопросительного знака
+     * ?? - insert a question mark
      * @dataProvider providerQMark
      */
     public function testQMark($pattern, $data, $expected)
@@ -445,7 +445,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Префикс таблиц
+     * The table prefix
      * @dataProvider providerPrefix
      */
     public function testPrefix($pattern, $data, $prefix, $expected)
@@ -479,7 +479,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Именованные плейсхолдеры
+     * Named placeholders
      * @dataProvider providerNamed
      */
     public function testNamed($pattern, $data, $expected)
@@ -643,7 +643,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Создать объект шаблонизатора
+     * Creates a templater instance
      *
      * @param string $pattern
      * @param array $data

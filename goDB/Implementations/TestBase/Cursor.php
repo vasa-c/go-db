@@ -1,21 +1,22 @@
 <?php
 /**
- * Курсор тестовой базы
- *
  * @package go\DB
- * @subpackage Implementations
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Implementations\TestBase;
 
+/**
+ * The cursor of test base
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Cursor
 {
     /**
-     * Конструктор
+     * The constructor
      *
      * @param array $data
-     *        данные "выборки"
+     *        a selected data
      */
     public function __construct(array $data)
     {
@@ -57,7 +58,7 @@ final class Cursor
     }
 
     /**
-     * Сброс курсора
+     * Resets the cursor
      */
     public function reset()
     {
@@ -66,7 +67,7 @@ final class Cursor
     }
 
     /**
-     * Получить количество записей в "выборке"
+     * Returns a size of the result
      *
      * @return int
      */

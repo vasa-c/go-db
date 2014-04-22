@@ -1,193 +1,207 @@
 <?php
 /**
- * Интерфейс объектов, возвращаемых в виде результата запроса
- *
- * @example $result = $db->query($pattern, $data);
- * Объект $result инкапсулирует в себе конкретную реализацию курсора.
- * Например, для mysql-драйвера это может быть mysqli_result-объект.
- *
  * @package go\DB
- * @author  Григорьев Олег aka vasa_c
  */
 
 namespace go\DB;
 
+/**
+ * The result representation interface
+ *
+ * @example $result = $db->query($pattern, $data);
+ * The $result object encapsulates the specific implementation of the cursor.
+ * For mysqli-adapter (for example) it is a mysqli_result instance.
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 interface Result extends \IteratorAggregate
 {
     /**
-     * Разобрать результат в соответствии с форматом
+     * Represents result as specified in $fetch
      *
      * @param string $fetch
-     *        формат разбора
+     *        a representation format
      * @return mixed
-     *         результат в заданном формате
+     *         the result in specified format
      * @throws \go\DB\Exceptions\Fetch
-     *         ошибка при разборе
+     *         the format is invalid for this result type
      */
     public function fetch($fetch);
 
     /**
-     * Очистить результат
+     * Clears the result
      */
     public function free();
 
     /**
-     * Массив ассоциативных массивов
+     * As a list of dictionaries
      *
      * @param string $param [optional]
-     *        поле, используемое в качестве индекса
-     *        не указано - порядковый массив
+     *        a column for keys of the main list (numeric list by default)
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function assoc($param = null);
 
     /**
-     * Массив порядковых массивов
+     * As a list of numerics array
      *
      * @param int $param [optional]
-     *        номер поля, используемого в качестве индекса
-     *        не указано - порядковый массив
+     *        a column number for keys of the main list (numeric list by default)
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function numerics($param = null);
 
     /**
-     * Массив объектов
+     * As a list of objects
      *
      * @param string $param [optional]
-     *        поле, используемое в качестве индекса
-     *        не указано - порядковый массив
+     *        a column for keys of the main list (numeric list by default)
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function objects($param = null);
 
     /**
-     * Массив значений
+     * As a list of scalar values (a single column)
      *
+     * @param mixed $param [optional]
+     *        a used column (first by default)
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function col($param = null);
 
     /**
-     * Список переменных (первое поле - имя переенной, второе - значение)
+     * As a variables list (a first row in result is a key, a second is a value)
      *
+     * @param mixed $param [optional]
+     *        does not used
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function vars($param = null);
 
     /**
-     * Итератор по assoc
+     * An iterator, analog for assoc()
      *
-     * @param string $param [optional]
-     * @return Iterator
+     * @param mixed $param [optional]
+     * @return \Traversable
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function iassoc($param = null);
 
     /**
-     * Итератор по numerics
+     * An iterator, analog for numerics()
      *
-     * @param int $param [optional]
-     * @return Iterator
+     * @param mixed $param [optional]
+     * @return \Traversable
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function inumerics($param = null);
 
     /**
-     * Итератор по objects
+     * An iterator, analog for objects()
      *
-     * @param string $param [optional]
-     * @return Iterator
+     * @param mixed $param [optional]
+     * @return \Traversable
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function iobjects($param = null);
 
     /**
-     * Итератор по vars
+     * An iterator, analog for vars()
      *
-     * @return Iterator
+     * @param mixed $param [optional]
+     * @return \Traversable
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function ivars($param = null);
 
     /**
-     * Итератор по col
+     * An iterator, analog for col()
      *
-     * @return Iterator
+     * @param mixed $param [optional]
+     * @return \Traversable
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function icol($param = null);
 
     /**
-     * Ассоциативный массив по одной строке (нет строки - NULL)
+     * A dictionary of a single row fields (NULL for empty result)
      *
+     * @param mixed $param [optional]
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function row($param = null);
 
     /**
-     * Порядковый массив по одной строке (нет строки - NULL)
+     * A numeric list of a single row fields (NULL for empty result)
      *
+     * @param mixed $param [optional]
      * @return array
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function numeric($param = null);
 
     /**
-     * Одна строка в виде объекта (нет строки - NULL)
+     * A object as a dictionary a single row fields (NULL for empty result)
      *
+     * @param mixed $param [optional]
      * @return object
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function object($param = null);
 
     /**
-     * Одно значение из строки (нет строки - NULL)
+     * A single value (a first column of a first row, NULL for empty result)
      *
+     * @param mixed $param [optional]
      * @return string
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function el($param = null);
 
     /**
-     * Одно значение из строки в виде bool (нет строки - NULL)
+     * A single value as boolean (a first column of a first row, NULL for empty result)
      *
+     * @param mixed $param [optional]
      * @return bool
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function bool($param = null);
 
     /**
-     * Количество строк в результате
+     * Number of rows in the result
      *
+     * @param mixed $param [optional]
      * @return int
      * @throws \go\DB\Exceptions\UnexpectedFetch
      */
     public function num($param = null);
 
     /**
-     * Последний AUTO_INCREMENT
+     * The last auto increment
      *
+     * @param mixed $param [optional]
      * @return int
      */
     public function id($param = null);
 
     /**
-     * Количество затронутых запросом строк
+     * Number of affected rows
      *
+     * @param mixed $param [optional]
      * @return int
      */
     public function ar($param = null);
 
     /**
-     * Внутренняя реализация результата
+     * The low-level implementation of cursor (adapter depended)
      *
+     * @param mixed $param [optional]
      * @return mixed
      */
     public function cursor($param = null);

@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: хранилище не имеет центральной базы
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: the main database is not defined in this storage
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class StorageDBCentral extends Storage
 {
     protected $MESSAGE_PATTERN = 'Storage contains no central database';

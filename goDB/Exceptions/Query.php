@@ -1,28 +1,33 @@
 <?php
 /**
- * Исключение: ошибка в запросе
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error in a query
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Query extends Logic
 {
+    /**
+     * The error message pattern
+     *
+     * @var string
+     */
     const MESSAGE_PATTERN = 'Error SQL "{{ query }}"; error="{{ error }}" [#{{ code }}]';
 
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $query
-     *        ошибочный запрос
+     *        the invalid query
      * @param string $error
-     *        описание ошибки
+     *        the error description
      * @param string $errorcode [optional]
-     *        код ошибки
+     *        the error code
      */
     public function __construct($query, $error, $errorcode = null)
     {
@@ -38,8 +43,6 @@ final class Query extends Logic
     }
 
     /**
-     * Получить ошибочный запрос
-     *
      * @return string
      */
     public function getQuery()
@@ -48,8 +51,6 @@ final class Query extends Logic
     }
 
     /**
-     * Получить описание ошибки
-     *
      * @return string
      */
     public function getError()
@@ -58,8 +59,6 @@ final class Query extends Logic
     }
 
     /**
-     * Получить код ошибки
-     *
      * @return mixed
      */
     public function getErrorCode()
@@ -67,9 +66,18 @@ final class Query extends Logic
         return $this->errorcode;
     }
 
+    /**
+     * @var string
+     */
     private $query;
 
+    /**
+     * @var string
+     */
     private $error;
 
+    /**
+     * @var int
+     */
     private $errorcode;
 }

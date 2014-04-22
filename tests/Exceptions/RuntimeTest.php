@@ -1,14 +1,14 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Exceptions;
 
 /**
- * @covers go\DB\Exceptions\Runtime
+ * @coversDefaultClass go\DB\Exceptions\Runtime
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class RuntimeTest extends \PHPUnit_Framework_TestCase
 {

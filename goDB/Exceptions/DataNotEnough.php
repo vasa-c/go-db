@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: данных меньше чем нужно
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: elements of incoming data less than necessary
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class DataNotEnough extends Data
 {
     public function __construct($datas, $placeholders)

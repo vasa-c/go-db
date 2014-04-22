@@ -1,25 +1,26 @@
 <?php
 /**
- * Получение конфигурации goDB (из каталога _config)
- *
- * @package    go\DB
- * @subpackage config
- * @author     Григорьев Олег aka vasa_c
- * @static
- * @protected для использования внутри библиотеки
+ * @package go\DB
  */
 
 namespace go\DB\Helpers;
 
+/**
+ * Access for the goDB-configuration (from the directory _config)
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ * @protected for internal use
+ */
 final class Config
 {
     /**
-     * Получить нужную конфигурацию
+     * Returns a specified configuration
      *
      * @example \go\DB\Config::get('placeholders')
      *
      * @param string $name
      * @return mixed
+     * @throws \RuntimeException
      */
     public static function get($name)
     {
@@ -34,7 +35,7 @@ final class Config
     }
 
     /**
-     * Уже загруженные конфигурации
+     * The cache of loaded configurations
      *
      * @var array
      */

@@ -1,17 +1,19 @@
 <?php
 /**
- * Autoloader for go\db-classes
- *
- * @package go\I18n
- * @author  Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
+ * @package go\DB
  */
 
 namespace go\DB;
 
+/**
+ * The autoloader for the library
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Autoloader
 {
     /**
-     * Register autoloader for this lib
+     * Registers an autoloader for the library
      */
     public static function register()
     {
@@ -22,10 +24,12 @@ final class Autoloader
     }
 
     /**
-     * Register autoloader for unit tests this lib
+     * Registers an autoloader for the unit tests of this library
      *
      * @param string $ns
+     *        the namespace of the tests
      * @param string $dir
+     *        the root directory of the test classes
      */
     public static function registerForTests($ns, $dir)
     {
@@ -36,10 +40,12 @@ final class Autoloader
     }
 
     /**
-     * Constructor
+     * The constructor
      *
      * @param string $namespace
+     *        the root namespace of the classess
      * @param string $dir
+     *        the root directory of the classess
      */
     private function __construct($namespace, $dir)
     {
@@ -48,7 +54,7 @@ final class Autoloader
     }
 
     /**
-     * Invoke - load class by name
+     * Invoke: loads a class by its name
      *
      * @param string $classname
      */

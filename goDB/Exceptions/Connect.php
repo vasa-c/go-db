@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: не удалось подключиться к серверу (или выбрать базу)
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: could not connect to the server or select database
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Connect extends Runtime
 {
 

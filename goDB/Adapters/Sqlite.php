@@ -1,26 +1,20 @@
 <?php
 /**
- * Адаптер sqlite
- *
- * @package    go\DB
- * @subpackage Adapters
- * @author     Григорьев Олег aka vasa_c
- * @uses       php_sqlite3 (http://php.net/manual/en/book.sqlite3.php)
+ * @package go\DB
  */
 
 namespace go\DB\Adapters;
 
+/**
+ * The SQLite adapter
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ * @uses php_sqlite3 (http://php.net/manual/en/book.sqlite3.php)
+ */
 final class Sqlite extends \go\DB\DB
 {
-
     /**
-     * @override \go\DB\DB
-     *
-     * @param string $pattern
-     * @param array $data
-     * @param string $prefix
-     * @return string
-     * @throws \go\DB\Exceptions\Templater
+     * {@inheritdoc}
      */
     public function makeQuery($pattern, $data, $prefix = null)
     {

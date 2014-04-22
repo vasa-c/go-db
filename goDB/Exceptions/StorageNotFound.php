@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: база с таким именем отсутствует в хранилище
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a required database was not found in the storage
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class StorageNotFound extends Storage
 {
     protected $MESSAGE_PATTERN = 'DB with name "{{ dbname }}" not found in Storage';

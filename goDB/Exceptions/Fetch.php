@@ -1,29 +1,28 @@
 <?php
 /**
- * Исключение: ошибка при разборе результата
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a result format is invalid
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Fetch extends Logic
 {
     /**
-     * Шаблон сообщения, переопределяется у потомков
+     * The template for the error message
      *
      * @var string
      */
     protected $MESSAGE_PATTERN;
 
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $fetch
-     *        формат разбора на котором случилась ошибка
      */
     public function __construct($fetch)
     {
@@ -37,8 +36,6 @@ abstract class Fetch extends Logic
     }
 
     /**
-     * Получить ошибочный формат разбора
-     *
      * @return string
      */
     public function getFetch()
@@ -46,5 +43,8 @@ abstract class Fetch extends Logic
         return $this->fetch;
     }
 
+    /**
+     * @var string
+     */
     protected $fetch;
 }

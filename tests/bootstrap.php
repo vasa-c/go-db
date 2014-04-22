@@ -1,8 +1,7 @@
 <?php
 /**
- * @package    go\DB
- * @subpackage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @package go\DB
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 
 namespace go\Tests\DB;

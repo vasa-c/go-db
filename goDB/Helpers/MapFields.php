@@ -6,14 +6,14 @@
 namespace go\DB\Helpers;
 
 /**
- * The map of fields to columns
+ * The map of fields to columns (use in the Table class)
  *
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class MapFields
 {
     /**
-     * Constructor
+     * The constructor
      *
      * @param array $map
      */

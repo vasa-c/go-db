@@ -1,19 +1,19 @@
 <?php
 /**
- * Исключение: попытка работать с "жестко" закрытым подключением
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: you cannot work with a hard-closed connection
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Closed extends Logic
 {
     /**
-     * Конструктор
+     * The constructor
      */
     public function __construct()
     {

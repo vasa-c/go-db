@@ -1,20 +1,19 @@
 <?php
 /**
- * Итератор по numerics
- *
- * @package    go\DB
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Helpers\Iterators;
 
+/**
+ * The iterator for numerics()
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Numerics extends Base
 {
     /**
-     * @override Base
-     *
-     * @return mixed | false
+     * {@inheritdoc}
      */
     public function fetchNextRow()
     {

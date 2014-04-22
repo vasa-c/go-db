@@ -1,19 +1,19 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB;
 
 /**
- * @covers go\DB\DB
+ * @coversDefaultClass go\DB\DB
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class DBTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\DB::create
+     * @covers ::create
      * @dataProvider providerCreate
      */
     public function testCreate($params, $adapter)
@@ -28,26 +28,26 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     public function providerCreate()
     {
         return array(
-            array( // адаптер отдельно
+            array( // the adapter is set separately from the parameters
                 array(
                     'host' => 'localhost',
                 ),
                 'test',
             ),
-            array( // адаптер регистронезависим
+            array( // the adapter is case insensitive
                 array(
                     'host' => 'localhost',
                 ),
                 'Test',
             ),
-            array( // адаптер в параметрах
+            array( // the adapter is set inside the parameters
                 array(
                     '_adapter' => 'test',
                     'host' => 'localhost',
                 ),
                 null,
             ),
-            array( // адаптер в параметрах также регистронезависим и перекрывает указанный отдельно
+            array( // the adapter in the parameters is case insensitive and replace a separate adapter
                 array(
                     '_adapter' => 'Test',
                     'host' => 'localhost',
@@ -58,7 +58,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::create
+     * @covers ::create
      * @dataProvider providerExceptionUnknownAdapter
      * @expectedException go\DB\Exceptions\UnknownAdapter
      */
@@ -111,7 +111,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::create
+     * @covers ::create
      * @expectedException \go\DB\Exceptions\ConfigConnect
      */
     public function testExceptionConfigConnect()
@@ -124,7 +124,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::create
+     * @covers ::create
      */
     public function testExceptionConnect()
     {
@@ -151,7 +151,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::getAvailableAdapters
+     * @covers ::getAvailableAdapters
      */
     public function testGetAvailableAdapters()
     {
@@ -161,9 +161,9 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::isConnected
-     * @covers go\DB\DB::forcedConnect
-     * @covers go\DB\DB::close
+     * @covers ::isConnected
+     * @covers ::forcedConnect
+     * @covers ::close
      */
     public function testConnectClose()
     {
@@ -205,7 +205,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::query
+     * @covers ::query
      */
     public function testQuery()
     {
@@ -246,7 +246,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::plainQuery
+     * @covers ::plainQuery
      */
     public function testPlainQuery()
     {
@@ -266,7 +266,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::__invoke
+     * @covers ::__invoke
      */
     public function testInvoke()
     {
@@ -287,9 +287,9 @@ final class DBTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers go\DB\DB::setPrefix
-     * @covers go\DB\DB::getPrefix
-     * @covers go\DB\DB::makeQuery
+     * @covers ::setPrefix
+     * @covers ::getPrefix
+     * @covers ::makeQuery
      */
     public function testPrefix()
     {
@@ -315,10 +315,10 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::setDebug
-     * @covers go\DB\DB::getDebug
-     * @covers go\DB\DB::disableDebug
-     * @covers go\DB\DB::query
+     * @covers ::setDebug
+     * @covers ::getDebug
+     * @covers ::disableDebug
+     * @covers ::query
      */
     public function testDebug()
     {
@@ -344,7 +344,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::getImplementationConnection
+     * @covers ::getImplementationConnection
      */
     public function testGetImplementationConnection()
     {
@@ -359,7 +359,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::__clone
+     * @covers ::__clone
      */
     public function testClone()
     {
@@ -410,7 +410,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::__destruct
+     * @covers ::__destruct
      */
     public function testDestruct()
     {

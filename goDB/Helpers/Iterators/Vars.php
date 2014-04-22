@@ -1,20 +1,19 @@
 <?php
 /**
- * Итератор по vars
- *
- * @package    go\DB
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Helpers\Iterators;
 
+/**
+ * The iterator for vars()
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Vars extends Base
 {
     /**
-     * @override Base
-     *
-     * @return mixed | false
+     * {@inheritdoc}
      */
     public function fetchNextRow()
     {
@@ -22,9 +21,7 @@ final class Vars extends Base
     }
 
     /**
-     * @overrider Base
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function key()
     {
@@ -35,9 +32,7 @@ final class Vars extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function current()
     {

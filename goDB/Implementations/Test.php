@@ -1,56 +1,45 @@
 <?php
 /**
- * Реализация тестового типа БД
- *
- * @see TestBase\Engine
- *
- * @package    go\DB
- * @subpackage Implementations
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Implementations;
 
+use go\DB\Implementations\TestBase\Engine;
+
+/**
+ * The adapter for test
+ * @see \go\DB\Implementations\TestBase\Engine
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Test extends Base
 {
     /**
-     * Обязательные параметры подключения
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsReq = array('host');
 
     /**
-     * Необязательные параметры подключения
-     *
-     * параметр => значение по умолчанию
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $paramsDefault = array('port' => 777);
 
     /**
-     * @override Base
-     *
-     * @param array $params
-     * @param string &$errorInfo
-     * @param int &$errorCode
-     * @return bool
+     * {@inheritdoc}
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         if ($params['host'] != 'localhost') {
             $errorInfo = 'Unable connect to "'.$params['host'].'"';
-            $errorCode = TestBase\Engine::ERROR_CONNECT;
+            $errorCode = Engine::ERROR_CONNECT;
             return false;
         }
-        return (new TestBase\Engine());
+        return (new Engine());
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
+     * {@inheritdoc}
      */
     public function close($connection)
     {
@@ -59,11 +48,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $query
-     * @return mixed
+     * {@inheritdoc}
      */
     public function query($connection, $query)
     {
@@ -71,11 +56,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getInsertId($connection, $cursor = null)
     {
@@ -83,11 +64,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getAffectedRows($connection, $cursor = null)
     {
@@ -95,11 +72,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return string
+     * {@inheritdoc}
      */
     public function getErrorInfo($connection, $cursor = null)
     {
@@ -107,11 +80,7 @@ final class Test extends Base
     }
 
     /**
-     * @override
-     *
-     * @param mixed $connection
-     * @param mixed $cursor [optional]
-     * @return int
+     * {@inheritdoc}
      */
     public function getErrorCode($connection, $cursor = null)
     {
@@ -119,11 +88,7 @@ final class Test extends Base
     }
 
     /**
-     * @override
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return int
+     * {@inheritdoc}
      */
     public function getNumRows($connection, $cursor)
     {
@@ -131,11 +96,7 @@ final class Test extends Base
     }
 
     /**
-     * @override
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchRow($connection, $cursor)
     {
@@ -143,11 +104,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return array|false
+     * {@inheritdoc}
      */
     public function fetchAssoc($connection, $cursor)
     {
@@ -155,11 +112,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
-     * @return object|false
+     * {@inheritdoc}
      */
     public function fetchObject($connection, $cursor)
     {
@@ -167,10 +120,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function freeCursor($connection, $cursor)
     {
@@ -178,11 +128,7 @@ final class Test extends Base
     }
 
     /**
-     * @override Base
-     *
-     * @param mixed $connection
-     * @param string $value
-     * @return string
+     * {@inheritdoc}
      */
     protected function reprField($connection, $value)
     {
@@ -190,10 +136,7 @@ final class Test extends Base
     }
 
     /**
-     * Вернуться в начало курсора
-     *
-     * @param mixed $connection
-     * @param mixed $cursor
+     * {@inheritdoc}
      */
     public function rewindCursor($connection, $cursor)
     {

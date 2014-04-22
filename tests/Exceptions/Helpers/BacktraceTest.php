@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Exceptions\Helpers;
@@ -10,15 +9,16 @@ namespace go\Tests\DB\Exceptions\Helpers;
 use go\DB\Exceptions\Helpers\Backtrace;
 
 /**
- * @covers go\DB\Exceptions\Helpers\Backtrace
+ * @coversDefaultClass go\DB\Exceptions\Helpers\Backtrace
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class QueryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Exceptions\Helpers\Backtrace::__construct
-     * @covers go\DB\Exceptions\Helpers\Backtrace::getTrace
-     * @covers go\DB\Exceptions\Helpers\Backtrace::getFile
-     * @covers go\DB\Exceptions\Helpers\Backtrace::getLine
+     * @covers ::__construct
+     * @covers ::getTrace
+     * @covers ::getFile
+     * @covers ::getLine
      */
     public function testBacktrace()
     {

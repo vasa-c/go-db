@@ -1,8 +1,7 @@
 <?php
 /**
  * @package go\DB
- * @subpakcage Tests
- * @author Oleg Grigoriev aka vasa_c <go.vasac@gmail.com>
+ * @subpackage Tests
  */
 
 namespace go\Tests\DB\Helpers;
@@ -10,12 +9,13 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\Config;
 
 /**
- * @covers go\DB\Helpers\Config
+ * @coversDefaultClass go\DB\Helpers\Config
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers go\DB\Helpers\Config::get
+     * @covers ::get
      */
     public function testGet()
     {

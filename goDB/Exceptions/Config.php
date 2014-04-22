@@ -1,15 +1,15 @@
 <?php
 /**
- * Исключение: ошибка конфигурации
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * Error: a configuration is invalid
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Config extends Logic
 {
 

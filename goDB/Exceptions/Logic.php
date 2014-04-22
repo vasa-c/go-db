@@ -1,17 +1,24 @@
 <?php
 /**
- * Базовое Logic-исключение при работе с библиотекой
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * The basic logic-exception of the library
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Logic extends \LogicException implements Exception
 {
+    /**
+     * The constructor
+     *
+     * @param string $message
+     * @param int $code [optional]
+     * @param \Exception $previous [optional]
+     */
     public function __construct($message, $code = null, $previous = null)
     {
         $backtrace = new Helpers\Backtrace($this->getTrace(), 'go\DB\\');

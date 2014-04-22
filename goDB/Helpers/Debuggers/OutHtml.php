@@ -1,14 +1,15 @@
 <?php
 /**
- * Отладчик в браузер
- *
  * @package go\DB
- * @subpackage Helpers
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers\Debuggers;
 
+/**
+ * The debugger for browsers
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class OutHtml
 {
     /**

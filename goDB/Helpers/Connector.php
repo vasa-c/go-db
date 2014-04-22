@@ -1,46 +1,47 @@
 <?php
 /**
- * Подключалка к базе
- *
- * Занимается подключением к БД.
- * Агрегирует в себе объект низкоуровневого подключения, агрегируется в объект DB.
- *
- * Может разделяться несколькими объектами DB.
- *
- * @package    go\DB
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Helpers;
 
-use go\DB\Exceptions as Exceptions;
+use \go\DB\Implementations\Base as BaseImp;
+use go\DB\Exceptions\ConfigConnect;
+use go\DB\Exceptions\Connect;
 
+/**
+ * Abstract database connection
+ *
+ * Contains a low-level connect implementation.
+ * Can be divided among several database objects.
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Connector
 {
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $adapter
-     *        для какого адаптера
+     *        the adapter name
      * @param array $params
-     *        параметры подключения
+     *        the connection parameters
      * @throws \go\DB\Exceptions\ConfigConnect
-     *         невеверный формат параметров подключения
+     *         the connection parameters is invalid
      */
     public function __construct($adapter, array $params)
     {
-        $this->implementation = \go\DB\Implementations\Base::getImplementationForAdapter($adapter);
+        $this->implementation = BaseImp::getImplementationForAdapter($adapter);
         $this->params = $this->implementation->checkParams($params);
         if (!$this->params) {
-            throw new Exceptions\ConfigConnect();
+            throw new ConfigConnect();
         }
         $this->countLinks = 1;
         $this->countConnections = 0;
     }
 
     /**
-     * Деструктор - уничтожение всех подключений
+     * The destructor
      */
     public function __destruct()
     {
@@ -48,12 +49,12 @@ final class Connector
     }
 
     /**
-     * Требование подключения
+     * The connection requirement
      *
      * @return bool
-     *         было ли подключение установлено именно в этот раз
+     *         TRUE if connection has been established in this time
      * @throws \go\DB\Exceptions\Connect
-     *         ошибка при подключении
+     *         a connect error
      */
     public function connect()
     {
@@ -63,7 +64,7 @@ final class Connector
         }
         $connection = $this->implementation->connect($this->params, $errorInfo, $errorCode);
         if (!$connection) {
-            throw new Exceptions\Connect($errorInfo, $errorCode);
+            throw new Connect($errorInfo, $errorCode);
         }
         $this->connection = $connection;
         $this->countConnections = 1;
@@ -71,10 +72,10 @@ final class Connector
     }
 
     /**
-     * Требование отключения
+     * The closing requirement
      *
      * @return bool
-     *         было ли подключение разорвано именно в этот раз
+     *         TRUE if connection has been closed in this time
      */
     public function close()
     {
@@ -91,7 +92,7 @@ final class Connector
     }
 
     /**
-     * Установлено ли подключение
+     * Checks if connection is established
      *
      * @return bool
      */
@@ -101,10 +102,10 @@ final class Connector
     }
 
     /**
-     * Добавить ссылку из объекта базы
+     * Appends a link to this connection
      *
      * @param bool $connection
-     *        есть ли в этой базе уже подключение
+     *        this database has connection already
      */
     public function addLink($connection)
     {
@@ -115,7 +116,7 @@ final class Connector
     }
 
     /**
-     * Удалить ссылку из объекта базы
+     * Removes alink to this connection
      */
     public function removeLink()
     {
@@ -128,7 +129,7 @@ final class Connector
     }
 
     /**
-     * Узнать количество ссылок на коннектор
+     * Returns number of required connections
      *
      * @return int
      */
@@ -138,7 +139,7 @@ final class Connector
     }
 
     /**
-     * Получить реализацию подключения
+     * Returns the low-level connection implementation
      *
      * @return mixed
      */
@@ -148,7 +149,7 @@ final class Connector
     }
 
     /**
-     * Получить имплементатор
+     * Returns the database implementation
      *
      * @return \go\DB\Implementations\Base
      */
@@ -158,7 +159,7 @@ final class Connector
     }
 
     /**
-     * Уничтожение всех подклбчений
+     * Closes all connection
      */
     protected function deny()
     {
@@ -172,35 +173,35 @@ final class Connector
     }
 
     /**
-     * Внутренняя реализация базы
+     * The database implementation
      *
      * @var \go\DB\Implementations\Base
      */
     private $implementation;
 
     /**
-     * Низкоуровневая реализация подключения
+     * The low-level connection implementation
      *
      * @var mixed
      */
     private $connection;
 
     /**
-     * Параметры подключения
+     * The connection configuration
      *
      * @var array
      */
     private $params;
 
     /**
-     * Количество ссылок из различных объектов DB
+     * Number of links from DB instances
      *
      * @var int
      */
     private $countLinks;
 
     /**
-     * Количество запрошенных подключений
+     * Number of required connections
      *
      * @var int
      */

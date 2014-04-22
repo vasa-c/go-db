@@ -1,36 +1,37 @@
 <?php
 /**
- * Разборщик плейсхолдера
- *
- * Вытаскивает параметры плейсхолдера.
- * Например, плейсхолдер "?list-null:name;"
- *
- * Данный класс работает только с типом плейсхолдера ("list-null"):
- * @example
- * <code>
- * $parser = new \go\DB\Templaters\Helpers\ParserPH("list-null");
- * $parser->getType(); // тип перведённый к краткой форме ("l")
- * $parser->getModifers(); // вкл/выкл модификаторов: array('n' => true, 'i' => false, ...)
- * </code>
- *
  * @package go\DB
- * @subpackage Helpers
- * @author Григорьев Олег aka vasa_c
  */
 
 namespace go\DB\Helpers;
 
 use go\DB\Compat;
+use go\DB\Exceptions\UnknownPlaceholder;
 
+/**
+ * The parser of placeholders
+ *
+ * Extracts parameters from a placeholder.
+ * For example, placeholder "?list-null:name;"
+ * This class works with a placeholder type only ("list-null")
+ * @example
+ * <code>
+ * $parser = new \go\DB\Templaters\Helpers\ParserPH("list-null");
+ * $parser->getType(); // a type in the short form ("l")
+ * $parser->getModifers(); // values of modifers: array('n' => true, 'i' => false, ...)
+ * </code>
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class ParserPH
 {
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $placeholder
-     *        плейсхолдер
+     *        the placeholder
      * @throws \go\DB\Exceptions\UnknownPlaceholder
-     *         неизвестный плейсхолдер
+     *         the placeholder is unknown
      */
     public function __construct($placeholder)
     {
@@ -44,7 +45,7 @@ final class ParserPH
     }
 
     /**
-     * Получить тип плейсхолдера
+     * Returns type of the placeholder
      *
      * @return string
      */
@@ -54,7 +55,7 @@ final class ParserPH
     }
 
     /**
-     * Получить настройки модификаторов
+     * Returns values of modifiers
      *
      * @return array
      */
@@ -64,7 +65,7 @@ final class ParserPH
     }
 
     /**
-     * Разбор плейсхолдера
+     * Parses the placeholder
      */
     private function parse()
     {
@@ -125,17 +126,17 @@ final class ParserPH
     }
 
     /**
-     * Выброс исключения об ошибочном плейсхолдере
+     * Throws a exception for an invalid placeholder
      *
      * @throws \go\DB\Exceptions\UnknownPlaceholder
      */
     private function error()
     {
-        throw new \go\DB\Exceptions\UnknownPlaceholder($this->placeholder);
+        throw new UnknownPlaceholder($this->placeholder);
     }
 
     /**
-     * Загрузить конфигурацию плейсхолдеров
+     * Loads the placeholders configuration
      */
     private static function loadConfig()
     {
@@ -154,50 +155,42 @@ final class ParserPH
     }
 
     /**
-     * Разбираемый плейсхолдер
+     * The placeholder for parsing
      *
      * @var string
      */
     private $placeholder;
 
     /**
-     * Тип плейсхолдера
+     * The placeholder type
      *
      * @var string
      */
     private $type;
 
     /**
-     * Настройки модификаторов
+     * The placeholder modifiers list
      *
      * @var array
      */
     private $modifers;
 
     /**
-     * Список доступных плейсхолдеров ("имя" => true)
-     *
      * @var array
      */
     private static $placeholders;
 
     /**
-     * Список длинных синонимов ("длинный" => "короткий")
-     *
      * @var array
      */
     private static $longs;
 
     /**
-     * Список модификаторов ("имя" => false)
-     *
      * @var array
      */
     private static $lModifers;
 
     /**
-     * Список длинных синонимов модифакторов ("динный" => "короткий")
-     *
      * @var array
      */
     private static $longModifers;

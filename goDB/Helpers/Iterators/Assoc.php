@@ -1,20 +1,19 @@
 <?php
 /**
- * Итератор по assoc
- *
- * @package    go\DB
- * @subpackage Helpers
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Helpers\Iterators;
 
+/**
+ * The iterator for assoc()
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 final class Assoc extends Base
 {
     /**
-     * @override Base
-     *
-     * @return mixed | false
+     * {@inheritdoc}
      */
     public function fetchNextRow()
     {

@@ -1,29 +1,28 @@
 <?php
 /**
- * Исключение: ошибка хранилища баз
- *
- * @package    go\DB
- * @subpackage Exceptions
- * @link       https://github.com/vasa-c/go-db/wiki/Exceptions
- * @author     Григорьев Олег aka vasa_c
+ * @package go\DB
  */
 
 namespace go\DB\Exceptions;
 
+/**
+ * The storage error
+ *
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 abstract class Storage extends Logic
 {
     /**
-     * Шаблон сообщения, переопределяется у потомков
+     * The error message pattern
      *
      * @var string
      */
     protected $MESSAGE_PATTERN;
 
     /**
-     * Конструктор
+     * The constructor
      *
      * @param string $dbname
-     *        ошибочное имя базы
      */
     public function __construct($dbname)
     {
@@ -37,8 +36,6 @@ abstract class Storage extends Logic
     }
 
     /**
-     * Получить ошибочное название базы
-     *
      * @return string
      */
     public function getDBName()
@@ -46,5 +43,8 @@ abstract class Storage extends Logic
         return $this->dbname;
     }
 
+    /**
+     * @var string
+     */
     protected $dbname;
 }
