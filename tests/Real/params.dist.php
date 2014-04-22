@@ -18,6 +18,13 @@ return array(
         'dbname' => 'test',
     ),
 
+    'mysqlold' => array(
+        'host' => 'localhost',
+        'username' => 'test',
+        'password' => 'test',
+        'dbname' => 'test',
+    ),
+
     'sqlite' => array(
         'filename' => ':memory:',
     ),
