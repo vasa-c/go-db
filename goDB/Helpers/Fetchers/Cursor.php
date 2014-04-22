@@ -305,6 +305,14 @@ class Cursor extends Base
     /**
      * {@inheritdoc}
      */
+    public function count()
+    {
+        return $this->implementation->getNumRows($this->connection, $this->cursor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function requiredCursor($fetch = null)
     {
         if ((!$this->isCursor) || $this->isFree) {

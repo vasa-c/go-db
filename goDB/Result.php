@@ -14,7 +14,7 @@ namespace go\DB;
  *
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
-interface Result extends \IteratorAggregate
+interface Result extends \IteratorAggregate, \Countable
 {
     /**
      * Represents result as specified in $fetch

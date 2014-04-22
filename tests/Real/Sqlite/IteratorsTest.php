@@ -31,7 +31,6 @@ class IteratorsTest extends Base
         $this->assertSame($db($sql)->col(), \iterator_to_array($db($sql)->icol()));
         $this->assertSame($db($sql)->vars(), \iterator_to_array($db($sql)->ivars()));
         $this->assertSame($db($sql)->assoc(), \iterator_to_array($db($sql)));
-        //$this->assertCount(5, $db($sql)->iassoc());
         $this->assertSame($db($sql)->assoc('id'), \iterator_to_array($db($sql)->iassoc('id')));
     }
 }

@@ -244,6 +244,14 @@ class Arr extends Base
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return \count($this->data);
+    }
+
+    /**
      * @var array
      */
     private $data;
