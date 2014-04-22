@@ -120,7 +120,7 @@ final class Sqlite extends Base
      */
     public function freeCursor($connection, $cursor)
     {
-        return $cursor->finalize();
+        return @$cursor->finalize(); // @todo fix (The SQLite3Result object has not been correctly initialised)
     }
 
     /**
@@ -152,6 +152,6 @@ final class Sqlite extends Base
      */
     public function rewindCursor($connection, $cursor)
     {
-        return $cursor->reset(0);
+        return $cursor->reset();
     }
 }
