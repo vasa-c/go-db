@@ -2,6 +2,8 @@
 
 ## dev-master
 
+* Fixed debug backtrace for global functions call
+
 ## 2.2.0 (22.04.2014)
 
 * #7: Fixed iterators

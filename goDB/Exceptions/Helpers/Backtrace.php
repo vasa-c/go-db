@@ -21,7 +21,14 @@ class Backtrace
         $trace = array();
         foreach (\array_reverse($realtrace) as $item) {
             $trace[] = $item;
-            if ((!empty($item['class'])) && (\strpos($item['class'], $prefix) === 0)) {
+            if (!empty($item['class'])) {
+                $ent = $item['class'];
+            } elseif (!empty($item['function'])) {
+                $ent = $item['function'];
+            } else {
+                continue;
+            }
+            if (\strpos($ent, $prefix) === 0) {
                 $this->trace = \array_reverse($trace);
                 $this->file = isset($item['file']) ? $item['file'] : null;
                 $this->line = isset($item['line']) ? $item['line'] : null;
