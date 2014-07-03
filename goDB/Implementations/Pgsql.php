@@ -45,11 +45,17 @@ final class Pgsql extends Base
                 $params['port'] = $host[1];
             }
         }
+
+        if (!function_exists('\pg_connect')) {
+            throw new  \go\DB\Exceptions\Connect('Function pg_connect not found.');
+        }
+
         $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
         if (!$connection) {
             $errorInfo = \error_get_last();
             return false;
         }
+
         return $connection;
     }
 
