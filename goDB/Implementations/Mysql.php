@@ -31,6 +31,11 @@ final class Mysql extends Base
     /**
      * {@inheritdoc}
      */
+    protected $depsPhpExts = 'mysqli';
+
+    /**
+     * {@inheritdoc}
+     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $host = \explode(':', $params['host'], 2);

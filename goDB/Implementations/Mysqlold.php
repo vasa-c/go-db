@@ -29,6 +29,11 @@ final class Mysqlold extends Base
     /**
      * {@inheritdoc}
      */
+    protected $depsPhpExts = 'mysql';
+
+    /**
+     * {@inheritdoc}
+     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);

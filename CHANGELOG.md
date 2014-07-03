@@ -2,6 +2,9 @@
 
 ## dev-master
 
+## 2.2.1 (03.07.2014)
+
+* Checks dependencies for an adapter
 * Fixed debug backtrace for global functions call
 
 ## 2.2.0 (22.04.2014)

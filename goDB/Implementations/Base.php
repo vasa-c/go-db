@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    go\DB
+ * @package go\DB
  */
 
 namespace go\DB\Implementations;
@@ -42,6 +42,13 @@ abstract class Base
     protected $paramsDefault = array();
 
     /**
+     * The list of required php extensions
+     *
+     * @var string|array
+     */
+    protected $depsPhpExts;
+
+    /**
      * Creates an instance for the specified adapter
      *
      * @param string $adapter
@@ -58,9 +65,12 @@ abstract class Base
 
     /**
      * The hidden constructor. Building only by getImplementationForAdapter()
+     *
+     * @throws \go\DB\Exceptions\Dependence
      */
     protected function __construct()
     {
+        $this->checkDeps();
     }
 
     /**
@@ -345,6 +355,24 @@ abstract class Base
     protected function reprField($connection, $value)
     {
         return '"'.$value.'"';
+    }
+
+    /**
+     * Checks dependencies
+     *
+     * @throws \go\DB\Exceptions\Dependence
+     */
+    protected function checkDeps()
+    {
+        if ($this->depsPhpExts === null) {
+            return;
+        }
+        $deps = \is_array($this->depsPhpExts) ? $this->depsPhpExts : array($this->depsPhpExts);
+        foreach ($deps as $dep) {
+            if (!\extension_loaded($dep)) {
+                throw new \go\DB\Exceptions\Dependence('php extension "'.$dep.'"');
+            }
+        }
     }
 
     /**

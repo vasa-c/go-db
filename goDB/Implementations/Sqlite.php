@@ -30,6 +30,11 @@ final class Sqlite extends Base
     /**
      * {@inheritdoc}
      */
+    protected $depsPhpExts = 'sqlite3';
+
+    /**
+     * {@inheritdoc}
+     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
