@@ -24,11 +24,13 @@ class PgsqlTest extends Base
         $db = $this->createDB(__DIR__.'/dump.sql');
         $this->assertEquals(5, $db->query('SELECT COUNT("id") FROM "godbtest"')->el());
         $this->assertEquals(4, $db->query('SELECT COUNT("val") FROM "godbtest"')->el());
+
         $values = array(
             array(8, 1, 'six'),
             array(9, 23, '125'),
         );
         $this->assertEquals(7, $db->query('INSERT INTO "godbtest"("num", "desc", "val") VALUES ?v', array($values))->id());
+
         $set = array(
             'num' => 9,
             'desc' => 1,
@@ -45,8 +47,10 @@ class PgsqlTest extends Base
             array(3, 6, 3, 'three'),
             array(1, 10, 1, 'one'),
         );
+
         $sql = 'SELECT "id","desc","num","val" FROM "godbtest" ORDER BY "desc" ASC, "id" ASC';
         $actual = $db->query($sql)->numerics();
+
         $this->assertEquals($expected, $actual);
         $this->assertNull($actual[1][3]);
         $this->assertNull($actual[3][3]);
