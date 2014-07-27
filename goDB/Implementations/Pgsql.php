@@ -25,6 +25,7 @@ final class Pgsql extends Base
         'password' => null,
         'dbname' => null,
         'charset' => null,
+        'host' => null,
         'port' => null,
         'hostaddr' => null,
         'connect_timeout' => null,
@@ -52,9 +53,15 @@ final class Pgsql extends Base
         }
         $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
         if (!$connection) {
-            $errorInfo = \error_get_last();
+            $errorData = \error_get_last();
+            $errorInfo = !empty($errorData['message'])
+                ? $errorData['message']
+                : 'Unknown connection error.'
+            ;
+
             return false;
         }
+
         return $connection;
     }
 
@@ -164,7 +171,7 @@ final class Pgsql extends Base
      */
     public function reprString($connection, $value)
     {
-        return '\''.$this->escapeString($connection, $value).'\'';
+        return '\'' . $this->escapeString($connection, $value) . '\'';
     }
 
     /**
@@ -172,7 +179,7 @@ final class Pgsql extends Base
      */
     protected function reprField($connection, $value)
     {
-        return '"'.$value.'"';
+        return '"' . $value . '"';
     }
 
     /**
