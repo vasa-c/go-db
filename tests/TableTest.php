@@ -240,7 +240,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             5 => array('id' => 5, 'a' => 2, 'b' => 10),
         );
         $this->assertEquals($expected, $table->select()->assoc('id'));
-        $this->assertSame('SELECT * FROM "pr_test" WHERE 1', $last);
+        $this->assertSame('SELECT * FROM "pr_test" WHERE 1=1', $last);
         $expected = array(
             2 => array('a' => 1, 'b' => 2),
             4 => array('a' => 1, 'b' => 4),
@@ -250,7 +250,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
         );
         $res = $table->select(array('a', 'b'));
         $this->assertEquals($expected, $res->assoc('b'));
-        $this->assertSame('SELECT "a","b_s" FROM "pr_test" WHERE 1', $last);
+        $this->assertSame('SELECT "a","b_s" FROM "pr_test" WHERE 1=1', $last);
         $expected = array(
             2 => array('b' => 2),
             4 => array('b' => 4),
@@ -259,7 +259,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
             10 => array('b' => 10),
         );
         $res = $table->select('b');
-        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1', $last);
+        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1=1', $last);
         $this->assertEquals($expected, $res->assoc('b'));
         $expected = array(
             8 => array('b' => 8),
@@ -277,15 +277,15 @@ class TableTest extends \PHPUnit_Framework_TestCase
         );
         $res = $table->select(array('b'), true, array('a' => false, 'b' => true));
         $this->assertEquals($expected, $res->assoc());
-        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1 ORDER BY "a" DESC,"b_s" ASC', $last);
+        $this->assertSame('SELECT "b_s" FROM "pr_test" WHERE 1=1 ORDER BY "a" DESC,"b_s" ASC', $last);
         $expected = array(1, 2, 3);
         $res = $table->select('id', null, 'id', 3);
         $this->assertEquals($expected, $res->col());
-        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 0,3', $last);
+        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1=1 ORDER BY "id_s" ASC LIMIT 0,3', $last);
         $expected = array(3, 4, 5);
         $res = $table->select('id', null, 'id', array(3, 2));
         $this->assertEquals($expected, $res->col());
-        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1 ORDER BY "id_s" ASC LIMIT 2,3', $last);
+        $this->assertSame('SELECT "id_s" FROM "pr_test" WHERE 1=1 ORDER BY "id_s" ASC LIMIT 2,3', $last);
     }
 
     /**

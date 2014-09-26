@@ -289,17 +289,17 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             array(
                 'WHERE ?w',
                 array(true),
-                'WHERE 1',
+                'WHERE 1=1',
             ),
             array(
                 'WHERE ?w',
                 array(array()),
-                'WHERE 1',
+                'WHERE 1=1',
             ),
             array(
                 'WHERE ?w',
                 array(false),
-                'WHERE 0',
+                'WHERE 1=0',
             ),
             array(
                 'WHERE ?w',
