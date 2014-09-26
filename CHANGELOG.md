@@ -2,6 +2,9 @@
 
 ## dev-master
 
+* #34: Fixed `?w` for PgSQL (argument of WHERE must be type boolean)
+* #31, #32: Fix error messages for PgSQL
+
 ## 2.2.1 (03.07.2014)
 
 * Checks dependencies for an adapter

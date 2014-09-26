@@ -29,7 +29,8 @@ class PgsqlTest extends Base
             array(8, 1, 'six'),
             array(9, 23, '125'),
         );
-        $this->assertEquals(7, $db->query('INSERT INTO "godbtest"("num", "desc", "val") VALUES ?v', array($values))->id());
+        $pattern = 'INSERT INTO "godbtest"("num", "desc", "val") VALUES ?v';
+        $this->assertEquals(7, $db->query($pattern, array($values))->id());
 
         $set = array(
             'num' => 9,
@@ -56,10 +57,10 @@ class PgsqlTest extends Base
         $this->assertNull($actual[3][3]);
         
         $sql = 'SELECT COUNT(*) FROM "godbtest" WHERE ?w';
-        $this->assertTrue( $db->query($sql, array( array() ))->el() > 0);
-        $this->assertTrue( $db->query($sql, array( null ))->el() > 0);
-        $this->assertTrue( $db->query($sql, array( true ))->el() > 0);
+        $this->assertTrue($db->query($sql, array(array()))->el() > 0);
+        $this->assertTrue($db->query($sql, array(null))->el() > 0);
+        $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
-        $this->assertTrue( $db->query($sql, array( false ))->el() == 0);
+        $this->assertTrue($db->query($sql, array(false))->el() == 0);
     }
 }

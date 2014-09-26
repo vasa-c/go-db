@@ -54,10 +54,10 @@ class SqliteTest extends Base
         $this->assertNull($actual[3][3]);
         
         $sql = 'SELECT COUNT(*) FROM `godbtest` WHERE ?w';
-        $this->assertTrue( $db->query($sql, array( array() ))->el() > 0);
-        $this->assertTrue( $db->query($sql, array( null ))->el() > 0);
-        $this->assertTrue( $db->query($sql, array( true ))->el() > 0);
+        $this->assertTrue($db->query($sql, array(array()))->el() > 0);
+        $this->assertTrue($db->query($sql, array(null))->el() > 0);
+        $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
-        $this->assertTrue( $db->query($sql, array( false ))->el() == 0);
+        $this->assertTrue($db->query($sql, array(false))->el() == 0);
     }
 }
