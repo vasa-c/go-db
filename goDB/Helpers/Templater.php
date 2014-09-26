@@ -321,7 +321,7 @@ class Templater
     private function replacementW($value, array $modifers)
     {
         if (!\is_array($value)) {
-            return ($value !== false) ? '1' : '0';
+            return ($value !== false) ? '1=1' : '1=0';
         }
         $stats = array();
         foreach ($value as $k => $v) {
@@ -375,7 +375,7 @@ class Templater
             $stats[] = $stat;
         }
         if (empty($stats)) {
-            return '1';
+            return '1=1';
         }
         return \implode(' AND ', $stats);
     }
