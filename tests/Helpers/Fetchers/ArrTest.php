@@ -257,6 +257,10 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     public function testId()
     {
         $this->assertNull($this->fetcher->id());
+        $idfetcher = new Arr(null, 10);
+        $this->assertEmpty($idfetcher->assoc());
+        $this->assertSame(0, $idfetcher->num());
+        $this->assertSame(10, $idfetcher->id());
     }
 
     /**

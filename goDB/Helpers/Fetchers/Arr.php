@@ -18,14 +18,18 @@ class Arr extends Base
      * Constructor
      *
      * @param \go\DB\Result|array $data
+     * @param int $id [optional]
      * @throws \InvalidArgumentException
      */
-    public function __construct($data)
+    public function __construct($data, $id = null)
     {
         if (\is_array($data)) {
             $this->data = $data;
         } elseif ($data instanceof Result) {
             $this->data = $data->assoc();
+        } elseif (($data === null) && ($id !== null)) {
+            $this->data = [];
+            $this->id = (int)$id;
         } else {
             throw new \InvalidArgumentException();
         }
@@ -216,7 +220,7 @@ class Arr extends Base
      */
     public function id($param = null)
     {
-        return null;
+        return $this->id;
     }
 
     /**
@@ -255,4 +259,9 @@ class Arr extends Base
      * @var array
      */
     private $data;
+
+    /**
+     * @var int
+     */
+    private $id;
 }
