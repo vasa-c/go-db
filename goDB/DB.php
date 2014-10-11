@@ -346,7 +346,17 @@ abstract class DB
      */
     public function getTable($tablename, array $map = null)
     {
-        return new Table($this, $tablename, $map);
+        if ($map === null) {
+            if (isset($this->cacheTables[$tablename])) {
+                $table = $this->cacheTables[$tablename];
+            } else {
+                $table = new Table($this, $tablename);
+                $this->cacheTables[$tablename] = $table;
+            }
+        } else {
+            $table = new Table($this, $tablename, $map);
+        }
+        return $table;
     }
 
     /**
@@ -515,6 +525,11 @@ abstract class DB
      * @var bool
      */
     protected $hardClosed = false;
+
+    /**
+     * @var array
+     */
+    private $cacheTables = array();
 }
 
 /**
