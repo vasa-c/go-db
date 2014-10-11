@@ -67,6 +67,15 @@ class Table
         if (empty($set)) {
             return null;
         }
+        if ($this->accum !== null) {
+            $this->accum[] = $set;
+            if (\count($this->accum) >= $this->sizeAccum) {
+                $this->multiInsert($this->accum, true);
+                $this->accum = [];
+            }
+            $this->lastIdAccum++;
+            return $this->lastIdAccum;
+        }
         if ($this->map) {
             $set = $this->map->set($set);
         }
@@ -303,6 +312,44 @@ class Table
     }
 
     /**
+     * Begins to accumulate INSERT queries (for multi insert)
+     *
+     * @param int $lastId [optional]
+     * @param int $size [optional]
+     * @return boolean
+     */
+    public function startAccumInsert($lastId = 0, $size = 100)
+    {
+        $ok = ($this->accum === null) && ($size > 1);
+        if ($ok) {
+            $this->accum = array();
+            $this->lastIdAccum = $lastId;
+            $this->sizeAccum = $size;
+        }
+        return $ok;
+    }
+
+    /**
+     * Flushes the accumulated queries
+     *
+     * @return int
+     */
+    public function flushAccumInsert()
+    {
+        if ($this->accum === null) {
+            return 0;
+        }
+        $count = \count($this->accum);
+        if ($count > 0) {
+            $this->multiInsert($this->accum, true);
+        }
+        $this->accum = null;
+        $this->lastIdAccum = null;
+        $this->sizeAccum = null;
+        return $count;
+    }
+
+    /**
      * The table name
      *
      * @var string
@@ -322,4 +369,19 @@ class Table
      * @var \go\DB\Helpers\MapFields
      */
     private $map;
+
+    /**
+     * @var array
+     */
+    private $accum;
+
+    /**
+     * @var int
+     */
+    private $lastIdAccum;
+
+    /**
+     * @var int
+     */
+    private $sizeAccum;
 }

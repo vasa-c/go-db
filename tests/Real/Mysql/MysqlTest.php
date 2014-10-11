@@ -50,12 +50,45 @@ class MysqlTest extends Base
         $this->assertEquals($expected, $actual);
         $this->assertNull($actual[1][3]);
         $this->assertNull($actual[3][3]);
-        
+
         $sql = 'SELECT COUNT(*) FROM `godbtest` WHERE ?w';
         $this->assertTrue($db->query($sql, array(array()))->el() > 0);
         $this->assertTrue($db->query($sql, array(null))->el() > 0);
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
+    }
+
+    /**
+     * @covers \go\DB\Table::startAccumInsert
+     * @covers \go\DB\Table::flustAccumInsert
+     */
+    public function testAccumInsert()
+    {
+        $db = $this->createDB(__DIR__.'/accum.sql');
+        $table = $db->getTable('godbaccumtest');
+        $table->startAccumInsert(2, 3);
+        $this->assertSame(3, $table->insert(array('a' => 3, 'b' => 6)));
+        $this->assertSame(4, $table->insert(array('a' => 4, 'b' => 8)));
+        $this->assertEquals(0, $table->getCount());
+        $this->assertSame(5, $table->insert(array('a' => 5, 'b' => 10)));
+        $this->assertEquals(3, $table->getCount());
+        $this->assertSame(6, $table->insert(array('a' => 6, 'b' => 12)));
+        $this->assertEquals(3, $table->getCount());
+        $this->assertSame(1, $table->flushAccumInsert());
+        $this->assertSame(0, $table->flushAccumInsert());
+        $this->assertEquals(4, $table->getCount());
+        $this->assertSame(5, $table->insert(array('a' => 7, 'b' => 14)));
+        $this->assertSame(0, $table->flushAccumInsert());
+        $this->assertEquals(5, $table->getCount());
+        $actual = $table->select(array('id', 'a', 'b'), null, 'id')->numerics();
+        $expected = array(
+            array(1, 3, 6),
+            array(2, 4, 8),
+            array(3, 5, 10),
+            array(4, 6, 12),
+            array(5, 7, 14),
+        );
+        $this->assertEquals($expected, $actual);
     }
 }
