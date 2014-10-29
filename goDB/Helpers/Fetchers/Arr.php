@@ -28,7 +28,7 @@ class Arr extends Base
         } elseif ($data instanceof Result) {
             $this->data = $data->assoc();
         } elseif (($data === null) && ($id !== null)) {
-            $this->data = [];
+            $this->data = array();
             $this->id = (int)$id;
         } else {
             throw new \InvalidArgumentException();

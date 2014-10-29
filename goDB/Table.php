@@ -71,7 +71,7 @@ class Table
             $this->accum[] = $set;
             if (\count($this->accum) >= $this->sizeAccum) {
                 $this->multiInsert($this->accum, true);
-                $this->accum = [];
+                $this->accum = array();
             }
             $this->lastIdAccum++;
             return $this->lastIdAccum;
