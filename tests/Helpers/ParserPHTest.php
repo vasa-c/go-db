@@ -77,7 +77,7 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnknownPlaceholder($placeholder)
     {
-        $parser = new ParserPH($placeholder);
+        return new ParserPH($placeholder);
     }
 
     /**

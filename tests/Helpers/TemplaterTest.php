@@ -17,6 +17,10 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * ?, ?string, ?scalar
+     *
+     * @param string $pattern
+     * @param array data
+     * @param string $expected
      * @dataProvider providerScalar
      */
     public function testScalar($pattern, $data, $expected)
@@ -33,11 +37,11 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     {
         $data = array('str"ing', 1, null, '3.5');
         return array(
-            [
+            array(
                 'INSERT INTO `table` VALUES (?, ?scalar, ?, ?string)',
                 $data,
                 'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
-            ],
+            ),
             array(
                 'INSERT INTO `table` VALUES (?null, ?null, ?null, ?null)',
                 $data,

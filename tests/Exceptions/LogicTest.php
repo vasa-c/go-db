@@ -24,7 +24,7 @@ final class LogicTest extends \PHPUnit_Framework_TestCase
         $line = null;
         try {
             $line = __LINE__ + 1;
-            $db = DB::create($params);
+            DB::create($params);
             $this->fail('not thrown');
         } catch (Config $e) {
             $this->assertEquals(__FILE__, $e->getFile());

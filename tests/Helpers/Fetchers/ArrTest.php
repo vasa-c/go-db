@@ -168,10 +168,10 @@ class ArrTest extends \PHPUnit_Framework_TestCase
         $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars();
         $this->assertInstanceOf('Traversable', $actual);
-        $this->assertEquals($expected, $this->fetcher->vars());
+        $this->assertEquals($expected, \iterator_to_array($actual));
         $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars('a');
-        $this->assertEquals($expected, $this->fetcher->vars('a'));
+        $this->assertEquals($expected, \iterator_to_array($actual));
     }
 
     /**
@@ -195,7 +195,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('id' => 1, 'a' => 5, 'b' => 10);
         $this->assertEquals($expected, $this->fetcher->row());
-        $fetcher = new Arr([]);
+        $fetcher = new Arr(array());
         $this->assertNull($fetcher->row());
     }
 
@@ -206,7 +206,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array(1, 5, 10);
         $this->assertEquals($expected, $this->fetcher->numeric());
-        $fetcher = new Arr([]);
+        $fetcher = new Arr(array());
         $this->assertNull($fetcher->numeric());
     }
 
@@ -217,7 +217,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     {
         $expected = (object)array('id' => 1, 'a' => 5, 'b' => 10);
         $this->assertEquals($expected, $this->fetcher->object());
-        $fetcher = new Arr([]);
+        $fetcher = new Arr(array());
         $this->assertNull($fetcher->object());
     }
 
@@ -227,7 +227,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     public function testEl()
     {
         $this->assertEquals(1, $this->fetcher->el());
-        $fetcher = new Arr([]);
+        $fetcher = new Arr(array());
         $this->assertNull($fetcher->el());
     }
 
@@ -237,9 +237,9 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     public function testBool()
     {
         $this->assertTrue($this->fetcher->bool());
-        $fetcher = new Arr([['id' => 0]]);
+        $fetcher = new Arr(array(array('id' => 0)));
         $this->assertFalse($fetcher->bool());
-        $fetcher = new Arr([]);
+        $fetcher = new Arr(array());
         $this->assertNull($fetcher->bool());
     }
 

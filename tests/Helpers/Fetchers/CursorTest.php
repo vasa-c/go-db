@@ -503,6 +503,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $query
      * @return \go\DB\Result
      */
     private function createFetcher($query)

@@ -8,6 +8,7 @@ namespace go\Tests\DB;
 
 use go\DB\DB;
 use go\DB\Helpers\Debuggers\Test;
+use go\DB\Exceptions\Query as QueryException;
 
 /**
  * @coversDefaultClass go\DB\DB
@@ -154,7 +155,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
         $db = \go\DB\create(array('host' => 'localhost'), 'test');
         $this->assertInstanceOf('go\DB\DB', $db);
         $this->setExpectedException('go\DB\Exceptions\UnknownAdapter');
-        $db = \go\DB\create(array('host' => 'localhost'), 'unknown');
+        return \go\DB\create(array('host' => 'localhost'), 'unknown');
     }
 
     /**
@@ -231,8 +232,8 @@ final class DBTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
         try {
-            $result = $db->query('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
-        } catch (\go\DB\Exceptions\Query $e) {
+            $db->query('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
+        } catch (QueryException $e) {
             $this->assertNotEmpty($e->getQuery());
             $this->assertNotEmpty($e->getError());
             throw $e;
@@ -269,7 +270,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $result);
         $this->setExpectedException('go\DB\Exceptions\Query'); // unknown table
-        $result = $db->plainQuery('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
+        $db->plainQuery('SELECT * FROM `unknown` LIMIT ?i,?i', array(2, 2), 'assoc');
     }
 
     /**
