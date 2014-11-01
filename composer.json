@@ -15,8 +15,18 @@
     "authors": [
         {
             "name": "Oleg Grigoriev",
-            "email": "go.vasac@gmail.com"
-        }
+            "email": "go.vasac@gmail.com",
+            "role": "Lead Developer"
+        },
+        {
+            "name": "Alex Polev",
+            "email": "alex.v.polev@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Michael",
+            "role": "Contributor"
+        }        
     ],
     "require": {
         "php": ">=5.3.0"
