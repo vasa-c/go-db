@@ -46,7 +46,7 @@ abstract class Base extends \PHPUnit_Framework_TestCase
                 self::$dbparams = false;
                 return null;
             }
-            self::$dbparams = include($filename);
+            self::$dbparams = include $filename;
         }
         if (!isset(self::$dbparams[$this->adapter])) {
             return null;

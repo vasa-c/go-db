@@ -68,7 +68,7 @@ final class Autoloader
         $filename = \str_replace('\\', \DIRECTORY_SEPARATOR, $short);
         $filename = $this->dir.\DIRECTORY_SEPARATOR.$filename.'.php';
         if (\is_file($filename)) {
-            require_once($filename);
+            require_once $filename;
         }
     }
 

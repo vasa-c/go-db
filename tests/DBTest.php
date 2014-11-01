@@ -6,6 +6,9 @@
 
 namespace go\Tests\DB;
 
+use go\DB\DB;
+use go\DB\Helpers\Debuggers\Test;
+
 /**
  * @coversDefaultClass go\DB\DB
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -14,11 +17,13 @@ final class DBTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::create
+     * @param array $params
+     * @param string $adapter
      * @dataProvider providerCreate
      */
     public function testCreate($params, $adapter)
     {
-        $db = \go\DB\DB::create($params, $adapter);
+        $db = DB::create($params, $adapter);
         $this->assertInstanceOf('go\DB\DB', $db);
     }
 
@@ -59,12 +64,14 @@ final class DBTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::create
+     * @param array $params
+     * @param string $adapter
      * @dataProvider providerExceptionUnknownAdapter
-     * @expectedException go\DB\Exceptions\UnknownAdapter
+     * @expectedException \go\DB\Exceptions\UnknownAdapter
      */
     public function testExceptionUnknownAdapter($params, $adapter)
     {
-        return \go\DB\DB::create($params, $adapter);
+        DB::create($params, $adapter);
     }
 
     /**
@@ -107,7 +114,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             'host' => 'localhost',
             '_unknown' => 'error',
         );
-        return \go\DB\DB::create($params);
+        return DB::create($params);
     }
 
     /**
@@ -120,7 +127,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'port' => 777,
         );
-        return \go\DB\DB::create($params);
+        return DB::create($params);
     }
 
     /**
@@ -134,7 +141,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             'host' => 'notlocalhost',
             'port' => 777,
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $this->setExpectedException('go\DB\Exceptions\Connect');
         $db->forcedConnect();
     }
@@ -155,7 +162,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAvailableAdapters()
     {
-        $adapters = \go\DB\DB::getAvailableAdapters();
+        $adapters = DB::getAvailableAdapters();
         $this->assertInternalType('array', $adapters);
         $this->assertContains('test', $adapters);
     }
@@ -171,7 +178,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $this->assertFalse($db->isConnected());
         $db->forcedConnect();
         $this->assertTrue($db->isConnected());
@@ -200,7 +207,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_lazy' => false,
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $this->assertTrue($db->isConnected());
     }
 
@@ -213,7 +220,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $result = $db->query('SELECT * FROM `table` LIMIT ?i,?i', array(2, 2));
         $this->assertInstanceOf('go\DB\Result', $result);
         $result = $result->assoc();
@@ -238,7 +245,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $pattern = 'UPDATE `table` SET `x`=`x`-?i';
         $data = array(-1);
         $query = $db->makeQuery($pattern, $data);
@@ -254,7 +261,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $result = $db->plainQuery('SELECT * FROM `table` LIMIT 2,2', 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
@@ -274,7 +281,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $result = $db('SELECT * FROM `table` LIMIT ?i,?i', array(2, 2), 'assoc');
         $expected = array(
             array('a' => 3, 'b' => 4, 'c' => 5),
@@ -297,7 +304,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $prefix  = 'p_';
         $pattern = 'SELECT * FROM {table} LEFT JOIN ?t AS `t` ON ?c=?c';
         $data    = array('t', 'a', array('table', 'b'));
@@ -326,9 +333,9 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host'     => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $this->assertEmpty($db->getDebug());
-        $debugger = new \go\DB\Helpers\Debuggers\Test();
+        $debugger = new Test();
         $db->setDebug($debugger);
         $this->assertSame($debugger, $db->getDebug());
         $this->assertEmpty($debugger->getLastQuery());
@@ -352,7 +359,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'localhost',
         );
-        $db = \go\DB\DB::create($params);
+        $db = DB::create($params);
         $this->assertEmpty($db->getImplementationConnection(false));
         $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection(true));
         $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $db->getImplementationConnection(false));
@@ -368,7 +375,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             'host' => 'localhost',
             '_prefix' => 'one_',
         );
-        $db1 = \go\DB\DB::create($params);
+        $db1 = DB::create($params);
 
         $db2 = clone $db1;
         $db2->setPrefix('two_');
@@ -419,7 +426,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
             'host'     => 'localhost',
             '_lazy'    => false,
         );
-        $db1 = \go\DB\DB::create($params);
+        $db1 = DB::create($params);
         $db2 = clone $db1;
         $engine = $db1->getImplementationConnection(false);
         $this->assertFalse($engine->isClosed());

@@ -17,7 +17,7 @@ class Arr extends Base
     /**
      * Constructor
      *
-     * @param \go\DB\Result|array $data
+     * @param \go\DB\Result|array|int $data
      * @param int $id [optional]
      * @throws \InvalidArgumentException
      */

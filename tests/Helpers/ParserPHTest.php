@@ -6,7 +6,8 @@
 
 namespace go\Tests\DB\Helpers;
 
-use go\DB\Helpers\ParserPH as ParserPH;
+use go\DB\Helpers\ParserPH;
+use go\DB\Helpers\Config;
 
 /**
  * @coversDefaultClass go\DB\Helpers\ParserPH
@@ -14,23 +15,22 @@ use go\DB\Helpers\ParserPH as ParserPH;
  */
 class ParserPHTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @dataProvider providerParse
      * @param string $placeholder
-     * @param string $expectedType
-     * @param string $expectedModifer
+     * @param string $expectType
+     * @param string $expectModifiers
      */
-    public function testParse($placeholder, $expectType, $expectModifers)
+    public function testParse($placeholder, $expectType, $expectModifiers)
     {
-        $modifers = self::getModifers();
-        $len = \strlen($expectModifers);
+        $modifiers = self::getModifiers();
+        $len = \strlen($expectModifiers);
         for ($i = 0; $i < $len; $i++) {
-            $modifers[\substr($expectModifers, $i, 1)] = true;
+            $modifiers[\substr($expectModifiers, $i, 1)] = true;
         }
         $parser = new ParserPH($placeholder);
         $this->assertEquals($expectType, $parser->getType());
-        $this->assertEquals($modifers, $parser->getModifers());
+        $this->assertEquals($modifiers, $parser->getModifiers());
     }
 
     /**
@@ -71,6 +71,7 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $placeholder
      * @dataProvider providerUnknownPlaceholder
      * @expectedException \go\DB\Exceptions\UnknownPlaceholder
      */
@@ -92,18 +93,24 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private static function getModifers()
+    /**
+     * @return array
+     */
+    private static function getModifiers()
     {
-        if (!self::$modifers) {
-            $config = \go\DB\Helpers\Config::get('placeholders');
-            $modifers = $config['modifers'];
-            self::$modifers = array();
-            foreach ($modifers as $modifer) {
-                self::$modifers[$modifer] = false;
+        if (!self::$modifiers) {
+            $config = Config::get('placeholders');
+            $modifiers = $config['modifiers'];
+            self::$modifiers = array();
+            foreach ($modifiers as $modifier) {
+                self::$modifiers[$modifier] = false;
             }
         }
-        return self::$modifers;
+        return self::$modifiers;
     }
 
-    private static $modifers;
+    /**
+     * @var array
+     */
+    private static $modifiers;
 }

@@ -6,6 +6,9 @@
 
 namespace go\Tests\DB\Exceptions;
 
+use go\DB\DB;
+use go\DB\Exceptions\Config;
+
 /**
  * @coversDefaultClass go\DB\Exceptions\Logic
  *
@@ -18,11 +21,12 @@ final class LogicTest extends \PHPUnit_Framework_TestCase
         $params = array(
             '_adapter' => 'test',
         );
+        $line = null;
         try {
             $line = __LINE__ + 1;
-            $db = \go\DB\DB::create($params);
+            $db = DB::create($params);
             $this->fail('not thrown');
-        } catch (\go\DB\Exceptions\Config $e) {
+        } catch (Config $e) {
             $this->assertEquals(__FILE__, $e->getFile());
             $this->assertEquals($line, $e->getLine());
         }

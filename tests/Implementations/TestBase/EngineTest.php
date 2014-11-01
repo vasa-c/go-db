@@ -6,7 +6,7 @@
 
 namespace go\Tests\DB\Implementations\TestBase;
 
-use go\DB\Implementations\TestBase\Engine as Engine;
+use go\DB\Implementations\TestBase\Engine;
 
 /**
  * @coversDefaultClass go\DB\Implementations\TestBase\Engine
@@ -16,6 +16,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::query
+     * @param string $query
+     * @param array $expected
      * @dataProvider providerSelect
      */
     public function testSelect($query, $expected)

@@ -25,7 +25,7 @@ function autoload($classname)
     if (!\file_exists($filename)) {
         return false;
     }
-    require_once($filename);
+    require_once $filename;
     return \class_exists($classname, false);
 }
 

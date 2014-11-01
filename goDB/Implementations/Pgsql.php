@@ -15,33 +15,6 @@ final class Pgsql extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $paramsDefault = array(
-        'username' => null,
-        'password' => null,
-        'dbname' => null,
-        'charset' => null,
-        'host' => null,
-        'port' => null,
-        'hostaddr' => null,
-        'connect_timeout' => null,
-        'options' => null,
-        'sslmode' => null,
-        'service' => null,
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $depsPhpExts = 'pgsql';
-
-    /**
-     * {@inheritdoc}
-     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         if (isset ($params['host'])) {
@@ -217,4 +190,31 @@ final class Pgsql extends Base
         }
         return \rtrim($connString);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsReq = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsDefault = array(
+        'username' => null,
+        'password' => null,
+        'dbname' => null,
+        'charset' => null,
+        'host' => null,
+        'port' => null,
+        'hostaddr' => null,
+        'connect_timeout' => null,
+        'options' => null,
+        'sslmode' => null,
+        'service' => null,
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $depsPhpExts = 'pgsql';
 }

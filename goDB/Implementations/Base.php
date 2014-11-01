@@ -5,10 +5,12 @@
 
 namespace go\DB\Implementations;
 
+use go\DB\Exceptions\Dependence;
+
 /**
- * The abstraction on a concrete low-level implementation database access
+ * The abstraction over a concrete low-level implementation database access
  *
- * For example, the MySQL-adapter is an abstraction under php_mysql.
+ * For example, the MySQL-adapter is an abstraction over php_mysql.
  * To do this, the Base-class inherited and its child delegates calls to mysqli_* functions.
  *
  * The implementation instance don't contains individual properties.
@@ -124,7 +126,7 @@ abstract class Base
      * Checks if a query result is a cursor (SELECT)
      *
      * @param mixed $connection
-     * @param mixed $cursor
+     * @param mixed $result
      * @return bool
      */
     public function isCursor($connection, $result)
@@ -233,7 +235,7 @@ abstract class Base
      * Escapes special symbols in a string
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param string $value
      * @return string
      */
     public function escapeString($connection, $value)
@@ -245,7 +247,7 @@ abstract class Base
      * Represents a string as a data
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param string $value
      * @return string
      */
     public function reprString($connection, $value)
@@ -257,7 +259,7 @@ abstract class Base
      * Represents a integer number as a data
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param string $value
      * @return string
      */
     public function reprInt($connection, $value)
@@ -273,7 +275,7 @@ abstract class Base
      * Represents a float number as a data
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param string $value
      * @return string
      */
     public function reprFloat($connection, $value)
@@ -285,7 +287,7 @@ abstract class Base
      * Represents a boolean value as a data
      *
      * @param mixed $connection
-     * @param scalar $value
+     * @param string $value
      * @return string
      */
     public function reprBool($connection, $value)
@@ -370,7 +372,7 @@ abstract class Base
         $deps = \is_array($this->depsPhpExts) ? $this->depsPhpExts : array($this->depsPhpExts);
         foreach ($deps as $dep) {
             if (!\extension_loaded($dep)) {
-                throw new \go\DB\Exceptions\Dependence('php extension "'.$dep.'"');
+                throw new Dependence('php extension "'.$dep.'"');
             }
         }
     }

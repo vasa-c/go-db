@@ -364,8 +364,8 @@ abstract class DB
      *
      * @param array $params
      *        a database configuration
-     * @thorws go\DB\Exceptions\Connect
-     * @throws go\DB\Exceptions\ConfigConnect
+     * @throws \go\DB\Exceptions\Connect
+     * @throws \go\DB\Exceptions\ConfigConnect
      */
     protected function __construct($params)
     {
@@ -452,7 +452,6 @@ abstract class DB
                 $this->paramsDB[$name] = $value;
             }
         }
-        return true;
     }
 
     /**
@@ -467,7 +466,6 @@ abstract class DB
         if ($this->debugCallback) {
             \call_user_func($this->debugCallback, $query, $duration, $info);
         }
-        return true;
     }
 
     /**
@@ -553,6 +551,7 @@ function create(array $params, $adapter = null)
  * @param array $data [optional]
  * @param string $fetch [optional]
  * @param string $prefix [optional]
+ * @return \go\DB\Result
  * @throws \go\DB\Exceptions\StorageDBCentral
  * @throws \go\DB\Exceptions\Connect
  * @throws \go\DB\Exceptions\Closed

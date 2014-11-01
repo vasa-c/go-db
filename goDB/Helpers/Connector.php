@@ -5,7 +5,7 @@
 
 namespace go\DB\Helpers;
 
-use \go\DB\Implementations\Base as BaseImp;
+use go\DB\Implementations\Base as BaseImp;
 use go\DB\Exceptions\ConfigConnect;
 use go\DB\Exceptions\Connect;
 

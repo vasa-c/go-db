@@ -15,27 +15,6 @@ final class Mysql extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array('username', 'password');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $paramsDefault = array(
-        'host' => 'localhost',
-        'dbname' => null,
-        'charset' => null,
-        'port' => null,
-        'socket' => null,
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $depsPhpExts = 'mysqli';
-
-    /**
-     * {@inheritdoc}
-     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $host = \explode(':', $params['host'], 2);
@@ -177,4 +156,35 @@ final class Mysql extends Base
     {
         return $cursor->data_seek(0);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsReq = array('username', 'password');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsDefault = array(
+        'host' => 'localhost',
+        'dbname' => null,
+        'charset' => null,
+        'port' => null,
+        'socket' => null,
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $depsPhpExts = 'mysqli';
+
+    /**
+     * @var string
+     */
+    private $errorInfo;
+
+    /**
+     * @var int
+     */
+    private $errorCode;
 }

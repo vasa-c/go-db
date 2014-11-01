@@ -29,12 +29,12 @@ return array(
     ),
 
     /* The list of modifiers (the main short form) */
-    'modifers' => array(
+    'modifiers' => array(
         'n', 'i', 'f', 'b',
     ),
 
     /* The list of long synonyms of modifiers */
-    'longModifers' => array(
+    'longModifiers' => array(
         'null'  => 'n',
         'int'   => 'i',
         'float' => 'f',

@@ -18,16 +18,6 @@ final class Test extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array('host');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $paramsDefault = array('port' => 777);
-
-    /**
-     * {@inheritdoc}
-     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         if ($params['host'] != 'localhost') {
@@ -142,4 +132,14 @@ final class Test extends Base
     {
         return $cursor->reset();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsReq = array('host');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsDefault = array('port' => 777);
 }

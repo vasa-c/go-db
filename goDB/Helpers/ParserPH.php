@@ -18,7 +18,7 @@ use go\DB\Exceptions\UnknownPlaceholder;
  * <code>
  * $parser = new \go\DB\Templaters\Helpers\ParserPH("list-null");
  * $parser->getType(); // a type in the short form ("l")
- * $parser->getModifers(); // values of modifers: array('n' => true, 'i' => false, ...)
+ * $parser->getModifiers(); // values of modifiers: array('n' => true, 'i' => false, ...)
  * </code>
  *
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -37,9 +37,9 @@ final class ParserPH
     {
         $this->placeholder = $placeholder;
         $this->parse();
-        if (!$this->modifers['n']) {
+        if (!$this->modifiers['n']) {
             if (Compat::getOpt('null')) {
-                $this->modifers['n'] = true;
+                $this->modifiers['n'] = true;
             }
         }
     }
@@ -59,9 +59,9 @@ final class ParserPH
      *
      * @return array
      */
-    public function getModifers()
+    public function getModifiers()
     {
-        return $this->modifers;
+        return $this->modifiers;
     }
 
     /**
@@ -73,7 +73,7 @@ final class ParserPH
             self::loadConfig();
         }
         $this->type = '';
-        $this->modifers = self::$lModifers;
+        $this->modifiers = self::$lModifiers;
         $ph = $this->placeholder;
         if ($ph == '') {
             return true;
@@ -83,14 +83,14 @@ final class ParserPH
             $type = \array_shift($comp);
             if (isset(self::$longs[$type])) {
                 $this->type = self::$longs[$type];
-            } elseif (isset(self::$longModifers[$type])) {
-                $this->modifers[self::$longModifers[$type]] = true;
+            } elseif (isset(self::$longModifiers[$type])) {
+                $this->modifiers[self::$longModifiers[$type]] = true;
             } else {
                 return $this->error();
             }
             foreach ($comp as $c) {
-                if (isset(self::$longModifers[$c])) {
-                    $this->modifers[self::$longModifers[$c]] = true;
+                if (isset(self::$longModifiers[$c])) {
+                    $this->modifiers[self::$longModifiers[$c]] = true;
                 } else {
                     return $this->error();
                 }
@@ -101,23 +101,23 @@ final class ParserPH
             $this->type = self::$longs[$ph];
             return true;
         }
-        if (isset(self::$longModifers[$ph])) {
-            $this->modifers[self::$longModifers[$ph]] = true;
+        if (isset(self::$longModifiers[$ph])) {
+            $this->modifiers[self::$longModifiers[$ph]] = true;
             return true;
         }
         $type = $ph[0];
         if (isset(self::$placeholders[$type])) {
             $this->type = $type;
-        } elseif (isset(self::$lModifers[$type])) {
-            $this->modifers[$type] = true;
+        } elseif (isset(self::$lModifiers[$type])) {
+            $this->modifiers[$type] = true;
         } else {
             return $this->error();
         }
         $len = strlen($ph);
         for ($i = 1; $i < $len; $i++) {
-            $modifer = $ph[$i];
-            if (isset(self::$lModifers[$modifer])) {
-                $this->modifers[$modifer] = true;
+            $modifier = $ph[$i];
+            if (isset(self::$lModifiers[$modifier])) {
+                $this->modifiers[$modifier] = true;
             } else {
                 return $this->error();
             }
@@ -142,14 +142,14 @@ final class ParserPH
     {
         $config = Config::get('placeholders');
         self::$longs = $config['longs'];
-        self::$longModifers = $config['longModifers'];
+        self::$longModifiers = $config['longModifiers'];
         self::$placeholders = array();
         foreach ($config['placeholders'] as $placeholder) {
             self::$placeholders[$placeholder] = true;
         }
-        self::$lModifers = array();
-        foreach ($config['modifers'] as $modifer) {
-            self::$lModifers[$modifer] = false;
+        self::$lModifiers = array();
+        foreach ($config['modifiers'] as $modifier) {
+            self::$lModifiers[$modifier] = false;
         }
         return true;
     }
@@ -173,7 +173,7 @@ final class ParserPH
      *
      * @var array
      */
-    private $modifers;
+    private $modifiers;
 
     /**
      * @var array
@@ -188,10 +188,10 @@ final class ParserPH
     /**
      * @var array
      */
-    private static $lModifers;
+    private static $lModifiers;
 
     /**
      * @var array
      */
-    private static $longModifers;
+    private static $longModifiers;
 }

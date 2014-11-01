@@ -7,6 +7,7 @@
 namespace go\Tests\DB\Helpers\Fetchers;
 
 use go\DB\Helpers\Fetchers\Cursor as Fetcher;
+use go\DB\Helpers\Connector;
 
 /**
  * @coversDefaultClass go\DB\Helpers\Fetchers\Cursor
@@ -16,6 +17,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * assoc, numerics, objects, col, vars
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerList
      */
     public function testList($query, $fetch, $expected)
@@ -75,6 +80,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * assoc, numerics, objects, col, vars
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerListKey
      */
     public function testListKey($query, $fetch, $expected)
@@ -134,6 +143,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * iassoc, inumerics, iobjects, icol, ivars
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerIterators
      */
     public function testIterators($query, $fetch, $expected)
@@ -195,6 +208,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * iassoc, inumerics, iobjects, icol, ivars
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerIteratorsKey
      */
     public function testIteratorsKey($query, $fetch, $expected)
@@ -240,6 +257,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * row, numeric, object, el, bool
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerRow
      */
     public function testRow($query, $fetch, $expected)
@@ -275,6 +296,10 @@ class CursorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * el, bool
+     *
+     * @param string $query
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerEl
      */
     public function testEl($query, $fetch, $expected)
@@ -312,6 +337,8 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $fetch
+     * @param string $expected
      * @dataProvider providerEmpty
      */
     public function testEmpty($fetch, $expected)
@@ -368,6 +395,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $fetch
      * @dataProvider providerUnknownFetch
      * @expectedException \go\DB\Exceptions\UnknownFetch
      */
@@ -387,6 +415,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $fetch
      * @dataProvider providerUnexpectedFetch
      * @expectedException \go\DB\Exceptions\UnexpectedFetch
      */
@@ -478,7 +507,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
      */
     private function createFetcher($query)
     {
-        $connector = new \go\DB\Helpers\Connector('test', array('host' => 'localhost'));
+        $connector = new Connector('test', array('host' => 'localhost'));
         $connector->connect();
         $cursor = $connector->getConnection()->query($query);
         return (new Fetcher($connector, $cursor));

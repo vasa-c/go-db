@@ -76,6 +76,9 @@ class Templater
 
     /**
      * Replaces "{table}" to a table name
+     *
+     * @param array $matches
+     * @return string
      */
     private function tableClb($matches)
     {
@@ -87,7 +90,7 @@ class Templater
      *
      * @param array $matches
      * @return string
-     * @throws \go\DB\Exceptions\Templaters
+     * @throws \go\DB\Exceptions\Templater
      */
     private function placeholderClb($matches)
     {
@@ -128,28 +131,28 @@ class Templater
         $this->counter++;
         $parser = new ParserPH($placeholder);
         $type = $parser->getType();
-        $modifers = $parser->getModifers();
+        $modifiers = $parser->getModifiers();
         $method = 'replacement'.\strtoupper($type);
-        return $this->$method($value, $modifers);
+        return $this->$method($value, $modifiers);
     }
 
     /**
      * Converts a scalar value in conformity with the modifiers list
      *
      * @param mixed $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function valueModification($value, array $modifers)
+    private function valueModification($value, array $modifiers)
     {
-        if ($modifers['n'] && \is_null($value)) {
+        if ($modifiers['n'] && \is_null($value)) {
             return $this->implementation->reprNULL($this->connection);
         }
-        if ($modifers['i']) {
+        if ($modifiers['i']) {
             return $this->implementation->reprInt($this->connection, $value);
-        } elseif ($modifers['f']) {
+        } elseif ($modifiers['f']) {
             return $this->implementation->reprFloat($this->connection, $value);
-        } elseif ($modifers['b']) {
+        } elseif ($modifiers['b']) {
             return $this->implementation->reprBool($this->connection, $value);
         }
         return $this->implementation->reprString($this->connection, $value);
@@ -159,26 +162,26 @@ class Templater
      * ?, ?string, ?scalar
      *
      * @param mixed $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacement($value, array $modifers)
+    private function replacement($value, array $modifiers)
     {
-        return $this->valueModification($value, $modifers);
+        return $this->valueModification($value, $modifiers);
     }
 
     /**
      * ?l, ?list
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementL(array $value, array $modifers)
+    private function replacementL(array $value, array $modifiers)
     {
         $values = array();
         foreach ($value as $element) {
-            $values[] = $this->valueModification($element, $modifers);
+            $values[] = $this->valueModification($element, $modifiers);
         }
         return \implode(', ', $values);
     }
@@ -187,10 +190,10 @@ class Templater
      * ?s, ?set
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementS(array $value, array $modifers)
+    private function replacementS(array $value, array $modifiers)
     {
         $set = array();
         foreach ($value as $col => $element) {
@@ -198,7 +201,7 @@ class Templater
             if (\is_array($element)) {
                 $oval = isset($element['value']) ? $element['value'] : null;
                 if (isset($element['col'])) {
-                    $element = $this->replacementC($element['col'], $modifers);
+                    $element = $this->replacementC($element['col'], $modifiers);
                     if ($oval !== null) {
                         $oval = (int)$oval;
                         if ($oval > 0) {
@@ -208,10 +211,10 @@ class Templater
                         }
                     }
                 } else {
-                    $element = $this->valueModification($oval, $modifers);
+                    $element = $this->valueModification($oval, $modifiers);
                 }
             } else {
-                $element = $this->valueModification($element, $modifers);
+                $element = $this->valueModification($element, $modifiers);
             }
             $set[] = $key.'='.$element;
         }
@@ -222,14 +225,14 @@ class Templater
      * ?v, ?values
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementV(array $value, array $modifers)
+    private function replacementV(array $value, array $modifiers)
     {
         $values = array();
         foreach ($value as $v) {
-            $values[] = '('.$this->replacementL($v, $modifers).')';
+            $values[] = '('.$this->replacementL($v, $modifiers).')';
         }
         return implode(', ', $values);
     }
@@ -238,10 +241,10 @@ class Templater
      * ?t, ?table
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementT($value, array $modifers)
+    private function replacementT($value, array $modifiers)
     {
         return $this->implementation->reprTable($this->connection, $this->prefix.$value);
     }
@@ -250,10 +253,10 @@ class Templater
      * ?c, ?col
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementC($value, array $modifers)
+    private function replacementC($value, array $modifiers)
     {
         if (\is_array($value)) {
             $chain = array($this->prefix.$value[0], $value[1]);
@@ -268,23 +271,23 @@ class Templater
      * ?cols
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementXC($value, array $modifers)
+    private function replacementXC($value, array $modifiers)
     {
         if (!\is_array($value)) {
             if ($value === true) {
                 return '*';
             }
-            return $this->replacementC($value, $modifers);
+            return $this->replacementC($value, $modifiers);
         }
         if (empty($value)) {
             return '*';
         }
         $cols = array();
         foreach ($value as $col) {
-            $cols[] = $this->replacementC($col, $modifers);
+            $cols[] = $this->replacementC($col, $modifiers);
         }
         return \implode(',', $cols);
     }
@@ -293,10 +296,10 @@ class Templater
      * ?e, ?escape
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementE($value, array $modifers)
+    private function replacementE($value, array $modifiers)
     {
         return $this->implementation->escapeString($this->connection, $value);
     }
@@ -305,10 +308,10 @@ class Templater
      * ?q, ?query
      *
      * @param array $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementQ($value, array $modifers)
+    private function replacementQ($value, array $modifiers)
     {
         return $value;
     }
@@ -317,17 +320,17 @@ class Templater
      * ?w, ?where
      *
      * @param mixed $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementW($value, array $modifers)
+    private function replacementW($value, array $modifiers)
     {
         if (!\is_array($value)) {
             return ($value !== false) ? '1=1' : '1=0';
         }
         $stats = array();
         foreach ($value as $k => $v) {
-            $col = $this->replacementC($k, $modifers);
+            $col = $this->replacementC($k, $modifiers);
             if (\is_array($v)) {
                 if (empty($v)) {
                     break;
@@ -336,7 +339,7 @@ class Templater
                     $stat = $col.$v['op'];
                     $oval = isset($v['value']) ? $v['value'] : null;
                     if (isset($v['col'])) {
-                        $stat .= $this->replacementC($v['col'], $modifers);
+                        $stat .= $this->replacementC($v['col'], $modifiers);
                         if ($oval) {
                             $oval = (int)$oval;
                             if ($oval > 0) {
@@ -351,7 +354,7 @@ class Templater
                         } elseif (\is_int($oval)) {
                             $stat .= $oval;
                         } else {
-                            $stat .= $this->replacement($oval, $modifers);
+                            $stat .= $this->replacement($oval, $modifiers);
                         }
                     }
                 } else {
@@ -360,7 +363,7 @@ class Templater
                         if (\is_int($opt)) {
                             $opts[] = $opt;
                         } else {
-                            $opts[] = $this->replacement($opt, $modifers);
+                            $opts[] = $this->replacement($opt, $modifiers);
                         }
                     }
                     $stat = $col.' IN ('.\implode(',', $opts).')';
@@ -372,7 +375,7 @@ class Templater
             } elseif (\is_int($v)) {
                 $stat = $col.'='.$v;
             } else {
-                $stat = $col.'='.$this->replacement($v, $modifers);
+                $stat = $col.'='.$this->replacement($v, $modifiers);
             }
             $stats[] = $stat;
         }
@@ -386,13 +389,13 @@ class Templater
      * ?o, ?order
      *
      * @param mixed $value
-     * @param array $modifers
+     * @param array $modifiers
      * @return string
      */
-    private function replacementO($value, array $modifers)
+    private function replacementO($value, array $modifiers)
     {
         if (!\is_array($value)) {
-            return $this->replacementC($value, $modifers);
+            return $this->replacementC($value, $modifiers);
         }
         $stats = array();
         foreach ($value as $k => $v) {
@@ -403,7 +406,7 @@ class Templater
                 $c = $k;
                 $s = $v ? 'ASC' : 'DESC';
             }
-            $stats[] = $this->replacementC($c, $modifers).' '.$s;
+            $stats[] = $this->replacementC($c, $modifiers).' '.$s;
         }
         return \implode(',', $stats);
     }

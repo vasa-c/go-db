@@ -56,7 +56,7 @@ class Backtrace
     }
 
     /**
-     * @return line
+     * @return int
      */
     public function getLine()
     {

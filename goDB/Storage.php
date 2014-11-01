@@ -58,6 +58,7 @@ class Storage
      * @param array $data [optional]
      * @param string $fetch [optional]
      * @param string $prefix [optional]
+     * @return \go\DB\Result
      * @throws \go\DB\Exceptions\StorageDBCentral
      *         main storage is not exists
      * @throws \go\DB\Exceptions\Connect
@@ -151,7 +152,6 @@ class Storage
             throw new StorageEngaged($name);
         }
         $this->dbs[$name] = $db;
-        return true;
     }
 
     /**
@@ -177,7 +177,6 @@ class Storage
         foreach ($assocs as $name => $assoc) {
             $this->set($this->get($assoc), $name);
         }
-        return true;
     }
 
     /**
@@ -230,7 +229,7 @@ class Storage
      */
     public function __set($key, $value)
     {
-        return $this->set($value, $key);
+        $this->set($value, $key);
     }
 
     /**

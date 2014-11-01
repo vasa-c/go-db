@@ -6,6 +6,9 @@
 
 namespace go\Tests\DB\Helpers;
 
+use go\DB\Helpers\Connector;
+use go\DB\Helpers\Templater;
+
 /**
  * @coversDefaultClass go\DB\Helpers\Templater
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -30,11 +33,11 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     {
         $data = array('str"ing', 1, null, '3.5');
         return array(
-            array(
+            [
                 'INSERT INTO `table` VALUES (?, ?scalar, ?, ?string)',
                 $data,
                 'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
-            ),
+            ],
             array(
                 'INSERT INTO `table` VALUES (?null, ?null, ?null, ?null)',
                 $data,
@@ -60,6 +63,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?l, ?list
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerList
      */
     public function testList($pattern, $data, $expected)
@@ -106,6 +112,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?s, ?set
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerSet
      */
     public function testSet($pattern, $data, $expected)
@@ -162,6 +171,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?v, ?values
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerValues
      */
     public function testValues($pattern, $data, $expected)
@@ -201,6 +213,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?c, ?t, ?col, ?table
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerField
      */
     public function testFields($pattern, $data, $expected)
@@ -251,6 +266,10 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?w, ?where
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
+     * @param string $prefix [optional]
      * @dataProvider providerWhere
      */
     public function testWhere($pattern, $data, $expected, $prefix = null)
@@ -326,6 +345,10 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?o, ?order
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
+     * @param string $prefix [optional]
      * @dataProvider providerOrder
      */
     public function testOrder($pattern, $data, $expected, $prefix = null)
@@ -366,6 +389,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?e, ?escape
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerEscape
      */
     public function testEscape($pattern, $data, $expected)
@@ -391,6 +417,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?q, ?query
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerQuery
      */
     public function testQuery($pattern, $data, $expected)
@@ -416,6 +445,9 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * ?? - insert a question mark
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerQMark
      */
     public function testQMark($pattern, $data, $expected)
@@ -445,7 +477,10 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * The table prefix
+     * @param string $pattern
+     * @param array $data
+     * @param string $prefix
+     * @param string $expected
      * @dataProvider providerPrefix
      */
     public function testPrefix($pattern, $data, $prefix, $expected)
@@ -480,6 +515,10 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Named placeholders
+     *
+     * @param string $pattern
+     * @param array $data
+     * @param string $expected
      * @dataProvider providerNamed
      */
     public function testNamed($pattern, $data, $expected)
@@ -516,6 +555,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $pattern
+     * @param array $data
      * @dataProvider providerExceptionUnknownPlaceholder
      * @expectedException \go\DB\Exceptions\UnknownPlaceholder
      */
@@ -551,6 +592,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $pattern
+     * @param array $data
      * @dataProvider providerExceptionDataNotEnough
      * @expectedException \go\DB\Exceptions\DataNotEnough
      */
@@ -574,6 +617,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $pattern
+     * @param array $data
      * @dataProvider providerExceptionDataMuch
      * @expectedException \go\DB\Exceptions\DataMuch
      */
@@ -631,6 +676,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $pattern
+     * @param array $data
      * @dataProvider providerExceptionDataNamed
      * @expectedException \go\DB\Exceptions\DataNamed
      */
@@ -654,6 +701,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $pattern
+     * @param array $data
      * @dataProvider providerExceptionDataMixed
      * @expectedException \go\DB\Exceptions\DataNamed
      */
@@ -682,12 +731,12 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      * @param string $pattern
      * @param array $data
      * @param string $prefix
-     * @return \go\DB\Templaters\Base
+     * @return \go\DB\Helpers\Templater
      */
     protected function createTemplater($pattern, $data, $prefix = null)
     {
-        $connector = new \go\DB\Helpers\Connector('test', array('host' => 'localhost'));
+        $connector = new Connector('test', array('host' => 'localhost'));
         $connector->connect();
-        return new \go\DB\Helpers\Templater($connector, $pattern, $data, $prefix);
+        return new Templater($connector, $pattern, $data, $prefix);
     }
 }

@@ -28,7 +28,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException go\DB\Exceptions\ConfigConnect
+     * @expectedException \go\DB\Exceptions\ConfigConnect
      */
     public function testConstructInvalidConfig()
     {
@@ -59,7 +59,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::connect
-     * @expectedException go\DB\Exceptions\Connect
+     * @expectedException \go\DB\Exceptions\Connect
      */
     public function testConnectErrorConfig()
     {

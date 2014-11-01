@@ -6,7 +6,8 @@
 
 namespace go\Tests\DB;
 
-use go\DB\Storage as Storage;
+use go\DB\DB;
+use go\DB\Storage;
 
 /**
  * @coversDefaultClass go\DB\Storage
@@ -41,7 +42,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $db = DB::create(array('host' => 'localhost'), 'test');
         $storage = new Storage();
         $this->assertFalse($storage->exists('dbname'));
         $this->assertFalse(isset($storage->dbname));
@@ -79,7 +80,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
      */
     public function testSet()
     {
-        $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $db = DB::create(array('host' => 'localhost'), 'test');
         $storage = new Storage();
         $storage->set($db, 'name1');
         $storage->name2 = $db;
@@ -114,17 +115,17 @@ class StorageTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($storage1->one, $storage1->two);
         $storage2 = new Storage($dbs);
         $this->assertTrue($storage1->exists('one'));
-        $instance = \go\DB\Storage::getInstance();
-        $storage3 = \go\DB\Storage::setInstance($dbs);
+        $instance = Storage::getInstance();
+        $storage3 = Storage::setInstance($dbs);
         $this->assertTrue($storage3->exists('one'));
-        \go\DB\Storage::setInstance($instance);
+        Storage::setInstance($instance);
         $this->setExpectedException('go\DB\Exceptions\StorageEngaged');
         $storage2->fill($dbs);
     }
 
     /**
      * @covers ::fill
-     * @expectedException go\DB\Exceptions\StorageAssoc
+     * @expectedException \go\DB\Exceptions\StorageAssoc
      */
     public function testExceptionStorageAssoc()
     {
@@ -140,7 +141,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
 
     public function testCentralDB()
     {
-        $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $db = DB::create(array('host' => 'localhost'), 'test');
         $storage = new Storage();
         $this->assertFalse($storage->exists());
         $storage->set($db);
@@ -170,7 +171,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     public function testQuery()
     {
         $instance = Storage::getInstance();
-        $db = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $db = DB::create(array('host' => 'localhost'), 'test');
         $storage = new Storage();
         $id1 = $db->query('INSERT')->id();
         $storage->set($db);
@@ -187,8 +188,8 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     public function testMainname()
     {
         $storage = new Storage(null, 'base');
-        $dbN = \go\DB\DB::create(array('host' => 'localhost'), 'test');
-        $dbB = \go\DB\DB::create(array('host' => 'localhost'), 'test');
+        $dbN = DB::create(array('host' => 'localhost'), 'test');
+        $dbB = DB::create(array('host' => 'localhost'), 'test');
         $storage->set($dbN, '');
         $storage->set($dbB);
         $this->assertSame($dbN, $storage->get(''));

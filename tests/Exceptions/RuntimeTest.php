@@ -6,6 +6,9 @@
 
 namespace go\Tests\DB\Exceptions;
 
+use go\DB\DB;
+use go\DB\Exceptions\Connect;
+
 /**
  * @coversDefaultClass go\DB\Exceptions\Runtime
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -18,12 +21,13 @@ final class RuntimeTest extends \PHPUnit_Framework_TestCase
             '_adapter' => 'test',
             'host' => 'invalid',
         );
+        $line = null;
         try {
-            $db = \go\DB\DB::create($params);
+            $db = DB::create($params);
             $line = __LINE__ + 1;
             $db->forcedConnect();
             $this->fail('not thrown');
-        } catch (\go\DB\Exceptions\Connect $e) {
+        } catch (Connect $e) {
             $this->assertEquals(__FILE__, $e->getFile());
             $this->assertEquals($line, $e->getLine());
         }

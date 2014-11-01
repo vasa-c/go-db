@@ -15,26 +15,6 @@ final class Sqlite extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $paramsDefault = array(
-        'filename' => ':memory:',
-        'flags' => null,
-        'encryption_key' => null,
-        'mysql_quot' => false,
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $depsPhpExts = 'sqlite3';
-
-    /**
-     * {@inheritdoc}
-     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
@@ -159,4 +139,34 @@ final class Sqlite extends Base
     {
         return $cursor->reset();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsReq = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsDefault = array(
+        'filename' => ':memory:',
+        'flags' => null,
+        'encryption_key' => null,
+        'mysql_quot' => false,
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $depsPhpExts = 'sqlite3';
+
+    /**
+     * @var string
+     */
+    private $errorInfo;
+
+    /**
+     * @var int
+     */
+    private $errorCode;
 }

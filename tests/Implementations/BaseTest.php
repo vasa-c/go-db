@@ -6,6 +6,9 @@
 
 namespace go\Tests\DB\Implementations;
 
+use go\DB\Implementations\Base;
+use go\DB\Implementations\TestBase\Engine;
+
 /**
  * @coversDefaultClass go\DB\Implementations\Base
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -17,18 +20,20 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreate()
     {
-        $imp = \go\DB\Implementations\Base::getImplementationForAdapter('test');
+        $imp = Base::getImplementationForAdapter('test');
         $this->assertInstanceOf('go\DB\Implementations\Base', $imp);
-        $this->assertSame($imp, \go\DB\Implementations\Base::getImplementationForAdapter('test'));
+        $this->assertSame($imp, Base::getImplementationForAdapter('test'));
     }
 
     /**
      * @covers ::checkParams
+     * @param array $params
+     * @param array $expected
      * @dataProvider providerCheckParams
      */
     public function testCheckParams($params, $expected)
     {
-        $imp = \go\DB\Implementations\Base::getImplementationForAdapter('test');
+        $imp = Base::getImplementationForAdapter('test');
         $this->assertEquals($expected, $imp->checkParams($params));
     }
 
@@ -58,14 +63,14 @@ class BaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testConnect()
     {
-        $implementation = \go\DB\Implementations\Base::getImplementationForAdapter('test');
+        $implementation = Base::getImplementationForAdapter('test');
         $params = array('host' => 'localhost');
         $connection = $implementation->connect($params, $errorInfo, $errorCode);
         $this->assertInstanceOf('go\DB\Implementations\TestBase\Engine', $connection);
         $params = array('host' => 'notlocalhost');
         $connection = $implementation->connect($params, $errorInfo, $errorCode);
         $this->assertFalse($connection);
-        $this->assertEquals(\go\DB\Implementations\TestBase\Engine::ERROR_CONNECT, $errorCode);
+        $this->assertEquals(Engine::ERROR_CONNECT, $errorCode);
     }
 
     /**
@@ -114,7 +119,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $imp->getAffectedRows($conn));
         $this->assertFalse($imp->query($conn, 'ERROR'));
         $this->assertNotEmpty($imp->getErrorInfo($conn));
-        $this->assertEquals(\go\DB\Implementations\TestBase\Engine::ERROR_OPERATOR, $imp->getErrorCode($conn));
+        $this->assertEquals(Engine::ERROR_OPERATOR, $imp->getErrorCode($conn));
     }
 
     /**
@@ -146,17 +151,17 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     private function createImp()
     {
         $params = array('host' => 'localhost');
-        $this->implementation = \go\DB\Implementations\Base::getImplementationForAdapter('test');
+        $this->implementation = Base::getImplementationForAdapter('test');
         $this->connection = $this->implementation->connect($params);
     }
 
     /**
-     * @var \go\DB\Implementations\Base
+     * @var Base
      */
     private $implementation;
 
     /**
-     * @var \go\DB\Implementations\TestBase\Engine
+     * @var Engine
      */
     private $connection;
 }

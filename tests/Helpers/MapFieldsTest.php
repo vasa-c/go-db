@@ -15,7 +15,7 @@ use go\DB\Helpers\MapFields;
 class MapFieldsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var go\DB\Helpers\MapFields
+     * @var array
      */
     private $map = array(
         'one' => 'o',
@@ -30,6 +30,7 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
      * @covers ::assoc
      * @covers ::row
      * @dataProvider providerMap
+     * @param string $method
      * @param mixed $value
      * @param mixed $expected
      */

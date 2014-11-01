@@ -5,6 +5,8 @@
 
 namespace go\DB\Adapters;
 
+use go\DB\DB;
+
 /**
  * The PostgreSQL adapter
  *
@@ -13,7 +15,7 @@ namespace go\DB\Adapters;
  */
 namespace go\DB\Adapters;
 
-final class Pgsql extends \go\DB\DB
+final class Pgsql extends DB
 {
 
 }

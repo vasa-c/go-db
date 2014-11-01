@@ -15,25 +15,6 @@ final class Mysqlold extends Base
     /**
      * {@inheritdoc}
      */
-    protected $paramsReq = array('username', 'password');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $paramsDefault = array(
-        'host' => 'localhost',
-        'dbname' => null,
-        'charset' => null,
-    );
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $depsPhpExts = 'mysql';
-
-    /**
-     * {@inheritdoc}
-     */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
@@ -172,4 +153,23 @@ final class Mysqlold extends Base
     {
         return \mysql_data_seek($cursor, 0);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsReq = array('username', 'password');
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $paramsDefault = array(
+        'host' => 'localhost',
+        'dbname' => null,
+        'charset' => null,
+    );
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $depsPhpExts = 'mysql';
 }
