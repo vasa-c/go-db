@@ -56,7 +56,9 @@ class Templater
         $callback = array($this, 'placeholderClb');
         $query = \preg_replace_callback($pattern, $callback, $query);
         if ((!$this->named) && (\count($this->data) > $this->counter)) {
-            throw new DataMuch(count($this->data), $this->counter);
+            if (($this->counter > 0) || (isset($this->data[0]))) {
+                throw new DataMuch(count($this->data), $this->counter);
+            }
         }
         $this->query = $query;
         return $this->query;

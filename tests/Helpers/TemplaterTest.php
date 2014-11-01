@@ -597,6 +597,40 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * ("SELECT 1", [0, 1]) - Error
+     * ("SELECT 1", ['id' => 1]) - Ok (named placeholders)
+     *
+     * @param array $data
+     * @param boolean $exception [optional]
+     * @dataProvider providerNamedAndEmptyPattern
+     */
+    public function testNamedAndEmptyPattern($data, $exception = false)
+    {
+        $pattern = 'SELECT 1';
+        $templater = $this->createTemplater($pattern, $data);
+        if ($exception) {
+            $this->setExpectedException('\go\DB\Exceptions\DataMuch');
+            $templater->parse();
+        } else {
+            $templater->parse();
+            $this->assertSame($pattern, $templater->getQuery());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerNamedAndEmptyPattern()
+    {
+        return array(
+            array(null, false),
+            array(array(), false),
+            array(array('id' => 1, 'x' => 2), false),
+            array(array(1, 2), true),
+        );
+    }
+
+    /**
      * @dataProvider providerExceptionDataNamed
      * @expectedException \go\DB\Exceptions\DataNamed
      */
