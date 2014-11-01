@@ -9,7 +9,7 @@
 return array(
     /* The adapter name */
     'adapter' => null,
-    
+
     /* The flag of lazy connection */
     'lazy' => true,
 
@@ -21,4 +21,7 @@ return array(
 
     /* The compatibility options */
     'compat'  => array(),
+
+    /* The list of pre-queries */
+    'pre' => array(),
 );

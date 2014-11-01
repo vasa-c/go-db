@@ -9,6 +9,7 @@ namespace go\Tests\DB;
 use go\DB\DB;
 use go\DB\Helpers\Debuggers\Test;
 use go\DB\Exceptions\Query as QueryException;
+use go\DB\Implementations\Test as TestImp;
 
 /**
  * @coversDefaultClass go\DB\DB
@@ -435,5 +436,61 @@ final class DBTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($engine->isClosed());
         unset($db2);
         $this->assertTrue($engine->isClosed());
+    }
+
+    public function testPreQueryLazy()
+    {
+        TestImp::resetLogs();
+        $params = array(
+            '_adapter' => 'test',
+            'host' => 'localhost',
+            '_prefix' => 'p_',
+            '_pre' => array(
+                'INSERT {tt}',
+                array('INSERT ?t:table ?i:x', array('x' => 10, 'table' => 'qq')),
+            ),
+        );
+        $db = DB::create($params);
+        $db->preQuery('INSERT ?t ?i', array('tt', 11));
+        $this->assertEmpty(TestImp::getLogs());
+        $actual = $db->query('SELECT `a` FROM `table` LIMIT 2')->col();
+        $this->assertEquals(array(1, 2), $actual);
+        $expected = array(
+            'connect',
+            'query: INSERT `p_tt`',
+            'query: INSERT `p_qq` 10',
+            'query: INSERT `p_tt` 11',
+            'query: SELECT `a` FROM `table` LIMIT 2',
+            'freeCursor',
+        );
+        $this->assertEquals($expected, TestImp::getLogs());
+        TestImp::resetLogs();
+        $db->preQuery('INSERT');
+        $this->assertEquals(array('query: INSERT'), TestImp::getLogs());
+    }
+
+    public function testPreQueryForce()
+    {
+        TestImp::resetLogs();
+        $params = array(
+            '_adapter' => 'test',
+            'host' => 'localhost',
+            '_prefix' => 'p_',
+            '_lazy' => false,
+            '_pre' => array(
+                'INSERT {tt}',
+                array('INSERT ?t:table ?i:x', array('x' => 10, 'table' => 'qq')),
+            ),
+        );
+        $db = DB::create($params);
+        $expected = array(
+            'connect',
+            'query: INSERT `p_tt`',
+            'query: INSERT `p_qq` 10',
+        );
+        $this->assertEquals($expected, TestImp::getLogs());
+        TestImp::resetLogs();
+        $db->preQuery('INSERT');
+        $this->assertEquals(array('query: INSERT'), TestImp::getLogs());
     }
 }

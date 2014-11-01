@@ -20,11 +20,13 @@ final class Test extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        if ($params['host'] != 'localhost') {
+        if ($params['host'] !== 'localhost') {
             $errorInfo = 'Unable connect to "'.$params['host'].'"';
             $errorCode = Engine::ERROR_CONNECT;
+            self::$logs[] = __FUNCTION__.' error';
             return false;
         }
+        self::$logs[] = __FUNCTION__;
         return (new Engine());
     }
 
@@ -33,6 +35,7 @@ final class Test extends Base
      */
     public function close($connection)
     {
+        self::$logs[] = __METHOD__;
         $connection->close();
         return true;
     }
@@ -42,6 +45,7 @@ final class Test extends Base
      */
     public function query($connection, $query)
     {
+        self::$logs[] = __FUNCTION__.': '.$query;
         return $connection->query($query);
     }
 
@@ -114,6 +118,7 @@ final class Test extends Base
      */
     public function freeCursor($connection, $cursor)
     {
+        self::$logs[] = __FUNCTION__;
         return true;
     }
 
@@ -134,6 +139,19 @@ final class Test extends Base
     }
 
     /**
+     * @return array
+     */
+    public static function getLogs()
+    {
+        return self::$logs;
+    }
+
+    public static function resetLogs()
+    {
+        self::$logs = array();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected $paramsReq = array('host');
@@ -142,4 +160,9 @@ final class Test extends Base
      * {@inheritdoc}
      */
     protected $paramsDefault = array('port' => 777);
+
+    /**
+     * @var array
+     */
+    protected static $logs = array();
 }

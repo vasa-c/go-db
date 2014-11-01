@@ -106,6 +106,21 @@ abstract class DB
     }
 
     /**
+     * Saves a pre-query
+     *
+     * @param string $pattern
+     * @param array $data [optional]
+     * @throws \go\DB\Exceptions\Exception
+     */
+    final public function preQuery($pattern, $data = null)
+    {
+        $this->preQueries[] = array($pattern, $data);
+        if ($this->connected) {
+            $this->execPre();
+        }
+    }
+
+    /**
      * Performs a "plain" query
      *
      * @param string $query
@@ -210,6 +225,7 @@ abstract class DB
         }
         $res = $this->connector->connect();
         $this->connected = true;
+        $this->execPre();
         return $res;
     }
 
@@ -371,12 +387,16 @@ abstract class DB
     {
         $this->separateParams($params);
         $this->connector = $this->createConnector();
+        $this->setPrefix($this->paramsSys['prefix']);
+        $this->setDebug($this->paramsSys['debug']);
+        if (\is_array($this->paramsSys['pre'])) {
+            $this->preQueries = $this->paramsSys['pre'];
+        }
         if (!$this->paramsSys['lazy']) {
             $this->connector->connect();
             $this->connected = true;
+            $this->execPre();
         }
-        $this->setPrefix($this->paramsSys['prefix']);
-        $this->setDebug($this->paramsSys['debug']);
     }
 
     /**
@@ -469,6 +489,26 @@ abstract class DB
     }
 
     /**
+     * Executes all pre-queries
+     *
+     * @throws \go\DB\Exceptions\Exception
+     */
+    protected function execPre()
+    {
+        foreach ($this->preQueries as $pq) {
+            if (\is_array($pq)) {
+                $pattern = $pq[0];
+                $data = isset($pq[1]) ? $pq[1] : null;
+            } else {
+                $pattern = $pq;
+                $data = null;
+            }
+            $this->query($pattern, $data);
+        }
+        $this->preQueries = array();
+    }
+
+    /**
      * The list of avaliable adapters (cache)
      *
      * @var array
@@ -523,6 +563,13 @@ abstract class DB
      * @var bool
      */
     protected $hardClosed = false;
+
+    /**
+     * The list of pre-queries
+     *
+     * @var array
+     */
+    protected $preQueries = array();
 
     /**
      * @var array

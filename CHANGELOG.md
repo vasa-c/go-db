@@ -2,7 +2,10 @@
 
 ## dev-master
 
+## 2.2.2 (01.11.2014)
+
 * Table: accumulate INSERT
+* #38: pre-query
 * #34: Fixed `?w` for PgSQL (argument of WHERE must be type boolean)
 * #31, #32: Fix error messages for PgSQL
 * #37: Fixed exception for named data

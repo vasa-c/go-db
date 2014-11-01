@@ -91,4 +91,13 @@ class MysqlTest extends Base
         );
         $this->assertEquals($expected, $actual);
     }
+
+    public function testPreQuery()
+    {
+        $db = $this->createDB();
+        $db->preQuery('SET @a="q"');
+        $this->assertFalse($db->isConnected());
+        $this->assertSame('q', $db->query('SELECT @a')->el());
+        $this->assertTrue($db->isConnected());
+    }
 }
