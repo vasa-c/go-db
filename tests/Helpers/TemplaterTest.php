@@ -577,7 +577,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      * @dataProvider providerExceptionDataMuch
      * @expectedException \go\DB\Exceptions\DataMuch
      */
-    public function testExceptionUnknownDataNotMuch($pattern, $data)
+    public function testExceptionDataMuch($pattern, $data)
     {
         $templater = $this->createTemplater($pattern, $data);
         $templater->parse();
@@ -600,7 +600,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      * @dataProvider providerExceptionDataNamed
      * @expectedException \go\DB\Exceptions\DataNamed
      */
-    public function testExceptionUnknownDataNamed($pattern, $data)
+    public function testExceptionDataNamed($pattern, $data)
     {
         $templater = $this->createTemplater($pattern, $data);
         $templater->parse();
@@ -623,7 +623,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      * @dataProvider providerExceptionDataMixed
      * @expectedException \go\DB\Exceptions\DataNamed
      */
-    public function testExceptionUnknownDataMixed($pattern, $data)
+    public function testExceptionDataMixed($pattern, $data)
     {
         $templater = $this->createTemplater($pattern, $data);
         $templater->parse();
