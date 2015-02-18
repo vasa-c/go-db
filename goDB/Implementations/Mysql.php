@@ -17,7 +17,7 @@ final class Mysql extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        $host = \explode(':', $params['host'], 2);
+        $host = explode(':', $params['host'], 2);
         if (!empty($host[1])) {
             $port = $host[1];
         } else {
@@ -58,7 +58,7 @@ final class Mysql extends Base
      */
     public function query($connection, $query)
     {
-        return $connection->query($query, \MYSQLI_STORE_RESULT);
+        return $connection->query($query, MYSQLI_STORE_RESULT);
     }
 
     /**

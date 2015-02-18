@@ -30,7 +30,7 @@ class VarsTest extends \PHPUnit_Framework_TestCase
         $cursor = new Cursor($data);
 
         $iterator = new Iterators\Vars($connector, new Fetcher($connector, $cursor));
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             1 => 'One',
             3 => 'Three',
@@ -41,7 +41,7 @@ class VarsTest extends \PHPUnit_Framework_TestCase
 
         $cursor->reset();
         $iterator = new Iterators\Vars($connector, new Fetcher($connector, $cursor), 'name');
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             1 => 'One',
             3 => 'Three',

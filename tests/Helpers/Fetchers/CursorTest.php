@@ -153,7 +153,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     {
         $iterator = $this->dbQuery($query, $fetch);
         $this->assertInstanceOf('Iterator', $iterator);
-        $this->assertEquals($expected, \iterator_to_array($iterator));
+        $this->assertEquals($expected, iterator_to_array($iterator));
     }
 
     /**
@@ -218,7 +218,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     {
         $iterator = $this->dbQuery($query, $fetch);
         $this->assertInstanceOf('Iterator', $iterator);
-        $this->assertEquals($expected, \iterator_to_array($iterator));
+        $this->assertEquals($expected, iterator_to_array($iterator));
     }
 
     /**
@@ -346,7 +346,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
         $query = 'SELECT * FROM `table` LIMIT 10,10';
         $result = $this->dbQuery($query, $fetch);
         if ($result instanceof \Traversable) {
-            $result = \iterator_to_array($result);
+            $result = iterator_to_array($result);
         }
         $this->assertSame($expected, $result);
     }
@@ -384,7 +384,7 @@ class CursorTest extends \PHPUnit_Framework_TestCase
             array('a' => 2, 'b' => 3, 'c' => 4),
             array('a' => 3, 'b' => 4, 'c' => 5),
         );
-        $this->assertEquals($expected, \iterator_to_array($fetcher));
+        $this->assertEquals($expected, iterator_to_array($fetcher));
     }
 
     public function testNoSelect()

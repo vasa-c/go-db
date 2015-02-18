@@ -36,6 +36,6 @@ final class Vars extends Base
      */
     public function current()
     {
-        return \array_key_exists('1', $this->nextRow) ? $this->nextRow[1] : $this->nextRow[0];
+        return array_key_exists('1', $this->nextRow) ? $this->nextRow[1] : $this->nextRow[0];
     }
 }

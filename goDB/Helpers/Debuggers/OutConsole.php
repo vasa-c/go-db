@@ -19,6 +19,6 @@ final class OutConsole
      */
     public function __invoke($query, $duration, $info)
     {
-        echo $query.\PHP_EOL;
+        echo $query.PHP_EOL;
     }
 }

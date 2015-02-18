@@ -51,7 +51,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
      */
     private function createDB($fill = true)
     {
-        if (!\extension_loaded('sqlite3')) {
+        if (!extension_loaded('sqlite3')) {
             $this->markTestSkipped('SQLite3 not loaded');
         }
         $params = array(

@@ -59,7 +59,7 @@ abstract class Base
     public static function getImplementationForAdapter($adapter)
     {
         if (!isset(self::$cacheAdapters[$adapter])) {
-            $classname = __NAMESPACE__.'\\'.\ucfirst($adapter);
+            $classname = __NAMESPACE__.'\\'.ucfirst($adapter);
             self::$cacheAdapters[$adapter] = new $classname();
         }
         return self::$cacheAdapters[$adapter];
@@ -107,13 +107,13 @@ abstract class Base
     {
         $result = array();
         foreach ($this->paramsReq as $param) {
-            if (!\array_key_exists($param, $params)) {
+            if (!array_key_exists($param, $params)) {
                 return false;
             }
             $result[$param] = $params[$param];
         }
         foreach ($this->paramsDefault as $param => $default) {
-            if (\array_key_exists($param, $params)) {
+            if (array_key_exists($param, $params)) {
                 $result[$param] = $params[$param];
             } else {
                 $result[$param] = $default;
@@ -240,7 +240,7 @@ abstract class Base
      */
     public function escapeString($connection, $value)
     {
-        return \addslashes($value);
+        return addslashes($value);
     }
 
     /**
@@ -344,7 +344,7 @@ abstract class Base
         foreach ($fields as $field) {
             $result[] = $this->reprField($connection, $field);
         }
-        return \implode('.', $result);
+        return implode('.', $result);
     }
 
     /**
@@ -369,9 +369,9 @@ abstract class Base
         if ($this->depsPhpExts === null) {
             return;
         }
-        $deps = \is_array($this->depsPhpExts) ? $this->depsPhpExts : array($this->depsPhpExts);
+        $deps = is_array($this->depsPhpExts) ? $this->depsPhpExts : array($this->depsPhpExts);
         foreach ($deps as $dep) {
-            if (!\extension_loaded($dep)) {
+            if (!extension_loaded($dep)) {
                 throw new Dependence('php extension "'.$dep.'"');
             }
         }

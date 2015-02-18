@@ -51,11 +51,11 @@ class Templater
         if ($this->query !== null) {
             return $this->query;
         }
-        $query = \preg_replace_callback('~{(.*?)}~', array($this, 'tableClb'), $this->pattern);
+        $query = preg_replace_callback('~{(.*?)}~', array($this, 'tableClb'), $this->pattern);
         $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
         $callback = array($this, 'placeholderClb');
-        $query = \preg_replace_callback($pattern, $callback, $query);
-        if ((!$this->named) && (\count($this->data) > $this->counter)) {
+        $query = preg_replace_callback($pattern, $callback, $query);
+        if ((!$this->named) && (count($this->data) > $this->counter)) {
             if (($this->counter > 0) || (isset($this->data[0]))) {
                 throw new DataMuch(count($this->data), $this->counter);
             }
@@ -114,7 +114,7 @@ class Templater
                 /* There is a named placeholder although already used regular */
                 throw new MixedPlaceholder($matches[0]);
             }
-            if (!\array_key_exists($name, $this->data)) {
+            if (!array_key_exists($name, $this->data)) {
                 throw new DataNamed($name);
             }
             $value = $this->data[$name];
@@ -122,7 +122,7 @@ class Templater
             /* There is a regular placeholder although already used named */
             throw new MixedPlaceholder($matches[0]);
         } else {
-            if (!\array_key_exists($this->counter, $this->data)) {
+            if (!array_key_exists($this->counter, $this->data)) {
                 /* Data for regular placeholders is ended */
                 throw new DataNotEnough(count($this->data), $this->counter);
             }
@@ -132,7 +132,7 @@ class Templater
         $parser = new ParserPH($placeholder);
         $type = $parser->getType();
         $modifiers = $parser->getModifiers();
-        $method = 'replacement'.\strtoupper($type);
+        $method = 'replacement'.strtoupper($type);
         return $this->$method($value, $modifiers);
     }
 
@@ -145,7 +145,7 @@ class Templater
      */
     private function valueModification($value, array $modifiers)
     {
-        if ($modifiers['n'] && \is_null($value)) {
+        if ($modifiers['n'] && is_null($value)) {
             return $this->implementation->reprNULL($this->connection);
         }
         if ($modifiers['i']) {
@@ -183,7 +183,7 @@ class Templater
         foreach ($value as $element) {
             $values[] = $this->valueModification($element, $modifiers);
         }
-        return \implode(', ', $values);
+        return implode(', ', $values);
     }
 
     /**
@@ -198,7 +198,7 @@ class Templater
         $set = array();
         foreach ($value as $col => $element) {
             $key = $this->implementation->reprCol($this->connection, $col);
-            if (\is_array($element)) {
+            if (is_array($element)) {
                 $oval = isset($element['value']) ? $element['value'] : null;
                 if (isset($element['col'])) {
                     $element = $this->replacementC($element['col'], $modifiers);
@@ -218,7 +218,7 @@ class Templater
             }
             $set[] = $key.'='.$element;
         }
-        return \implode(', ', $set);
+        return implode(', ', $set);
     }
 
     /**
@@ -258,7 +258,7 @@ class Templater
      */
     private function replacementC($value, array $modifiers)
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
             $chain = array($this->prefix.$value[0], $value[1]);
             $result = $this->implementation->reprChainFields($this->connection, $chain);
         } else {
@@ -276,7 +276,7 @@ class Templater
      */
     private function replacementXC($value, array $modifiers)
     {
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             if ($value === true) {
                 return '*';
             }
@@ -289,7 +289,7 @@ class Templater
         foreach ($value as $col) {
             $cols[] = $this->replacementC($col, $modifiers);
         }
-        return \implode(',', $cols);
+        return implode(',', $cols);
     }
 
     /**
@@ -325,13 +325,13 @@ class Templater
      */
     private function replacementW($value, array $modifiers)
     {
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             return ($value !== false) ? '1=1' : '1=0';
         }
         $stats = array();
         foreach ($value as $k => $v) {
             $col = $this->replacementC($k, $modifiers);
-            if (\is_array($v)) {
+            if (is_array($v)) {
                 if (empty($v)) {
                     break;
                 }
@@ -351,7 +351,7 @@ class Templater
                     } else {
                         if ($oval === null) {
                             $stat .= 'NULL';
-                        } elseif (\is_int($oval)) {
+                        } elseif (is_int($oval)) {
                             $stat .= $oval;
                         } else {
                             $stat .= $this->replacement($oval, $modifiers);
@@ -360,19 +360,19 @@ class Templater
                 } else {
                     $opts = array();
                     foreach ($v as $opt) {
-                        if (\is_int($opt)) {
+                        if (is_int($opt)) {
                             $opts[] = $opt;
                         } else {
                             $opts[] = $this->replacement($opt, $modifiers);
                         }
                     }
-                    $stat = $col.' IN ('.\implode(',', $opts).')';
+                    $stat = $col.' IN ('.implode(',', $opts).')';
                 }
             } elseif ($v === null) {
                 $stat = $col.' IS NULL';
             } elseif ($v === true) {
                 $stat = $col.' IS NOT NULL';
-            } elseif (\is_int($v)) {
+            } elseif (is_int($v)) {
                 $stat = $col.'='.$v;
             } else {
                 $stat = $col.'='.$this->replacement($v, $modifiers);
@@ -382,7 +382,7 @@ class Templater
         if (empty($stats)) {
             return '1=1';
         }
-        return \implode(' AND ', $stats);
+        return implode(' AND ', $stats);
     }
 
     /**
@@ -394,12 +394,12 @@ class Templater
      */
     private function replacementO($value, array $modifiers)
     {
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             return $this->replacementC($value, $modifiers);
         }
         $stats = array();
         foreach ($value as $k => $v) {
-            if (\is_int($k)) {
+            if (is_int($k)) {
                 $c = $v;
                 $s = 'ASC';
             } else {
@@ -408,7 +408,7 @@ class Templater
             }
             $stats[] = $this->replacementC($c, $modifiers).' '.$s;
         }
-        return \implode(',', $stats);
+        return implode(',', $stats);
     }
 
     /**

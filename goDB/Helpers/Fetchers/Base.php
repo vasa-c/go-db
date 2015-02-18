@@ -29,8 +29,8 @@ abstract class Base implements Result
      */
     public function fetch($fetch)
     {
-        $fetch = \explode(':', $fetch, 2);
-        $param = isset($fetch[1]) ? \strtolower($fetch[1]) : null;
+        $fetch = explode(':', $fetch, 2);
+        $param = isset($fetch[1]) ? strtolower($fetch[1]) : null;
         $fetch = $fetch[0];
         $fetches = Config::get('fetch');
         if (!isset($fetches[$fetch])) {

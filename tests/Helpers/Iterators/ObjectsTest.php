@@ -30,7 +30,7 @@ class ObjectsTest extends \PHPUnit_Framework_TestCase
         $cursor = new Cursor($data);
 
         $iterator = new Iterators\Objects($connector, new Fetcher($connector, $cursor));
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             (object)array('id' => 1, 'name' => 'One'),
             (object)array('id' => 3, 'name' => 'Three'),
@@ -41,7 +41,7 @@ class ObjectsTest extends \PHPUnit_Framework_TestCase
 
         $cursor->reset();
         $iterator = new Iterators\Objects($connector, new Fetcher($connector, $cursor), 'id');
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             1 => (object)array('id' => 1, 'name' => 'One'),
             3 => (object)array('id' => 3, 'name' => 'Three'),

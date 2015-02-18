@@ -24,9 +24,9 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
     public function testParse($placeholder, $expectType, $expectModifiers)
     {
         $modifiers = self::getModifiers();
-        $len = \strlen($expectModifiers);
+        $len = strlen($expectModifiers);
         for ($i = 0; $i < $len; $i++) {
-            $modifiers[\substr($expectModifiers, $i, 1)] = true;
+            $modifiers[substr($expectModifiers, $i, 1)] = true;
         }
         $parser = new ParserPH($placeholder);
         $this->assertEquals($expectType, $parser->getType());

@@ -36,8 +36,8 @@ class AssocTest extends \PHPUnit_Framework_TestCase
             array('id' => 5, 'name' => 'Five'),
             array('id' => 7, 'name' => 'Seven'),
         );
-        $this->assertEquals($expected, \iterator_to_array($iterator));
-        $this->assertEquals($expected, \iterator_to_array($iterator));
+        $this->assertEquals($expected, iterator_to_array($iterator));
+        $this->assertEquals($expected, iterator_to_array($iterator));
 
         $cursor->reset();
 
@@ -48,6 +48,6 @@ class AssocTest extends \PHPUnit_Framework_TestCase
             5 => array('id' => 5, 'name' => 'Five'),
             7 => array('id' => 7, 'name' => 'Seven'),
         );
-        $this->assertEquals($expected, \iterator_to_array($iterator));
+        $this->assertEquals($expected, iterator_to_array($iterator));
     }
 }

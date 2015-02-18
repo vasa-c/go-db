@@ -19,7 +19,7 @@ class Backtrace
     public function __construct(array $realtrace, $prefix)
     {
         $trace = array();
-        foreach (\array_reverse($realtrace) as $item) {
+        foreach (array_reverse($realtrace) as $item) {
             $trace[] = $item;
             if (!empty($item['class'])) {
                 $ent = $item['class'];
@@ -28,8 +28,8 @@ class Backtrace
             } else {
                 continue;
             }
-            if (\strpos($ent, $prefix) === 0) {
-                $this->trace = \array_reverse($trace);
+            if (strpos($ent, $prefix) === 0) {
+                $this->trace = array_reverse($trace);
                 $this->file = isset($item['file']) ? $item['file'] : null;
                 $this->line = isset($item['line']) ? $item['line'] : null;
                 return;

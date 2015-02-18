@@ -21,7 +21,7 @@ final class Sqlite extends DB
     public function makeQuery($pattern, $data, $prefix = null)
     {
         if (!empty($this->paramsDB['mysql_quot'])) {
-            $pattern = \str_replace('`', '"', $pattern);
+            $pattern = str_replace('`', '"', $pattern);
         }
         return parent::makeQuery($pattern, $data, $prefix);
     }

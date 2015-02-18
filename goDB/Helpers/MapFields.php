@@ -28,7 +28,7 @@ class MapFields
      */
     public function col($col)
     {
-        if (\is_string($col) && (isset($this->map[$col]))) {
+        if (is_string($col) && (isset($this->map[$col]))) {
             $col = $this->map[$col];
         }
         return $col;
@@ -40,14 +40,14 @@ class MapFields
      */
     public function cols($cols)
     {
-        if (\is_array($cols)) {
+        if (is_array($cols)) {
             foreach ($cols as &$col) {
-                if (\is_string($col) && (isset($this->map[$col]))) {
+                if (is_string($col) && (isset($this->map[$col]))) {
                     $col = $this->map[$col];
                 }
             }
             unset($col);
-        } elseif ((\is_string($cols) && (isset($this->map[$cols])))) {
+        } elseif ((is_string($cols) && (isset($this->map[$cols])))) {
             $cols = $this->map[$cols];
         }
         return $cols;
@@ -78,7 +78,7 @@ class MapFields
      */
     public function where($where)
     {
-        if (!\is_array($where)) {
+        if (!is_array($where)) {
             return $where;
         }
         $result = array();
@@ -100,15 +100,15 @@ class MapFields
      */
     public function order($order)
     {
-        if (\is_string($order)) {
+        if (is_string($order)) {
             return isset($this->map[$order]) ? $this->map[$order] : $order;
         }
-        if (!\is_array($order)) {
+        if (!is_array($order)) {
             return null;
         }
         $result = array();
         foreach ($order as $k => $v) {
-            if (\is_int($k)) {
+            if (is_int($k)) {
                 $v = isset($this->map[$v]) ? $this->map[$v] : $v;
             } else {
                 $k = isset($this->map[$k]) ? $this->map[$k] : $k;
@@ -125,7 +125,7 @@ class MapFields
     public function assoc($rows)
     {
         if (!$this->flip) {
-            $this->flip = \array_flip($this->map);
+            $this->flip = array_flip($this->map);
         }
         $result = array();
         foreach ($rows as $row) {
@@ -145,11 +145,11 @@ class MapFields
      */
     public function row($row)
     {
-        if (!\is_array($row)) {
+        if (!is_array($row)) {
             return $row;
         }
         if (!$this->flip) {
-            $this->flip = \array_flip($this->map);
+            $this->flip = array_flip($this->map);
         }
         $item = array();
         foreach ($row as $k => $v) {

@@ -128,14 +128,14 @@ class ArrTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->fetcher->iassoc();
         $this->assertInstanceOf('Traversable', $actual);
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
         $expected = array(
             5 => array('id' => 1, 'a' => 5, 'b' => 10),
             15 => array('id' => 2, 'a' => 15, 'b' => 5),
             25 => array('id' => 3, 'a' => 25, 'b' => null),
         );
         $actual = $this->fetcher->iassoc('a');
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
     }
 
     /**
@@ -150,14 +150,14 @@ class ArrTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->fetcher->inumerics();
         $this->assertInstanceOf('Traversable', $actual);
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
         $expected = array(
             5 => array(1, 5, 10),
             15 => array(2, 15, 5),
             25 => array(3, 25, null),
         );
         $actual = $this->fetcher->inumerics(1);
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
     }
 
     /**
@@ -168,10 +168,10 @@ class ArrTest extends \PHPUnit_Framework_TestCase
         $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars();
         $this->assertInstanceOf('Traversable', $actual);
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
         $expected = array(1 => 5, 2 => 15, 3 => 25);
         $actual = $this->fetcher->ivars('a');
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
     }
 
     /**
@@ -182,10 +182,10 @@ class ArrTest extends \PHPUnit_Framework_TestCase
         $expected = array(1, 2, 3);
         $actual = $this->fetcher->icol();
         $this->assertInstanceOf('Traversable', $actual);
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
         $expected = array(1, 2, 3);
         $this->fetcher->icol('a');
-        $this->assertEquals($expected, \iterator_to_array($actual));
+        $this->assertEquals($expected, iterator_to_array($actual));
     }
 
     /**
@@ -281,7 +281,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $this->assertEquals($this->data, \iterator_to_array($this->fetcher));
+        $this->assertEquals($this->data, iterator_to_array($this->fetcher));
     }
 
     /**

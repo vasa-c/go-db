@@ -30,13 +30,13 @@ class ColTest extends \PHPUnit_Framework_TestCase
         $cursor = new Cursor($data);
 
         $iterator = new Iterators\Col($connector, new Fetcher($connector, $cursor));
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(1, 3, 5, 7);
         $this->assertEquals($expected, $result);
 
         $cursor->reset();
         $iterator = new Iterators\Col($connector, new Fetcher($connector, $cursor), 'name');
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(1, 3, 5, 7);
         $this->assertEquals($expected, $result);
     }

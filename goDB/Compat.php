@@ -42,10 +42,10 @@ class Compat
      */
     public static function getOpt($key, $default = null)
     {
-        if (\array_key_exists($key, self::$current)) {
+        if (array_key_exists($key, self::$current)) {
             return self::$current[$key];
         }
-        if (\array_key_exists($key, self::$opts)) {
+        if (array_key_exists($key, self::$opts)) {
             return self::$opts[$key];
         }
         return $default;

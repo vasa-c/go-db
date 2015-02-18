@@ -46,8 +46,8 @@ final class Engine
         $this->errorCode = null;
         $this->affectedRows = 0;
         $this->log('query: '.$query);
-        $query = \strtolower($query);
-        $query = \explode(' ', $query, 2);
+        $query = strtolower($query);
+        $query = explode(' ', $query, 2);
         $operator = $query[0];
         $query = isset($query[1]) ? $query[1] : '';
         switch ($operator) {
@@ -137,15 +137,15 @@ final class Engine
     private function select($query)
     {
         $pattern = '~^(.*?)FROM (.*?)(LIMIT (.*?))?$~i';
-        if (!\preg_match($pattern, $query, $matches)) {
+        if (!preg_match($pattern, $query, $matches)) {
             $this->errorInfo = 'Error SELECT query "'.$query.'"';
             $this->errorCode = self::ERROR_TABLE;
         }
-        $cols  = \trim($matches[1]);
-        $table = \trim($matches[2]);
+        $cols  = trim($matches[1]);
+        $table = trim($matches[2]);
         $limit = isset($matches[4]) ? $matches[4] : null;
         $limit = $this->parseLimit($limit);
-        $table = \str_replace('`', '', $table);
+        $table = str_replace('`', '', $table);
         if ($table != 'table') {
             $this->errorInfo = 'Table "'.$table.'" not found';
             $this->errorCode = self::ERROR_TABLE;
@@ -154,7 +154,7 @@ final class Engine
         if ($cols == '*') {
             $cols = null;
         } else {
-            $cols = \explode(',', \str_replace('`', '', $cols));
+            $cols = explode(',', str_replace('`', '', $cols));
         }
         $data = array();
         for ($i = $limit['begin']; $i <= $limit['end']; $i++) {
@@ -196,7 +196,7 @@ final class Engine
      */
     private function update($query)
     {
-        $query = \explode('limit', $query, 2);
+        $query = explode('limit', $query, 2);
         if (isset($query[1])) {
             $limit = $query[1];
         } else {
@@ -216,22 +216,22 @@ final class Engine
      */
     private function parseLimit($limit)
     {
-        $limit = \trim($limit);
+        $limit = trim($limit);
         if (empty($limit)) {
             return array(
                 'begin' => 0,
-                'end'   => \count($this->table) - 1,
+                'end'   => count($this->table) - 1,
             );
         }
-        $limit = \explode(',', $limit, 2);
-        if (\count($limit) == 2) {
+        $limit = explode(',', $limit, 2);
+        if (count($limit) == 2) {
             $begin = (int)$limit[0];
             $end   = $begin + (int)$limit[1] - 1;
         } else {
             $begin = 0;
             $end   = (int)$limit[0] - 1;
         }
-        $max = \count($this->table) - 1;
+        $max = count($this->table) - 1;
         if ($end > $max) {
             $end = $max;
         }

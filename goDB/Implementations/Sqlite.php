@@ -17,7 +17,7 @@ final class Sqlite extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        $flags = \is_null($params['flags']) ? (\SQLITE3_OPEN_CREATE | \SQLITE3_OPEN_READWRITE) : $params['flags'];
+        $flags = is_null($params['flags']) ? (SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE) : $params['flags'];
         try {
             $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
         } catch (\Exception $e) {

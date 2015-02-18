@@ -32,7 +32,7 @@ final class Cursor
     public function fetchRow()
     {
         $row = $this->next();
-        return $row ? \array_values($row) : false;
+        return $row ? array_values($row) : false;
     }
 
     /**
@@ -62,7 +62,7 @@ final class Cursor
      */
     public function reset()
     {
-        \reset($this->data);
+        reset($this->data);
         return true;
     }
 
@@ -73,7 +73,7 @@ final class Cursor
      */
     public function getNumRows()
     {
-        return \count($this->data);
+        return count($this->data);
     }
 
     /**
@@ -81,7 +81,7 @@ final class Cursor
      */
     private function next()
     {
-        $value = \current($this->data);
+        $value = current($this->data);
         next($this->data);
         return $value;
     }

@@ -29,14 +29,14 @@ class SqliteTest extends Base
             'desc' => 1,
             'val' => 'six',
         );
-        $data = array(\array_keys($set), \array_values($set));
+        $data = array(array_keys($set), array_values($set));
         $this->assertEquals(6, $db->query('INSERT INTO `godbtest` (?cols) VALUES (?list)', $data)->id());
         $set = array(
             'num' => 9,
             'desc' => 1,
             'val' => null,
         );
-        $data = array(\array_keys($set), \array_values($set));
+        $data = array(array_keys($set), array_values($set));
         $this->assertEquals(7, $db->query('INSERT INTO `godbtest` (?cols) VALUES (?list)', $data)->id());
         $expected = array(
             array(6, 1, 8, 'six'),

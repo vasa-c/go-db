@@ -41,12 +41,12 @@ class Storage
     {
         if ($instance instanceof self) {
             self::$instance = $instance;
-        } elseif (\is_array($instance)) {
+        } elseif (is_array($instance)) {
             self::$instance = new self($instance);
         } else {
             $message = 'Argument 1 passed to Storage::setInstance must be '.
-                'an instance of go\DB\DB or array, '.\gettype($instance).' given';
-            \trigger_error($message, \E_USER_ERROR);
+                'an instance of go\DB\DB or array, '.gettype($instance).' given';
+            trigger_error($message, E_USER_ERROR);
         }
         return self::$instance;
     }
@@ -166,7 +166,7 @@ class Storage
     {
         $assocs = array();
         foreach ($mparams as $name => $params) {
-            if (\is_array($params)) {
+            if (is_array($params)) {
                 $this->create($params, $name);
             } elseif (isset($mparams[$params])) {
                 $assocs[$name] = $params;

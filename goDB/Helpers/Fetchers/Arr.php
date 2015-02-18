@@ -23,7 +23,7 @@ class Arr extends Base
      */
     public function __construct($data, $id = null)
     {
-        if (\is_array($data)) {
+        if (is_array($data)) {
             $this->data = $data;
         } elseif ($data instanceof Result) {
             $this->data = $data->assoc();
@@ -63,7 +63,7 @@ class Arr extends Base
      */
     public function numerics($param = null)
     {
-        $data = \array_map('array_values', $this->data);
+        $data = array_map('array_values', $this->data);
         if (!$param) {
             return $data;
         }
@@ -100,7 +100,7 @@ class Arr extends Base
     {
         $result = array();
         foreach ($this->data as $item) {
-            $item = \array_values($item);
+            $item = array_values($item);
             $result[] = $item[0];
         }
         return $result;
@@ -113,7 +113,7 @@ class Arr extends Base
     {
         $result = array();
         foreach ($this->data as $item) {
-            $item = \array_values($item);
+            $item = array_values($item);
             $result[$item[0]] = $item[1];
         }
         return $result;
@@ -172,7 +172,7 @@ class Arr extends Base
      */
     public function numeric($param = null)
     {
-        return isset($this->data[0]) ? \array_values($this->data[0]) : null;
+        return isset($this->data[0]) ? array_values($this->data[0]) : null;
     }
 
     /**
@@ -191,7 +191,7 @@ class Arr extends Base
         if (!isset($this->data[0])) {
             return null;
         }
-        $row = \array_values($this->data[0]);
+        $row = array_values($this->data[0]);
         return $row[0];
     }
 
@@ -203,7 +203,7 @@ class Arr extends Base
         if (!isset($this->data[0])) {
             return null;
         }
-        $row = \array_values($this->data[0]);
+        $row = array_values($this->data[0]);
         return (bool)$row[0];
     }
 
@@ -212,7 +212,7 @@ class Arr extends Base
      */
     public function num($param = null)
     {
-        return \count($this->data);
+        return count($this->data);
     }
 
     /**
@@ -252,7 +252,7 @@ class Arr extends Base
      */
     public function count()
     {
-        return \count($this->data);
+        return count($this->data);
     }
 
     /**

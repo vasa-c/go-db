@@ -69,7 +69,7 @@ class Table
         }
         if ($this->accum !== null) {
             $this->accum[] = $set;
-            if (\count($this->accum) >= $this->sizeAccum) {
+            if (count($this->accum) >= $this->sizeAccum) {
                 $this->multiInsert($this->accum, true);
                 $this->accum = array();
             }
@@ -80,7 +80,7 @@ class Table
             $set = $this->map->set($set);
         }
         $pattern = 'INSERT INTO ?t (?cols) VALUES (?ln)';
-        $data = array($this->name, \array_keys($set), \array_values($set));
+        $data = array($this->name, array_keys($set), array_values($set));
         return $this->db->query($pattern, $data)->id();
     }
 
@@ -112,10 +112,10 @@ class Table
         if (isset($sets[0])) {
             $first = $sets[0];
         } else {
-            $first = \current($sets);
+            $first = current($sets);
         }
         $pattern = 'INSERT INTO ?t (?cols) VALUES ?vn';
-        $data = array($this->name, \array_keys($first), $sets);
+        $data = array($this->name, array_keys($first), $sets);
         $this->db->query($pattern, $data);
     }
 
@@ -134,7 +134,7 @@ class Table
             $set = $this->map->set($set);
         }
         $pattern = 'REPLACE INTO ?t (?cols) VALUES (?ln)';
-        $data = array($this->name, \array_keys($set), \array_values($set));
+        $data = array($this->name, array_keys($set), array_values($set));
         return $this->db->query($pattern, $data)->id();
     }
 
@@ -165,10 +165,10 @@ class Table
         if (isset($sets[0])) {
             $first = $sets[0];
         } else {
-            $first = \current($sets);
+            $first = current($sets);
         }
         $pattern = 'REPLACE INTO ?t (?cols) VALUES ?vn';
-        $data = array($this->name, \array_keys($first), $sets);
+        $data = array($this->name, array_keys($first), $sets);
         $this->db->query($pattern, $data);
     }
 
@@ -215,21 +215,21 @@ class Table
         }
         $pattern = 'SELECT ?cols FROM ?t WHERE ?w';
         $data = array($cols, $this->name, $where);
-        if (\is_array($order)) {
+        if (is_array($order)) {
             if (!empty($order)) {
                 $ords = array();
                 foreach ($order as $k => $v) {
                     $ords[] = '?c '.($v ? 'ASC' : 'DESC');
                     $data[] = $k;
                 }
-                $pattern .= ' ORDER BY '.\implode(',', $ords);
+                $pattern .= ' ORDER BY '.implode(',', $ords);
             }
         } elseif ($order !== null) {
             $pattern .= ' ORDER BY ?c ASC';
             $data[] = $order;
         }
         if ($limit !== null) {
-            if (\is_array($limit)) {
+            if (is_array($limit)) {
                 $offset = isset($limit[1]) ? $limit[1] : 0;
                 $limit = $limit[0];
             } else {
@@ -339,7 +339,7 @@ class Table
         if ($this->accum === null) {
             return 0;
         }
-        $count = \count($this->accum);
+        $count = count($this->accum);
         if ($count > 0) {
             $this->multiInsert($this->accum, true);
         }

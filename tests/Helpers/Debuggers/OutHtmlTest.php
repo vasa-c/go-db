@@ -20,9 +20,9 @@ class OutHtmlTest extends \PHPUnit_Framework_TestCase
     public function testTest()
     {
         $debugger = new OutHtml();
-        \ob_start();
+        ob_start();
         $debugger('"query"', 10, 'info');
-        $log = \ob_get_clean();
-        $this->assertSame('<pre>&quot;query&quot;</pre>', \trim($log));
+        $log = ob_get_clean();
+        $this->assertSame('<pre>&quot;query&quot;</pre>', trim($log));
     }
 }

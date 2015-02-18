@@ -30,7 +30,7 @@ class NumericsTest extends \PHPUnit_Framework_TestCase
         $cursor = new Cursor($data);
 
         $iterator = new Iterators\Numerics($connector, new Fetcher($connector, $cursor));
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             array(1, 'One'),
             array(3, 'Three'),
@@ -41,7 +41,7 @@ class NumericsTest extends \PHPUnit_Framework_TestCase
 
         $cursor->reset();
         $iterator = new Iterators\Numerics($connector, new Fetcher($connector, $cursor), '1');
-        $result = \iterator_to_array($iterator);
+        $result = iterator_to_array($iterator);
         $expected = array(
             'One' => array(1, 'One'),
             'Three' => array(3, 'Three'),

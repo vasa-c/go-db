@@ -78,9 +78,9 @@ final class ParserPH
         if ($ph == '') {
             return true;
         }
-        $comp = \explode('-', $ph);
-        if (\count($comp) > 1) {
-            $type = \array_shift($comp);
+        $comp = explode('-', $ph);
+        if (count($comp) > 1) {
+            $type = array_shift($comp);
             if (isset(self::$longs[$type])) {
                 $this->type = self::$longs[$type];
             } elseif (isset(self::$longModifiers[$type])) {

@@ -17,25 +17,25 @@ final class Mysqlold extends Base
      */
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
-        $connection = @\mysql_connect($params['host'], $params['username'], $params['password'], true);
+        $connection = @mysql_connect($params['host'], $params['username'], $params['password'], true);
         if (!$connection) {
-            $errorInfo = \mysql_error();
-            $errorCode = \mysql_errno();
+            $errorInfo = mysql_error();
+            $errorCode = mysql_errno();
             return false;
         }
         if ($params['dbname']) {
-            if (!@\mysql_select_db($params['dbname'], $connection)) {
-                $errorInfo = \mysql_error($connection);
-                $errorCode = \mysql_errno($connection);
-                @\mysql_close($connection);
+            if (!@mysql_select_db($params['dbname'], $connection)) {
+                $errorInfo = mysql_error($connection);
+                $errorCode = mysql_errno($connection);
+                @mysql_close($connection);
                 return false;
             }
         }
         if ($params['charset']) {
-            if (!\mysql_set_charset($params['charset'], $connection)) {
-                $errorInfo = \mysql_error($connection);
-                $errorCode = \mysql_errno($connection);
-                @\mysql_close($connection);
+            if (!mysql_set_charset($params['charset'], $connection)) {
+                $errorInfo = mysql_error($connection);
+                $errorCode = mysql_errno($connection);
+                @mysql_close($connection);
                 return false;
             }
         }
@@ -47,7 +47,7 @@ final class Mysqlold extends Base
      */
     public function close($connection)
     {
-        return @\mysql_close($connection);
+        return @mysql_close($connection);
     }
 
     /**
@@ -55,7 +55,7 @@ final class Mysqlold extends Base
      */
     public function query($connection, $query)
     {
-        return \mysql_query($query, $connection);
+        return mysql_query($query, $connection);
     }
 
     /**
@@ -63,7 +63,7 @@ final class Mysqlold extends Base
      */
     public function getInsertId($connection, $cursor = null)
     {
-        return \mysql_insert_id($connection);
+        return mysql_insert_id($connection);
     }
 
     /**
@@ -71,7 +71,7 @@ final class Mysqlold extends Base
      */
     public function getAffectedRows($connection, $cursor = null)
     {
-        return \mysql_affected_rows($connection);
+        return mysql_affected_rows($connection);
     }
 
     /**
@@ -79,7 +79,7 @@ final class Mysqlold extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return \mysql_error($connection);
+        return mysql_error($connection);
     }
 
     /**
@@ -87,7 +87,7 @@ final class Mysqlold extends Base
      */
     public function getErrorCode($connection, $cursor = null)
     {
-        return \mysql_errno($connection);
+        return mysql_errno($connection);
     }
 
     /**
@@ -95,7 +95,7 @@ final class Mysqlold extends Base
      */
     public function getNumRows($connection, $cursor)
     {
-        return \mysql_num_rows($cursor);
+        return mysql_num_rows($cursor);
     }
 
     /**
@@ -103,7 +103,7 @@ final class Mysqlold extends Base
      */
     public function fetchRow($connection, $cursor)
     {
-        return \mysql_fetch_row($cursor);
+        return mysql_fetch_row($cursor);
     }
 
     /**
@@ -111,7 +111,7 @@ final class Mysqlold extends Base
      */
     public function fetchAssoc($connection, $cursor)
     {
-        return \mysql_fetch_assoc($cursor);
+        return mysql_fetch_assoc($cursor);
     }
 
     /**
@@ -119,7 +119,7 @@ final class Mysqlold extends Base
      */
     public function fetchObject($connection, $cursor)
     {
-        return \mysql_fetch_object($cursor);
+        return mysql_fetch_object($cursor);
     }
 
     /**
@@ -127,7 +127,7 @@ final class Mysqlold extends Base
      */
     public function freeCursor($connection, $cursor)
     {
-        return \mysql_free_result($cursor);
+        return mysql_free_result($cursor);
     }
 
     /**
@@ -135,7 +135,7 @@ final class Mysqlold extends Base
      */
     public function escapeString($connection, $value)
     {
-        return \mysql_real_escape_string($value, $connection);
+        return mysql_real_escape_string($value, $connection);
     }
 
     /**
@@ -151,7 +151,7 @@ final class Mysqlold extends Base
      */
     public function rewindCursor($connection, $cursor)
     {
-        return \mysql_data_seek($cursor, 0);
+        return mysql_data_seek($cursor, 0);
     }
 
     /**

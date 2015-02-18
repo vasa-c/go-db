@@ -47,9 +47,9 @@ abstract class DB
     final public static function create(array $params, $adapter = null)
     {
         $adapter = isset($params['_adapter']) ? $params['_adapter'] : $adapter;
-        $adapter = \strtolower($adapter);
-        $classname = __NAMESPACE__.'\\Adapters\\'.\ucfirst($adapter);
-        if (!\class_exists($classname, true)) {
+        $adapter = strtolower($adapter);
+        $classname = __NAMESPACE__.'\\Adapters\\'.ucfirst($adapter);
+        if (!class_exists($classname, true)) {
             throw new UnknownAdapter($adapter);
         }
         $params['_adapter'] = $adapter;
@@ -65,9 +65,9 @@ abstract class DB
     {
         if (!self::$availableAdapters) {
             $adapters = array();
-            foreach (\glob(__DIR__.'/Adapters/*.php') as $filename) {
-                if (\preg_match('~([a-z0-9]*)\.php$~si', $filename, $matches)) {
-                    $adapters[] = \strtolower($matches[1]);
+            foreach (glob(__DIR__.'/Adapters/*.php') as $filename) {
+                if (preg_match('~([a-z0-9]*)\.php$~si', $filename, $matches)) {
+                    $adapters[] = strtolower($matches[1]);
                 }
             }
             self::$availableAdapters = $adapters;
@@ -143,9 +143,9 @@ abstract class DB
         $this->forcedConnect();
         $implementation = $this->connector->getImplementation();
         $connection = $this->connector->getConnection();
-        $duration = \microtime(true);
+        $duration = microtime(true);
         $cursor = $implementation->query($connection, $query);
-        $duration = \microtime(true) - $duration;
+        $duration = microtime(true) - $duration;
         if (!$cursor) {
             $errorInfo = $implementation->getErrorInfo($connection);
             $errorCode = $implementation->getErrorCode($connection);
@@ -279,7 +279,7 @@ abstract class DB
     final public function setDebug($callback = true)
     {
         if ($callback === true) {
-            if (\php_sapi_name() === 'cli') {
+            if (php_sapi_name() === 'cli') {
                 $callback = new DebuggerOutConsole();
             } else {
                 $callback = new DebuggerOutHtml();
@@ -389,7 +389,7 @@ abstract class DB
         $this->connector = $this->createConnector();
         $this->setPrefix($this->paramsSys['prefix']);
         $this->setDebug($this->paramsSys['debug']);
-        if (\is_array($this->paramsSys['pre'])) {
+        if (is_array($this->paramsSys['pre'])) {
             $this->preQueries = $this->paramsSys['pre'];
         }
         if (!$this->paramsSys['lazy']) {
@@ -462,9 +462,9 @@ abstract class DB
         $this->paramsDB = array();
         $this->paramsSys = Config::get('configsys');
         foreach ($params as $name => $value) {
-            if (\substr($name, 0, 1) === '_') {
-                $name = \substr($name, 1);
-                if (!\array_key_exists($name, $this->paramsSys)) {
+            if (substr($name, 0, 1) === '_') {
+                $name = substr($name, 1);
+                if (!array_key_exists($name, $this->paramsSys)) {
                     throw new ConfigSys('Unknown system param "'.$name.'"');
                 }
                 $this->paramsSys[$name] = $value;
@@ -484,7 +484,7 @@ abstract class DB
     protected function debugLog($query, $duration, $info)
     {
         if ($this->debugCallback) {
-            \call_user_func($this->debugCallback, $query, $duration, $info);
+            call_user_func($this->debugCallback, $query, $duration, $info);
         }
     }
 
@@ -496,7 +496,7 @@ abstract class DB
     protected function execPre()
     {
         foreach ($this->preQueries as $pq) {
-            if (\is_array($pq)) {
+            if (is_array($pq)) {
                 $pattern = $pq[0];
                 $data = isset($pq[1]) ? $pq[1] : null;
             } else {

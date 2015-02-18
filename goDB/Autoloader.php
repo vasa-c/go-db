@@ -19,7 +19,7 @@ final class Autoloader
     {
         if (!self::$autoloader) {
             self::$autoloader = new self(__NAMESPACE__, __DIR__);
-            \spl_autoload_register(self::$autoloader);
+            spl_autoload_register(self::$autoloader);
         }
     }
 
@@ -35,7 +35,7 @@ final class Autoloader
     {
         if (!self::$autoloaderForTests) {
             self::$autoloaderForTests = new self($ns, $dir);
-            \spl_autoload_register(self::$autoloaderForTests);
+            spl_autoload_register(self::$autoloaderForTests);
         }
     }
 
@@ -61,13 +61,13 @@ final class Autoloader
     public function __invoke($classname)
     {
         $prefix = $this->namespace.'\\';
-        if (\strpos($classname, $prefix) !== 0) {
+        if (strpos($classname, $prefix) !== 0) {
             return;
         }
-        $short = \substr($classname, \strlen($prefix));
-        $filename = \str_replace('\\', \DIRECTORY_SEPARATOR, $short);
-        $filename = $this->dir.\DIRECTORY_SEPARATOR.$filename.'.php';
-        if (\is_file($filename)) {
+        $short = substr($classname, strlen($prefix));
+        $filename = str_replace('\\', DIRECTORY_SEPARATOR, $short);
+        $filename = $this->dir.DIRECTORY_SEPARATOR.$filename.'.php';
+        if (is_file($filename)) {
             require_once $filename;
         }
     }

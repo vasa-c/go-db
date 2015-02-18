@@ -20,9 +20,9 @@ class OutConsoleTest extends \PHPUnit_Framework_TestCase
     public function testTest()
     {
         $debugger = new OutConsole();
-        \ob_start();
+        ob_start();
         $debugger('"query"', 10, 'info');
-        $log = \ob_get_clean();
-        $this->assertSame('"query"', \trim($log));
+        $log = ob_get_clean();
+        $this->assertSame('"query"', trim($log));
     }
 }

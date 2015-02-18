@@ -19,6 +19,6 @@ final class OutHtml
      */
     public function __invoke($query, $duration, $info)
     {
-        echo '<pre>'.\htmlspecialchars($query, \ENT_COMPAT, 'utf-8').'</pre>';
+        echo '<pre>'.htmlspecialchars($query, ENT_COMPAT, 'utf-8').'</pre>';
     }
 }

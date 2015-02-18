@@ -83,7 +83,7 @@ class Cursor extends Base
         $conn = $this->connection;
         $cursor = $this->cursor;
         $result = array();
-        if (!\is_null($param)) {
+        if (!is_null($param)) {
             $row = $imp->fetchRow($conn, $cursor);
             while ($row) {
                 $result[$row[$param]] = $row;
@@ -163,7 +163,7 @@ class Cursor extends Base
         $result = array();
         $row = $imp->fetchRow($conn, $cursor);
         while ($row) {
-            $result[$row[0]] = \array_key_exists('1', $row) ? $row[1] : $row[0];
+            $result[$row[0]] = array_key_exists('1', $row) ? $row[1] : $row[0];
             $row = $imp->fetchRow($conn, $cursor);
         }
         return $result;

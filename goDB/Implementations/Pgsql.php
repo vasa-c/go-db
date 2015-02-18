@@ -18,15 +18,15 @@ final class Pgsql extends Base
     public function connect(array $params, &$errorInfo = null, &$errorCode = null)
     {
         if (isset ($params['host'])) {
-            $host = \explode(':', $params['host'], 2);
+            $host = explode(':', $params['host'], 2);
             if (!empty($host[1])) {
                 $params['host'] = $host[0];
                 $params['port'] = $host[1];
             }
         }
-        $connection = @\pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
+        $connection = @pg_connect($this->generateConnectString($params), PGSQL_CONNECT_FORCE_NEW);
         if (!$connection) {
-            $errorData = \error_get_last();
+            $errorData = error_get_last();
             $errorInfo = !empty($errorData['message'])
                 ? $errorData['message']
                 : 'Unknown connection error.'
@@ -43,7 +43,7 @@ final class Pgsql extends Base
      */
     public function close($connection)
     {
-        return @\pg_close($connection);
+        return @pg_close($connection);
     }
 
     /**
@@ -51,7 +51,7 @@ final class Pgsql extends Base
      */
     public function query($connection, $query)
     {
-        return \pg_query($connection, $query);
+        return pg_query($connection, $query);
     }
 
     /**
@@ -59,11 +59,11 @@ final class Pgsql extends Base
      */
     public function getInsertId($connection, $cursor = null)
     {
-        $result = @\pg_query($connection, 'SELECT lastval()');
+        $result = @pg_query($connection, 'SELECT lastval()');
         if (!$result) {
             return false;
         }
-        $row = \pg_fetch_row($result);
+        $row = pg_fetch_row($result);
         return $row[0];
     }
 
@@ -72,7 +72,7 @@ final class Pgsql extends Base
      */
     public function getAffectedRows($connection, $cursor = null)
     {
-        return \pg_affected_rows($cursor);
+        return pg_affected_rows($cursor);
     }
 
     /**
@@ -80,7 +80,7 @@ final class Pgsql extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return \pg_errormessage($connection);
+        return pg_errormessage($connection);
     }
 
     /**
@@ -96,7 +96,7 @@ final class Pgsql extends Base
      */
     public function getNumRows($connection, $cursor)
     {
-        return \pg_numrows($cursor);
+        return pg_numrows($cursor);
     }
 
     /**
@@ -104,7 +104,7 @@ final class Pgsql extends Base
      */
     public function fetchRow($connection, $cursor)
     {
-        return \pg_fetch_row($cursor);
+        return pg_fetch_row($cursor);
     }
 
     /**
@@ -112,7 +112,7 @@ final class Pgsql extends Base
      */
     public function fetchAssoc($connection, $cursor)
     {
-        return \pg_fetch_assoc($cursor);
+        return pg_fetch_assoc($cursor);
     }
 
     /**
@@ -120,7 +120,7 @@ final class Pgsql extends Base
      */
     public function fetchObject($connection, $cursor)
     {
-        return \pg_fetch_object($cursor);
+        return pg_fetch_object($cursor);
     }
 
     /**
@@ -128,7 +128,7 @@ final class Pgsql extends Base
      */
     public function freeCursor($connection, $cursor)
     {
-        return \pg_free_result($cursor);
+        return pg_free_result($cursor);
     }
 
     /**
@@ -136,7 +136,7 @@ final class Pgsql extends Base
      */
     public function escapeString($connection, $value)
     {
-        return \pg_escape_string($connection, $value);
+        return pg_escape_string($connection, $value);
     }
 
     /**
@@ -160,7 +160,7 @@ final class Pgsql extends Base
      */
     public function rewindCursor($connection, $cursor)
     {
-        return \pg_result_seek($cursor, 0);
+        return pg_result_seek($cursor, 0);
     }
 
     /**
@@ -188,7 +188,7 @@ final class Pgsql extends Base
                 $connString .= ' ';
             }
         }
-        return \rtrim($connString);
+        return rtrim($connString);
     }
 
     /**

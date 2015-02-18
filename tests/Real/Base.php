@@ -42,7 +42,7 @@ abstract class Base extends \PHPUnit_Framework_TestCase
                 return null;
             }
             $filename = __DIR__.'/params.php';
-            if (!\is_file($filename)) {
+            if (!is_file($filename)) {
                 self::$dbparams = false;
                 return null;
             }
@@ -69,13 +69,13 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         if ($params === null) {
             $this->markTestSkipped();
         }
-        if ($this->reqExt && (!\extension_loaded($this->reqExt))) {
+        if ($this->reqExt && (!extension_loaded($this->reqExt))) {
             $this->markTestSkipped();
         }
         $db = DB::create($params, $this->adapter);
         if ($dumpfile) {
-            foreach (\explode(';', \file_get_contents($dumpfile)) as $query) {
-                $query = \trim($query);
+            foreach (explode(';', file_get_contents($dumpfile)) as $query) {
+                $query = trim($query);
                 if ($query !== '') {
                     $db->query($query);
                 }
