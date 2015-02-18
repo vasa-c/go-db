@@ -6,7 +6,9 @@
 
 namespace go\Tests\DB;
 
+use go\DB\Autoloader;
+
 require(__DIR__.'/../goDB/Autoloader.php');
 
-\go\DB\Autoloader::register();
-\go\DB\Autoloader::registerForTests(__NAMESPACE__, __DIR__);
+Autoloader::register();
+Autoloader::registerForTests(__NAMESPACE__, __DIR__);

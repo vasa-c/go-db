@@ -19,7 +19,7 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
      * ?, ?string, ?scalar
      *
      * @param string $pattern
-     * @param array data
+     * @param array $data
      * @param string $expected
      * @dataProvider providerScalar
      */

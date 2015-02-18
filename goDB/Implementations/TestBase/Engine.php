@@ -132,6 +132,7 @@ final class Engine
     }
 
     /**
+     * @param string $query
      * @return \go\DB\Implementations\TestBase\Cursor
      */
     private function select($query)

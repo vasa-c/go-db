@@ -74,6 +74,7 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
      * @param string $placeholder
      * @dataProvider providerUnknownPlaceholder
      * @expectedException \go\DB\Exceptions\UnknownPlaceholder
+     * @return \go\DB\Helpers\ParserPH
      */
     public function testUnknownPlaceholder($placeholder)
     {

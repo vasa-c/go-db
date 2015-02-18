@@ -273,7 +273,7 @@ abstract class DB
     /**
      * Sets a handler for the debug info
      *
-     * @param callable $callback
+     * @param callable|bool $callback [optional]
      *        a callback($query, $duration, $info) or TRUE for the standard handler or NULL for disable
      */
     final public function setDebug($callback = true)

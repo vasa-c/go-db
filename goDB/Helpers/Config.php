@@ -29,7 +29,7 @@ final class Config
             if (!file_exists($filename)) {
                 throw new \RuntimeException('Error go\\DB config "'.$name.'"');
             }
-            self::$config[$name] = include($filename);
+            self::$config[$name] = include $filename;
         }
         return self::$config[$name];
     }
