@@ -12,7 +12,7 @@ use go\DB\Implementations\TestBase\Cursor;
 use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
- * @cov@coversDefaultClassers go\DB\Helpers\Iterators\Objects
+ * @covcoversDefaultClassers go\DB\Helpers\Iterators\Objects
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ObjectsTest extends \PHPUnit_Framework_TestCase

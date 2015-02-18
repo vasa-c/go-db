@@ -9,7 +9,7 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\MapFields;
 
 /**
- * @coversDefaultClass go\DB\Helpers\MapFields
+ * coversDefaultClass go\DB\Helpers\MapFields
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class MapFieldsTest extends \PHPUnit_Framework_TestCase
@@ -23,12 +23,12 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
     );
 
     /**
-     * @covers ::col
-     * @covers ::cols
-     * @covers ::set
-     * @covers ::where
-     * @covers ::assoc
-     * @covers ::row
+     * covers ::col
+     * covers ::cols
+     * covers ::set
+     * covers ::where
+     * covers ::assoc
+     * covers ::row
      * @dataProvider providerMap
      * @param string $method
      * @param mixed $value
@@ -156,7 +156,7 @@ class MapFieldsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getMap
+     * covers ::getMap
      */
     public function testGetMap()
     {

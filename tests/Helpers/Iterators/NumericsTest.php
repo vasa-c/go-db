@@ -12,7 +12,7 @@ use go\DB\Implementations\TestBase\Cursor;
 use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Iterators\Numerics
+ * coversDefaultClass go\DB\Helpers\Iterators\Numerics
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class NumericsTest extends \PHPUnit_Framework_TestCase

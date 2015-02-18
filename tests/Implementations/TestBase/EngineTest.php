@@ -9,13 +9,13 @@ namespace go\Tests\DB\Implementations\TestBase;
 use go\DB\Implementations\TestBase\Engine;
 
 /**
- * @coversDefaultClass go\DB\Implementations\TestBase\Engine
+ * coversDefaultClass go\DB\Implementations\TestBase\Engine
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class EngineTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::query
+     * covers ::query
      * @param string $query
      * @param array $expected
      * @dataProvider providerSelect
@@ -86,8 +86,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getInsertId
+     * covers ::query
+     * covers ::getInsertId
      */
     public function testInsert()
     {
@@ -105,8 +105,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getAffectedRows
+     * covers ::query
+     * covers ::getAffectedRows
      */
     public function testUpdate()
     {
@@ -127,8 +127,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getErrorCode
+     * covers ::query
+     * covers ::getErrorCode
      */
     public function testErrorOperator()
     {
@@ -138,8 +138,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getErrorCode
+     * covers ::query
+     * covers ::getErrorCode
      */
     public function testErrorTable()
     {
@@ -149,8 +149,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getErrorCode
+     * covers ::query
+     * covers ::getErrorCode
      */
     public function testErrorCol()
     {
@@ -160,9 +160,9 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::getErrorInfo
-     * @covers ::getErrorCode
+     * covers ::query
+     * covers ::getErrorInfo
+     * covers ::getErrorCode
      */
     public function testErrorInfo()
     {
@@ -178,8 +178,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::close
-     * @covers ::isClosed
+     * covers ::close
+     * covers ::isClosed
      */
     public function testClose()
     {
@@ -190,8 +190,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getLogs
-     * @covers ::resetLogs
+     * covers ::getLogs
+     * covers ::resetLogs
      */
     public function testLogs()
     {

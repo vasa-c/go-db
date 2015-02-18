@@ -60,8 +60,8 @@ class MysqlTest extends Base
     }
 
     /**
-     * @covers \go\DB\Table::startAccumInsert
-     * @covers \go\DB\Table::flustAccumInsert
+     * covers \go\DB\Table::startAccumInsert
+     * covers \go\DB\Table::flushAccumInsert
      */
     public function testAccumInsert()
     {

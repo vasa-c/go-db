@@ -9,13 +9,13 @@ namespace go\Tests\DB\Helpers\Debuggers;
 use go\DB\Helpers\Debuggers\OutConsole;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Debuggers\OutConsole
+ * coversDefaultClass go\DB\Helpers\Debuggers\OutConsole
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class OutConsoleTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::__invoke
+     * covers ::__invoke
      */
     public function testTest()
     {

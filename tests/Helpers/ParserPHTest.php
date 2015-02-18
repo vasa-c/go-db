@@ -10,7 +10,7 @@ use go\DB\Helpers\ParserPH;
 use go\DB\Helpers\Config;
 
 /**
- * @coversDefaultClass go\DB\Helpers\ParserPH
+ * coversDefaultClass go\DB\Helpers\ParserPH
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ParserPHTest extends \PHPUnit_Framework_TestCase

@@ -10,14 +10,14 @@ use go\DB\DB;
 use go\DB\Storage;
 
 /**
- * @coversDefaultClass go\DB\Storage
+ * coversDefaultClass go\DB\Storage
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class StorageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::getInstance
-     * @covers ::setInstance
+     * covers ::getInstance
+     * covers ::setInstance
      */
     public function testInstance()
     {
@@ -34,11 +34,11 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::get
-     * @covers ::exists
-     * @covers ::__get
-     * @covers ::__set
-     * @covers ::__isset
+     * covers ::get
+     * covers ::exists
+     * covers ::__get
+     * covers ::__set
+     * covers ::__isset
      */
     public function testGet()
     {
@@ -58,7 +58,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::create
+     * covers ::create
      */
     public function testCreate()
     {
@@ -76,7 +76,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::set
+     * covers ::set
      */
     public function testSet()
     {
@@ -91,9 +91,9 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::fill
-     * @covers ::__construct
-     * @covers ::setInstance
+     * covers ::fill
+     * covers ::__construct
+     * covers ::setInstance
      */
     public function testFill()
     {
@@ -124,7 +124,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::fill
+     * covers ::fill
      * @expectedException \go\DB\Exceptions\StorageAssoc
      */
     public function testExceptionStorageAssoc()
@@ -154,7 +154,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__invoke
+     * covers ::__invoke
      */
     public function testInvoke()
     {
@@ -166,7 +166,7 @@ class StorageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
+     * covers ::query
      */
     public function testQuery()
     {

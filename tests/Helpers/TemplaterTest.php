@@ -10,7 +10,7 @@ use go\DB\Helpers\Connector;
 use go\DB\Helpers\Templater;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Templater
+ * coversDefaultClass go\DB\Helpers\Templater
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class TemplaterTest extends \PHPUnit_Framework_TestCase

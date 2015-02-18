@@ -9,7 +9,7 @@ namespace go\Tests\DB\Helpers\Fetchers;
 use go\DB\Helpers\Fetchers\Arr;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Fetchers\Arr
+ * coversDefaultClass go\DB\Helpers\Fetchers\Arr
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ArrTest extends \PHPUnit_Framework_TestCase
@@ -37,7 +37,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::assoc
+     * covers ::assoc
      */
     public function testAssoc()
     {
@@ -56,7 +56,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::numerics
+     * covers ::numerics
      */
     public function testNumerics()
     {
@@ -75,7 +75,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::objects
+     * covers ::objects
      */
     public function testObjects()
     {
@@ -95,7 +95,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::col
+     * covers ::col
      */
     public function testCol()
     {
@@ -106,7 +106,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::vars
+     * covers ::vars
      */
     public function testVars()
     {
@@ -117,7 +117,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::iassoc
+     * covers ::iassoc
      */
     public function testIassoc()
     {
@@ -139,7 +139,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::inumerics
+     * covers ::inumerics
      */
     public function testINumerics()
     {
@@ -161,7 +161,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::ivars
+     * covers ::ivars
      */
     public function testIvars()
     {
@@ -175,7 +175,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::icol
+     * covers ::icol
      */
     public function testICol()
     {
@@ -189,7 +189,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::row
+     * covers ::row
      */
     public function testRow()
     {
@@ -200,7 +200,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::numeric
+     * covers ::numeric
      */
     public function testNumeric()
     {
@@ -211,7 +211,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::object
+     * covers ::object
      */
     public function testObject()
     {
@@ -222,7 +222,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::el
+     * covers ::el
      */
     public function testEl()
     {
@@ -232,7 +232,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::bool
+     * covers ::bool
      */
     public function testBool()
     {
@@ -244,7 +244,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::num
+     * covers ::num
      */
     public function testNum()
     {
@@ -252,7 +252,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::id
+     * covers ::id
      */
     public function testId()
     {
@@ -264,7 +264,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::ar
+     * covers ::ar
      */
     public function testAr()
     {
@@ -272,7 +272,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::cursor
+     * covers ::cursor
      */
     public function testCursor()
     {
@@ -285,7 +285,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::fetch
+     * covers ::fetch
      */
     public function testFetch()
     {
@@ -298,7 +298,7 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
+     * covers ::__construct
      */
     public function testConstruct()
     {

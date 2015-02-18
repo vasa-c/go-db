@@ -10,7 +10,7 @@ use go\DB\DB;
 use go\DB\Exceptions\Config;
 
 /**
- * @coversDefaultClass go\DB\Exceptions\Logic
+ * coversDefaultClass go\DB\Exceptions\Logic
  *
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */

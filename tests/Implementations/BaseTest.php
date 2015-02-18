@@ -10,13 +10,13 @@ use go\DB\Implementations\Base;
 use go\DB\Implementations\TestBase\Engine;
 
 /**
- * @coversDefaultClass go\DB\Implementations\Base
+ * coversDefaultClass go\DB\Implementations\Base
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::getImplementationForAdapter
+     * covers ::getImplementationForAdapter
      */
     public function testCreate()
     {
@@ -26,7 +26,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::checkParams
+     * covers ::checkParams
      * @param array $params
      * @param array $expected
      * @dataProvider providerCheckParams
@@ -59,7 +59,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::connect()
+     * covers ::connect()
      */
     public function testConnect()
     {
@@ -74,7 +74,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::close()
+     * covers ::close()
      */
     public function testClose()
     {
@@ -85,17 +85,17 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
-     * @covers ::isCursor
-     * @covers ::getInsertId
-     * @covers ::getAffectedRows
-     * @covers ::getErrorInfo
-     * @covers ::getErrorCode
-     * @covers ::getNumRows
-     * @covers ::fetchRow
-     * @covers ::fetchAssoc
-     * @covers ::fetchObject
-     * @covers ::rewindCursor
+     * covers ::query
+     * covers ::isCursor
+     * covers ::getInsertId
+     * covers ::getAffectedRows
+     * covers ::getErrorInfo
+     * covers ::getErrorCode
+     * covers ::getNumRows
+     * covers ::fetchRow
+     * covers ::fetchAssoc
+     * covers ::fetchObject
+     * covers ::rewindCursor
      */
     public function testQuery()
     {
@@ -123,14 +123,14 @@ class BaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::escapeString
-     * @covers ::reprString
-     * @covers ::reprInt
-     * @covers ::reprBool
-     * @covers ::reprNULL
-     * @covers ::reprTable
-     * @covers ::reprCol
-     * @covers ::reprChainFields
+     * covers ::escapeString
+     * covers ::reprString
+     * covers ::reprInt
+     * covers ::reprBool
+     * covers ::reprNULL
+     * covers ::reprTable
+     * covers ::reprCol
+     * covers ::reprChainFields
      */
     public function testRepr()
     {

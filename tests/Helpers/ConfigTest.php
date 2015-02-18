@@ -9,13 +9,13 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\Config;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Config
+ * coversDefaultClass go\DB\Helpers\Config
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::get
+     * covers ::get
      */
     public function testGet()
     {

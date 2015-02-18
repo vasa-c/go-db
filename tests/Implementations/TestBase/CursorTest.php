@@ -9,13 +9,13 @@ namespace go\Tests\DB\Implementations\TestBase;
 use go\DB\Implementations\TestBase\Cursor as Cursor;
 
 /**
- * @coversDefaultClass \go\DB\Implementations\TestBase\Cursor
+ * coversDefaultClass \go\DB\Implementations\TestBase\Cursor
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class CursorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::fetchAssoc
+     * covers ::fetchAssoc
      */
     public function testAssoc()
     {
@@ -31,7 +31,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::fetchRow
+     * covers ::fetchRow
      */
     public function testRow()
     {
@@ -47,7 +47,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::fetchObject
+     * covers ::fetchObject
      */
     public function testObject()
     {
@@ -63,7 +63,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::reset
+     * covers ::reset
      */
     public function testReset()
     {
@@ -82,7 +82,7 @@ final class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getNumRows
+     * covers ::getNumRows
      */
     public function testGetNumRows()
     {

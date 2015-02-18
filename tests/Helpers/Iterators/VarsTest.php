@@ -12,7 +12,7 @@ use go\DB\Implementations\TestBase\Cursor;
 use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Iterators\Vars
+ * coversDefaultClass go\DB\Helpers\Iterators\Vars
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class VarsTest extends \PHPUnit_Framework_TestCase

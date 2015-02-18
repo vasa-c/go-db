@@ -12,13 +12,13 @@ use go\DB\Exceptions\Query as QueryException;
 use go\DB\Implementations\Test as TestImp;
 
 /**
- * @coversDefaultClass go\DB\DB
+ * coversDefaultClass go\DB\DB
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class DBTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::create
+     * covers ::create
      * @param array $params
      * @param string $adapter
      * @dataProvider providerCreate
@@ -65,7 +65,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::create
+     * covers ::create
      * @param array $params
      * @param string $adapter
      * @dataProvider providerExceptionUnknownAdapter
@@ -106,7 +106,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::create
+     * covers go\DB\DB::create
      * @expectedException \go\DB\Exceptions\ConfigSys
      */
     public function testExceptionConfigSys()
@@ -120,7 +120,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::create
+     * covers ::create
      * @expectedException \go\DB\Exceptions\ConfigConnect
      */
     public function testExceptionConfigConnect()
@@ -133,7 +133,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::create
+     * covers ::create
      */
     public function testExceptionConnect()
     {
@@ -160,7 +160,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getAvailableAdapters
+     * covers ::getAvailableAdapters
      */
     public function testGetAvailableAdapters()
     {
@@ -170,9 +170,9 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::isConnected
-     * @covers ::forcedConnect
-     * @covers ::close
+     * covers ::isConnected
+     * covers ::forcedConnect
+     * covers ::close
      */
     public function testConnectClose()
     {
@@ -200,7 +200,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers go\DB\DB::create
+     * covers go\DB\DB::create
      */
     public function testNotLazyConnect()
     {
@@ -214,7 +214,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::query
+     * covers ::query
      */
     public function testQuery()
     {
@@ -255,7 +255,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::plainQuery
+     * covers ::plainQuery
      */
     public function testPlainQuery()
     {
@@ -275,7 +275,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__invoke
+     * covers ::__invoke
      */
     public function testInvoke()
     {
@@ -296,9 +296,9 @@ final class DBTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers ::setPrefix
-     * @covers ::getPrefix
-     * @covers ::makeQuery
+     * covers ::setPrefix
+     * covers ::getPrefix
+     * covers ::makeQuery
      */
     public function testPrefix()
     {
@@ -324,10 +324,10 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::setDebug
-     * @covers ::getDebug
-     * @covers ::disableDebug
-     * @covers ::query
+     * covers ::setDebug
+     * covers ::getDebug
+     * covers ::disableDebug
+     * covers ::query
      */
     public function testDebug()
     {
@@ -353,7 +353,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getImplementationConnection
+     * covers ::getImplementationConnection
      */
     public function testGetImplementationConnection()
     {
@@ -368,7 +368,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__clone
+     * covers ::__clone
      */
     public function testClone()
     {
@@ -419,7 +419,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__destruct
+     * covers ::__destruct
      */
     public function testDestruct()
     {

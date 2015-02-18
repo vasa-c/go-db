@@ -9,13 +9,13 @@ namespace go\Tests\DB\Helpers;
 use go\DB\Helpers\Connector;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Connector
+ * coversDefaultClass go\DB\Helpers\Connector
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class ConnectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::__construct
+     * covers ::__construct
      */
     public function testConstruct()
     {
@@ -27,7 +27,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
+     * covers ::__construct
      * @expectedException \go\DB\Exceptions\ConfigConnect
      */
     public function testConstructInvalidConfig()
@@ -39,7 +39,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::connect
+     * covers ::connect
      */
     public function testConnect()
     {
@@ -58,7 +58,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::connect
+     * covers ::connect
      * @expectedException \go\DB\Exceptions\Connect
      */
     public function testConnectErrorConfig()
@@ -71,8 +71,8 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::close
-     * @covers ::isConnected
+     * covers ::close
+     * covers ::isConnected
      */
     public function testClose()
     {
@@ -108,13 +108,13 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::connect
-     * @covers ::close
-     * @covers ::isConnected
-     * @covers ::getCountConnections
-     * @covers ::addLink
-     * @covers ::removeLink
+     * covers ::__construct
+     * covers ::connect
+     * covers ::close
+     * covers ::isConnected
+     * covers ::getCountConnections
+     * covers ::addLink
+     * covers ::removeLink
      */
     public function testShare()
     {
@@ -145,7 +145,7 @@ class ConnectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__destruct
+     * covers ::__destruct
      */
     public function testDestructor()
     {

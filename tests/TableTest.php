@@ -9,7 +9,7 @@ namespace go\Tests\DB;
 use go\DB\DB;
 
 /**
- * @coversDefaultClass go\DB\Table
+ * coversDefaultClass go\DB\Table
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class TableTest extends \PHPUnit_Framework_TestCase
@@ -73,7 +73,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\DB\DB::getTable
+     * covers \go\DB\DB::getTable
      */
     public function testCreate()
     {
@@ -83,7 +83,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getTableName
+     * covers ::getTableName
      */
     public function testGetTableName()
     {
@@ -93,7 +93,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getDB
+     * covers ::getDB
      */
     public function testGetDB()
     {
@@ -102,7 +102,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getCount
+     * covers ::getCount
      */
     public function testGetCount()
     {
@@ -117,7 +117,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::insert
+     * covers ::insert
      */
     public function testInsert()
     {
@@ -131,7 +131,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers ::multiInsert
+     * covers ::multiInsert
      */
     public function testMultiInsert()
     {
@@ -157,8 +157,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::replace
-     * @covers ::multiReplace
+     * covers ::replace
+     * covers ::multiReplace
      */
     public function testMultiReplace()
     {
@@ -188,7 +188,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::update
+     * covers ::update
      */
     public function testUpdate()
     {
@@ -207,7 +207,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::delete
+     * covers ::delete
      */
     public function testDelete()
     {
@@ -221,7 +221,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::select
+     * covers ::select
      */
     public function testSelect()
     {
@@ -289,7 +289,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getMap
+     * covers ::getMap
      */
     public function testGetMap()
     {

@@ -10,7 +10,7 @@ use go\DB\Helpers\Fetchers\Cursor as Fetcher;
 use go\DB\Helpers\Connector;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Fetchers\Cursor
+ * coversDefaultClass go\DB\Helpers\Fetchers\Cursor
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class CursorTest extends \PHPUnit_Framework_TestCase

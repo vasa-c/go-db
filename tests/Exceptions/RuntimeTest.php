@@ -10,7 +10,7 @@ use go\DB\DB;
 use go\DB\Exceptions\Connect;
 
 /**
- * @coversDefaultClass go\DB\Exceptions\Runtime
+ * coversDefaultClass go\DB\Exceptions\Runtime
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class RuntimeTest extends \PHPUnit_Framework_TestCase

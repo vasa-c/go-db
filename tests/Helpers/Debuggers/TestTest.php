@@ -9,16 +9,16 @@ namespace go\Tests\DB\Helpers\Debuggers;
 use go\DB\Helpers\Debuggers\Test;
 
 /**
- * @coversDefaultClass go\DB\Helpers\Debuggers\Test
+ * coversDefaultClass go\DB\Helpers\Debuggers\Test
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class TestTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::__invoke
-     * @covers ::getLastQuery
-     * @covers ::getLastDuration
-     * @covers ::getLastInfo
+     * covers ::__invoke
+     * covers ::getLastQuery
+     * covers ::getLastDuration
+     * covers ::getLastInfo
      */
     public function testTest()
     {

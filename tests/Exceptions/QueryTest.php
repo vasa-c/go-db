@@ -9,16 +9,16 @@ namespace go\Tests\DB\Exceptions;
 use go\DB\Exceptions\Query;
 
 /**
- * @coversDefaultClass go\DB\Exceptions\Query
+ * coversDefaultClass go\DB\Exceptions\Query
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 final class QueryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers ::__construct
-     * @covers ::getQuery
-     * @covers ::getError
-     * @covers ::getErrorCode
+     * covers ::__construct
+     * covers ::getQuery
+     * covers ::getError
+     * covers ::getErrorCode
      */
     public function testGetMethods()
     {
