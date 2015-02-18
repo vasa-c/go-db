@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## dev-master
+## 2.2.3 (18.02.2015)
+
+* Some refactoring and phpdoc fixes
 
 ## 2.2.2 (01.11.2014)
 
