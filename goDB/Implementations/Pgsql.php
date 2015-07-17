@@ -34,7 +34,7 @@ final class Pgsql extends Base
 
             return false;
         }
-
+        pg_set_error_verbosity($connection, PGSQL_ERRORS_VERBOSE);
         return $connection;
     }
 
@@ -51,7 +51,7 @@ final class Pgsql extends Base
      */
     public function query($connection, $query)
     {
-        return pg_query($connection, $query);
+        return @pg_query($connection, $query);
     }
 
     /**
@@ -80,7 +80,7 @@ final class Pgsql extends Base
      */
     public function getErrorInfo($connection, $cursor = null)
     {
-        return pg_errormessage($connection);
+        return pg_last_error($connection);
     }
 
     /**
@@ -88,6 +88,10 @@ final class Pgsql extends Base
      */
     public function getErrorCode($connection, $cursor = null)
     {
+        $error = pg_last_error($connection);
+        if (preg_match("#\A[^:]+\:\s+([0-9A-Z]{5})\:#i", $error, $m)){
+            return $m[1];
+        }
         return null;
     }
 

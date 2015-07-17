@@ -62,5 +62,14 @@ class PgsqlTest extends Base
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
+        
+        try {
+            $db->query("SELECT 'abc'::int");
+            $this->fail();
+        } catch (\go\DB\Exceptions\Query $q){
+            $this->assertNotNull($q->getError());
+            $this->assertEquals("22P02", $q->getErrorCode());
+        }
+       
     }
 }
