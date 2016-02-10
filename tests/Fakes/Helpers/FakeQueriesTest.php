@@ -23,12 +23,12 @@ class FakesQueriesTest extends \PHPUnit_Framework_TestCase
     public function testWhere($where, $expected)
     {
         $data = [
-            ['id' => 2, 'name' => 'One', 'age' => 4],
-            ['id' => 5, 'name' => 'Five', 'age' => 10],
-            ['id' => 12, 'name' => 'Twelve', 'age' => 24],
-            ['id' => 7, 'name' => 'Seven', 'age' => 14],
-            ['id' => 20, 'name' => null, 'age' => 40],
-            ['id' => 6, 'name' => 'Six', 'age' => 12],
+            2 => ['id' => 2, 'name' => 'One', 'age' => 4],
+            5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
+            12 => ['id' => 12, 'name' => 'Twelve', 'age' => 24],
+            7 => ['id' => 7, 'name' => 'Seven', 'age' => 14],
+            20 => ['id' => 20, 'name' => null, 'age' => 40],
+            6 => ['id' => 6, 'name' => 'Six', 'age' => 12],
         ];
         $actual = FakeQueries::where($data, $where);
         $this->assertSame($actual, $expected);
@@ -43,23 +43,23 @@ class FakesQueriesTest extends \PHPUnit_Framework_TestCase
             [
                 true,
                 [
-                    ['id' => 2, 'name' => 'One', 'age' => 4],
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
-                    ['id' => 12, 'name' => 'Twelve', 'age' => 24],
-                    ['id' => 7, 'name' => 'Seven', 'age' => 14],
-                    ['id' => 20, 'name' => null, 'age' => 40],
-                    ['id' => 6, 'name' => 'Six', 'age' => 12],
+                    2 => ['id' => 2, 'name' => 'One', 'age' => 4],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    12 => ['id' => 12, 'name' => 'Twelve', 'age' => 24],
+                    7 => ['id' => 7, 'name' => 'Seven', 'age' => 14],
+                    20 => ['id' => 20, 'name' => null, 'age' => 40],
+                    6 => ['id' => 6, 'name' => 'Six', 'age' => 12],
                 ],
             ],
             [
                 [],
                 [
-                    ['id' => 2, 'name' => 'One', 'age' => 4],
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
-                    ['id' => 12, 'name' => 'Twelve', 'age' => 24],
-                    ['id' => 7, 'name' => 'Seven', 'age' => 14],
-                    ['id' => 20, 'name' => null, 'age' => 40],
-                    ['id' => 6, 'name' => 'Six', 'age' => 12],
+                    2 => ['id' => 2, 'name' => 'One', 'age' => 4],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    12 => ['id' => 12, 'name' => 'Twelve', 'age' => 24],
+                    7 => ['id' => 7, 'name' => 'Seven', 'age' => 14],
+                    20 => ['id' => 20, 'name' => null, 'age' => 40],
+                    6 => ['id' => 6, 'name' => 'Six', 'age' => 12],
                 ],
             ],
             [
@@ -70,7 +70,7 @@ class FakesQueriesTest extends \PHPUnit_Framework_TestCase
             [
                 ['id' => 5],
                 [
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
                 ],
             ],
             [
@@ -81,14 +81,14 @@ class FakesQueriesTest extends \PHPUnit_Framework_TestCase
             [
                 ['id' => [5, 9, 2]],
                 [
-                    ['id' => 2, 'name' => 'One', 'age' => 4],
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    2 => ['id' => 2, 'name' => 'One', 'age' => 4],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
                 ],
             ],
             [
                 ['id' => [5, 9, 2], 'age' => 4],
                 [
-                    ['id' => 2, 'name' => 'One', 'age' => 4],
+                    2 => ['id' => 2, 'name' => 'One', 'age' => 4],
                 ],
             ],
             [
@@ -99,20 +99,20 @@ class FakesQueriesTest extends \PHPUnit_Framework_TestCase
             [
                 ['id' => [5, 9, 2], 'age' => [10, 18, 5]],
                 [
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
                 ],
             ],
             [
                 ['id' => [20, 5, 7], 'name' => null],
                 [
-                    ['id' => 20, 'name' => null, 'age' => 40],
+                    20 => ['id' => 20, 'name' => null, 'age' => 40],
                 ],
             ],
             [
                 ['id' => [20, 5, 7], 'name' => true],
                 [
-                    ['id' => 5, 'name' => 'Five', 'age' => 10],
-                    ['id' => 7, 'name' => 'Seven', 'age' => 14],
+                    5 => ['id' => 5, 'name' => 'Five', 'age' => 10],
+                    7 => ['id' => 7, 'name' => 'Seven', 'age' => 14],
                 ],
             ],
         ];

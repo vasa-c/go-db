@@ -24,9 +24,9 @@ class FakeQueries
             return $data;
         }
         $result = [];
-        foreach ($data as $row) {
+        foreach ($data as $k => $row) {
             if (self::rowWhere($row, $where)) {
-                $result[] = $row;
+                $result[$k] = $row;
             }
         }
         return $result;
