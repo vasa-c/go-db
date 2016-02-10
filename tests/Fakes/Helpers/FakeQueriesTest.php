@@ -9,7 +9,7 @@ namespace go\Tests\DB\Fakes\Helpers;
 use go\DB\Fakes\Helpers\FakeQueries;
 
 /**
- * coversDefaultClass go\DB\Fakes\Helpers\FaleQueries
+ * coversDefaultClass go\DB\Fakes\Helpers\FakeQueries
  * @author Oleg Grigoriev <go.vasac@gmail.com>
  */
 class FakesQueriesTest extends \PHPUnit_Framework_TestCase

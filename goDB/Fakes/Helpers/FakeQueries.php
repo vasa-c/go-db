@@ -17,7 +17,7 @@ class FakeQueries
      */
     public static function where($data, $where)
     {
-        if (is_scalar($where)) {
+        if (!is_array($where)) {
             if ($where === false) {
                 return array();
             }

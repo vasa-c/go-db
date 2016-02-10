@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.4 (10.02.2016)
+
+* FakeTable for tests
+
 ## 2.2.3 (18.02.2015)
 
 * Some refactoring and phpdoc fixes
