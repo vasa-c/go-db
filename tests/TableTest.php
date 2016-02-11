@@ -341,4 +341,16 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $fake->getData());
         $this->assertSame(2, $fake->getCount(true, ['a' => [1, 5, 11]]));
     }
+
+    public function testFakeCache()
+    {
+        $data = [
+            ['a' => 1, 'b' => 2],
+            ['a' => 3, 'b' => 4],
+        ];
+        $fake = new FakeTable($data, null, 'b', 4);
+        $db = $this->createDB(false);
+        $table = $db->getTable($fake);
+        $this->assertEquals($data, $fake->getData());
+    }
 }
