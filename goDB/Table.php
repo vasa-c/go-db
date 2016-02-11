@@ -234,7 +234,11 @@ class Table
             $cols = true;
         }
         if ($this->fake) {
-            return $this->fake->select($cols, $where, $order, $limit);
+            $result = $this->fake->select($cols, $where, $order, $limit);
+            if ($this->map) {
+                return new ArrFetcher($this->map->assoc($result));
+            }
+            return $result;
         }
         $pattern = 'SELECT ?cols FROM ?t WHERE ?w';
         $data = array($cols, $this->name, $where);

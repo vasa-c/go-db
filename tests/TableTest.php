@@ -322,12 +322,12 @@ class TableTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertEquals($expected, $fake->getData());
         $this->assertEquals(25, $fake->getLastIncrement());
-        $actual = $table->select(['b', 'one'], null, ['b' => false])->vars();
+        $actual = $table->select(['b', 'one'], null, ['b' => false])->assoc();
         $expected = [
-            25 => 12,
-            5 => 11,
-            4 => 3,
-            2 => 1,
+            ['b' => 25, 'one' => 12],
+            ['b' => 5, 'one' => 11],
+            ['b' => 4, 'one' => 3],
+            ['b' => 2, 'one' => 1],
         ];
         $this->assertSame($expected, $actual);
         $table->replace(['b' => 4, 'a' => 5]);
