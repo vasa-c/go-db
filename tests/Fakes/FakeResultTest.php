@@ -91,11 +91,6 @@ class FakesResultTest extends \PHPUnit_Framework_TestCase
                 [1, 3],
             ],
             [
-                'col',
-                'b',
-                [2, 4],
-            ],
-            [
                 'vars',
                 null,
                 [
@@ -140,8 +135,11 @@ class FakesResultTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'fetch',
-                'col:b',
-                [2, 4],
+                'assoc:b',
+                [
+                    2 => ['a' => 1, 'b' => 2],
+                    4 => ['a' => 3, 'b' => 4],
+                ]
             ],
         ];
     }

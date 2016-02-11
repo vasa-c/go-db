@@ -574,7 +574,7 @@ abstract class DB
     /**
      * @var array
      */
-    private $cacheTables = array();
+    protected $cacheTables = array();
 }
 
 /**

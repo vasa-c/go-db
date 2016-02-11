@@ -17,7 +17,7 @@ use go\DB\Exceptions\UnknownFetch;
 abstract class Base implements Result
 {
     /**
-     * Desctuctor
+     * Destructor
      */
     public function __destruct()
     {

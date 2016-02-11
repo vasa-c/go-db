@@ -2,6 +2,7 @@
 
 ## 2.2.5 (11.02.2016)
 
+* FakeDB
 * FakeTable transactions
 * Fix DB::getTable() for FakeTable
 

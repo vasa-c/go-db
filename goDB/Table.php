@@ -321,7 +321,7 @@ class Table
             $where = $this->map->where($where);
         }
         if ($this->fake) {
-            return $this->getCount($col, $where);
+            return $this->fake->getCount($col, $where);
         }
         if ($col !== null) {
             $p = '?c';
