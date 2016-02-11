@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.5 (11.02.2016)
+
+* FakeTable transactions
+
 ## 2.2.4 (10.02.2016)
 
 * FakeTable for tests

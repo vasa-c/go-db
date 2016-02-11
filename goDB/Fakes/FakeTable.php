@@ -174,6 +174,39 @@ class FakeTable implements IFakeTable
     }
 
     /**
+     * Begin transaction
+     */
+    public function begin()
+    {
+        $this->transactions[] = array(
+            'data' => $this->data,
+            'lastAI' => $this->lastAI,
+        );
+    }
+
+    /**
+     * Commit transaction
+     */
+    public function commit()
+    {
+        if (!empty($this->transactions)) {
+            array_pop($this->transactions);
+        }
+    }
+
+    /**
+     * Rollback transaction
+     */
+    public function rollback()
+    {
+        if (!empty($this->transactions)) {
+            $t = array_pop($this->transactions);
+            $this->data = $t['data'];
+            $this->lastAI = $t['lastAI'];
+        }
+    }
+
+    /**
      * @param string $query
      * @throws \go\DB\Exceptions\Query
      */
@@ -246,4 +279,9 @@ class FakeTable implements IFakeTable
      * @var int
      */
     private $lastAI;
+
+    /**
+     * @var array
+     */
+    private $transactions = array();
 }

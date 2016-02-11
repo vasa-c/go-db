@@ -262,4 +262,56 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(6, $table->getCount(null, ['c' => 3]));
         $this->assertSame(5, $table->getCount('b', ['c' => 3]));
     }
+
+    /**
+     * covers ::begin
+     * covers ::commit
+     * covers ::rollback
+     */
+    public function testTransaction()
+    {
+        $data = [
+            ['id' => 1, 't' => 'a'],
+            ['id' => 2, 't' => 'b'],
+        ];
+        $table = new FakeTable($data, null, 'id', 2);
+        $table->begin();
+        $table->insert(['t' => 'c']);
+        $table->insert(['t' => 'd']);
+        $table->begin();
+        $table->insert(['t' => 'e']);
+        $table->insert(['t' => 'f']);
+        $table->delete(['t' => 'b']);
+        $expected = [
+            ['id' => 1, 't' => 'a'],
+            ['id' => 3, 't' => 'c'],
+            ['id' => 4, 't' => 'd'],
+            ['id' => 5, 't' => 'e'],
+            ['id' => 6, 't' => 'f'],
+        ];
+        $this->assertEquals($expected, $table->getData());
+        $table->rollback();
+        $expected = [
+            ['id' => 1, 't' => 'a'],
+            ['id' => 2, 't' => 'b'],
+            ['id' => 3, 't' => 'c'],
+            ['id' => 4, 't' => 'd'],
+        ];
+        $this->assertEquals($expected, $table->getData());
+        $table->begin();
+        $table->insert(['t' => 'g']);
+        $table->insert(['t' => 'h']);
+        $table->commit();
+        $table->delete(['t' => 'c']);
+        $table->commit();
+        $table->rollback();
+        $expected = [
+            ['id' => 1, 't' => 'a'],
+            ['id' => 2, 't' => 'b'],
+            ['id' => 4, 't' => 'd'],
+            ['id' => 5, 't' => 'g'],
+            ['id' => 6, 't' => 'h'],
+        ];
+        $this->assertEquals($expected, $table->getData());
+    }
 }
