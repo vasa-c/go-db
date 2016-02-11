@@ -43,6 +43,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertEquals($expected, $table->getData());
         $this->assertSame(10, $table->getLastIncrement());
+        $this->assertSame(['INSERT 6', 'INSERT 7', 'INSERT 9', 'INSERT 10'], $table->getLogs());
     }
 
     /**
@@ -72,6 +73,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['id' => 7, 'name' => 'Seven', 'age' => 30],
         ];
         $this->assertEquals($expected, $table->getData());
+        $this->assertSame(['INSERT MULTI 2'], $table->getLogs());
     }
 
     /**
@@ -98,6 +100,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 5, 'b' => 7, 'c' => 25, 'd' => 11],
         ];
         $this->assertEquals($expected, $table->getData());
+        $this->assertSame(['REPLACE UPDATE', 'REPLACE INSERT'], $table->getLogs());
     }
 
     /**
@@ -127,6 +130,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 5, 'b' => 7, 'c' => 25, 'd' => 11],
         ];
         $this->assertEquals($expected, $table->getData());
+        $this->assertSame(['REPLACE MULTI 2'], $table->getLogs());
     }
 
     /**
@@ -150,6 +154,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 4, 'b' => 8, 'c' => 1],
         ];
         $this->assertEquals($expected, $table->getData());
+        $this->assertSame(['UPDATE 2', 'UPDATE 0'], $table->getLogs());
     }
 
     public function testDuplicate()
@@ -195,6 +200,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 7, 'b' => 21],
         ];
         $this->assertEquals($expected, $cursor->cursor());
+        $this->assertSame(['SELECT 4'], $table->getLogs());
     }
 
     /**
@@ -221,6 +227,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 8, 'b' => 25, 'c' => 7],
         ];
         $this->assertEquals($expected, $table->getData());
+        $this->assertSame(['DELETE 6'], $table->getLogs());
     }
 
     /**
@@ -238,6 +245,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
         $expected = [];
         $this->assertEquals($expected, $table->getData());
         $this->assertSame(0, $table->getLastIncrement());
+        $this->assertSame(['TRUNCATE'], $table->getLogs());
     }
 
     /**
@@ -261,6 +269,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(6, $table->getCount('b', null));
         $this->assertSame(6, $table->getCount(null, ['c' => 3]));
         $this->assertSame(5, $table->getCount('b', ['c' => 3]));
+        $this->assertSame(['COUNT 9', 'COUNT 6', 'COUNT 6', 'COUNT 5'], $table->getLogs());
     }
 
     /**
@@ -313,5 +322,23 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['id' => 6, 't' => 'h'],
         ];
         $this->assertEquals($expected, $table->getData());
+        $logs = [
+            'BEGIN',
+            'INSERT 3',
+            'INSERT 4',
+            'BEGIN',
+            'INSERT 5',
+            'INSERT 6',
+            'DELETE 1',
+            'ROLLBACK',
+            'BEGIN',
+            'INSERT 5',
+            'INSERT 6',
+            'COMMIT',
+            'DELETE 1',
+            'COMMIT',
+            'ROLLBACK',
+        ];
+        $this->assertSame($logs, $table->getLogs());
     }
 }

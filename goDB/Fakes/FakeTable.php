@@ -47,6 +47,7 @@ class FakeTable implements IFakeTable
         }
         $this->data[] = $set;
         $this->checkPK('INSERT INTO');
+        $this->log('INSERT'.($this->lastAI ? (' '.$this->lastAI) : ''));
         return $this->lastAI;
     }
 
@@ -55,9 +56,12 @@ class FakeTable implements IFakeTable
      */
     public function multiInsert(array $sets)
     {
+        $logs = $this->logs;
         foreach ($sets as $set) {
             $this->insert($set);
         }
+        $this->logs = $logs;
+        $this->log('INSERT MULTI '.count($sets));
     }
 
     /**
@@ -68,9 +72,14 @@ class FakeTable implements IFakeTable
         $set = array_replace($this->defaults, $set);
         $cur = $this->findByPK($set);
         if ($cur === null) {
-            return $this->insert($set);
+            $logs = $this->logs;
+            $this->insert($set);
+            $this->logs = $logs;
+            $this->log('REPLACE INSERT');
+            return;
         }
         $this->data[$cur] = $set;
+        $this->log('REPLACE UPDATE');
     }
 
     /**
@@ -78,9 +87,12 @@ class FakeTable implements IFakeTable
      */
     public function multiReplace(array $sets)
     {
+        $logs = $this->logs;
         foreach ($sets as $set) {
             $this->replace($set);
         }
+        $this->logs = $logs;
+        $this->log('REPLACE MULTI '.count($sets));
     }
 
     /**
@@ -97,6 +109,7 @@ class FakeTable implements IFakeTable
                 $ar++;
             }
         }
+        $this->log('UPDATE '.$ar);
         return $ar;
     }
 
@@ -109,7 +122,9 @@ class FakeTable implements IFakeTable
         $rows = FakeQueries::order($rows, $order);
         $rows = FakeQueries::cols($rows, $cols);
         $rows = FakeQueries::limit($rows, $limit);
-        return new FakeResult($rows);
+        $result = new FakeResult($rows);
+        $this->log('SELECT '.count($rows));
+        return $result;
     }
 
     /**
@@ -125,7 +140,9 @@ class FakeTable implements IFakeTable
             unset($this->data[$k]);
         }
         $this->data = array_values($this->data);
-        return count($del);
+        $ar = count($del);
+        $this->log('DELETE '.$ar);
+        return $ar;
     }
 
     /**
@@ -137,6 +154,7 @@ class FakeTable implements IFakeTable
         if ($this->lastAI !== null) {
             $this->lastAI = 0;
         }
+        $this->log('TRUNCATE');
     }
 
     /**
@@ -146,14 +164,16 @@ class FakeTable implements IFakeTable
     {
         $rows = FakeQueries::where($this->data, $where);
         if (($col === null) || ($col === true)) {
-            return count($rows);
-        }
-        $count = 0;
-        foreach ($rows as $r) {
-            if ($r[$col] !== null) {
-                $count += 1;
+            $count = count($rows);
+        } else {
+            $count = 0;
+            foreach ($rows as $r) {
+                if ($r[$col] !== null) {
+                    $count += 1;
+                }
             }
         }
+        $this->log('COUNT '.$count);
         return $count;
     }
 
@@ -182,6 +202,7 @@ class FakeTable implements IFakeTable
             'data' => $this->data,
             'lastAI' => $this->lastAI,
         );
+        $this->log('BEGIN');
     }
 
     /**
@@ -192,6 +213,7 @@ class FakeTable implements IFakeTable
         if (!empty($this->transactions)) {
             array_pop($this->transactions);
         }
+        $this->log('COMMIT');
     }
 
     /**
@@ -204,6 +226,28 @@ class FakeTable implements IFakeTable
             $this->data = $t['data'];
             $this->lastAI = $t['lastAI'];
         }
+        $this->log('ROLLBACK');
+    }
+
+    /**
+     * @param string $message
+     */
+    public function log($message)
+    {
+        $this->logs[] = $message;
+    }
+
+    public function resetLogs()
+    {
+        $this->logs = array();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLogs()
+    {
+        return $this->logs;
     }
 
     /**
@@ -284,4 +328,9 @@ class FakeTable implements IFakeTable
      * @var array
      */
     private $transactions = array();
+
+    /**
+     * @var string[]
+     */
+    private $logs = array();
 }

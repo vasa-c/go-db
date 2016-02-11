@@ -4,7 +4,8 @@
 
 * FakeDB
 * FakeTable transactions
-* Fix DB::getTable() for FakeTable
+* FakeTable log
+* Some fixes
 
 ## 2.2.4 (10.02.2016)
 
