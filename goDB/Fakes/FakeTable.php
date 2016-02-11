@@ -6,6 +6,7 @@
 namespace go\DB\Fakes;
 
 use go\DB\Fakes\Helpers\FakeQueries;
+use go\DB\Exceptions\Query;
 
 /**
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -45,7 +46,7 @@ class FakeTable implements IFakeTable
             }
         }
         $this->data[] = $set;
-        $this->checkPK();
+        $this->checkPK('INSERT INTO');
         return $this->lastAI;
     }
 
@@ -173,26 +174,28 @@ class FakeTable implements IFakeTable
     }
 
     /**
-     * @throws \LogicException
+     * @param string $query
+     * @throws \go\DB\Exceptions\Query
      */
-    private function checkPK()
+    private function checkPK($query = null)
     {
         $pk = $this->pk;
         if (!$pk) {
             return;
         }
         if (!is_array($pk)) {
-            $pk = [$pk];
+            $pk = array($pk);
         }
-        $keys = [];
+        $keys = array();
         foreach ($this->data as $row) {
-            $key = [];
+            $key = array();
             foreach ($pk as $k) {
                 $key[] = $row[$k];
             }
             $s = serialize($key);
             if (isset($keys[$s])) {
-                throw new \LogicException('FakeTable duplicate PK '.implode('-', $key));
+                $message = 'FakeTable duplicate PK '.implode('-', $key);
+                throw new Query($query, $message, 1022);
             }
             $keys[$s] = true;
         }

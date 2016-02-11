@@ -165,7 +165,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             'd' => 11,
         ];
         $table = new FakeTable($data, $defaults, ['a', 'b']);
-        $this->setExpectedException('LogicException');
+        $this->setExpectedException('go\DB\Exceptions\Query');
         $table->insert(['a' => 5, 'b' => 6, 'c' => 7]);
     }
 
