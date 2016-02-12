@@ -28,7 +28,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             'name' => null,
             'age' => 18,
         ];
-        $table = new FakeTable($data, $defaults, 'id', 5);
+        $table = new FakeTable($data, $defaults, 'id', true);
         $this->assertSame(6, $table->insert(['name' => 'Six', 'age' => 40]));
         $this->assertSame(7, $table->insert(['name' => 'Seven']));
         $this->assertSame(9, $table->insert(['name' => 'Nine', 'id' => 9]));
@@ -60,7 +60,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             'name' => null,
             'age' => 18,
         ];
-        $table = new FakeTable($data, $defaults, 'id', 5);
+        $table = new FakeTable($data, $defaults, 'id', true);
         $sets = [
             ['name' => 'Six'],
             ['name' => 'Seven', 'age' => 30],
@@ -240,7 +240,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['a' => 2, 'b' => 12, 'c' => 3],
             ['a' => 3, 'b' => 22, 'c' => 3],
         ];
-        $table = new FakeTable($data, null, 'a', 3);
+        $table = new FakeTable($data, null, 'a', true);
         $table->truncate();
         $expected = [];
         $this->assertEquals($expected, $table->getData());
@@ -283,7 +283,7 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
             ['id' => 1, 't' => 'a'],
             ['id' => 2, 't' => 'b'],
         ];
-        $table = new FakeTable($data, null, 'id', 2);
+        $table = new FakeTable($data, null, 'id', true);
         $table->begin();
         $table->insert(['t' => 'c']);
         $table->insert(['t' => 'd']);

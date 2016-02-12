@@ -28,7 +28,7 @@ class FakeTable implements IFakeTable
         }
         $this->defaults = $defaults;
         $this->pk = $pk;
-        $this->lastAI = $lastAI;
+        $this->lastAI = $this->defLastAI($lastAI);
     }
 
     /**
@@ -302,6 +302,22 @@ class FakeTable implements IFakeTable
         }
         $keys = array_keys($rows);
         return $keys[0];
+    }
+
+    /**
+     * @param mixed $lastAI
+     * @return mixed
+     */
+    private function defLastAI($lastAI)
+    {
+        if ($lastAI !== true) {
+            return $lastAI;
+        }
+        $lastAI = 0;
+        foreach ($this->data as $row) {
+            $lastAI = max($lastAI, $row[$this->pk]);
+        }
+        return $lastAI;
     }
 
     /**

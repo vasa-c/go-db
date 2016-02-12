@@ -19,7 +19,7 @@ class FakesDBTest extends \PHPUnit_Framework_TestCase
         'tables' => [
             'one' => [
                 'pk' => 'id',
-                'lastAI' => 3,
+                'lastAI' => true,
                 'defaults' => [
                     'enabled' => 1,
                 ],
