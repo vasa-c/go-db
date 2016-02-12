@@ -42,12 +42,6 @@
  * [sqlite](https://github.com/vasa-c/go-db/wiki/Adapters_sqlite)
  * [pgsql](https://github.com/vasa-c/go-db/wiki/Adapters_pgsql)
 
-### Разработка
-
- * [Список версий](https://github.com/vasa-c/go-db/wiki/versions)
- * [Текущий CHANGELOG](https://github.com/vasa-c/go-db/wiki/changelog_current)
- * [TODO](https://github.com/vasa-c/go-db/wiki/todo)
-
 ## Отдельное спасибо
 
  * Dallone aka Алексей Полев, за адаптер PgSQL
