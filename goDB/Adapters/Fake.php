@@ -20,7 +20,11 @@ final class Fake extends DB
      */
     public function getTable($tableName, array $map = null)
     {
-        $fake = $this->getImplementationConnection()->getTable($tableName);
+        if (is_object($tableName)) {
+            $fake = $tableName;
+        } else {
+            $fake = $this->getImplementationConnection()->getTable($tableName);
+        }
         return new Table($this, $fake, $map);
     }
 }

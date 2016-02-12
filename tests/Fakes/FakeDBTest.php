@@ -7,6 +7,7 @@
 namespace go\Tests\DB\Fakes;
 
 use go\DB\DB;
+use go\DB\Fakes\FakeTable;
 
 /**
  * @author Oleg Grigoriev <go.vasac@gmail.com>
@@ -58,5 +59,13 @@ class FakesDBTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(4, $imp['one']->getLastIncrement());
         $this->setExpectedException('go\DB\Exceptions\Query');
         $db->query('SELECT * FROM `one`');
+    }
+
+    public function testGetTableFake()
+    {
+        $fakeTable = new FakeTable([['x' => 1]]);
+        $db = DB::create(['tables' => []], 'fake');
+        $table = $db->getTable($fakeTable);
+        $this->assertSame([['x' => 1]], $table->select()->assoc());
     }
 }
