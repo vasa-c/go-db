@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.6 (12.02.2016)
+
+* FakeTable: some fixes and refactoring.
+
 ## 2.2.5 (11.02.2016)
 
 * FakeDB
