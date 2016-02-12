@@ -49,7 +49,7 @@ class FakeQueries
         foreach ($data as $row) {
             $r = array();
             foreach ($cols as $k) {
-                $r[$k] = $row[$k];
+                $r[$k] = isset($row[$k]) ? $row[$k] : null;
             }
             $result[] = $r;
         }

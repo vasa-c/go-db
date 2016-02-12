@@ -341,4 +341,16 @@ class FakeTableTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertSame($logs, $table->getLogs());
     }
+
+    public function testNullCols()
+    {
+        $data = [
+            ['id' => 1, 't' => 'a'],
+            ['id' => 2, 't' => 'b'],
+        ];
+        $table = new FakeTable($data, null, 'id', true);
+        $actual = $table->select(['id', 't', 'x'], ['t' => 'b'], null, null)->row();
+        $expected = ['id' => 2, 't' => 'b', 'x' => null];
+        $this->assertSame($expected, $actual);
+    }
 }
