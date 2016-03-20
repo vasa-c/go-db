@@ -30,6 +30,7 @@
  * [Клонирование объекта базы](https://github.com/vasa-c/go-db/wiki/clone)
  * [Надстройка над таблицами](https://github.com/vasa-c/go-db/wiki/Table)
  * [Формат WHERE](https://github.com/vasa-c/go-db/wiki/where)
+ * [Формат COLS](https://github.com/vasa-c/go-db/wiki/cols)
  * [Unit-тесты](https://github.com/vasa-c/go-db/wiki/tests)
  * [Написание адаптеров](https://github.com/vasa-c/go-db/wiki/Adapters)
  * [Расширение goDB](https://github.com/vasa-c/go-db/wiki/Extend)

@@ -8,6 +8,7 @@ namespace go\DB\Helpers;
 use go\DB\Exceptions\DataMuch;
 use go\DB\Exceptions\DataNotEnough;
 use go\DB\Exceptions\DataNamed;
+use go\DB\Exceptions\DataInvalidFormat;
 use go\DB\Exceptions\UnknownPlaceholder;
 use go\DB\Exceptions\MixedPlaceholder;
 
@@ -259,8 +260,37 @@ class Templater
     private function replacementC($value, array $modifiers)
     {
         if (is_array($value)) {
-            $chain = array($this->prefix.$value[0], $value[1]);
-            $result = $this->implementation->reprChainFields($this->connection, $chain);
+            if (isset($value[0])) {
+                $value = array(
+                    'table' => $value[0],
+                    'col' => $value[1],
+                );
+            }
+            if (isset($value['col'])) {
+                $chain = [$value['col']];
+                if (isset($value['table'])) {
+                    $chain[] = $this->prefix.$value['table'];
+                    if (isset($value['db'])) {
+                        $chain[] = $value['db'];
+                    }
+                }
+                $chain = array_reverse($chain);
+                $result = $this->implementation->reprChainFields($this->connection, $chain);
+            } elseif (isset($value['value'])) {
+                if (is_int($value['value'])) {
+                    $result = $this->implementation->reprInt($this->connection, $value['value']);
+                } else {
+                    $result = $this->implementation->reprString($this->connection, $value['value']);
+                }
+            } else {
+                throw new DataInvalidFormat('col', 'required `col` or `value` field');
+            }
+            if (isset($value['func'])) {
+                $result = $value['func'].'('.$result.')';
+            }
+            if (isset($value['as'])) {
+                $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);
+            }
         } else {
             $result = $this->implementation->reprCol($this->connection, $value);
         }

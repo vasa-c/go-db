@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Dev
+
+* #44: Extended ?col & ?cols format
+
 ## 2.2.6 (12.02.2016)
 
 * FakeTable: some fixes and refactoring.
