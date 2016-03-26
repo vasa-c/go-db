@@ -66,10 +66,12 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         if ($params === null) {
             $params = $this->getConnectionParams();
         }
+        var_dump($params);
         if ($params === null) {
             $this->markTestSkipped();
         }
         if ($this->reqExt && (!extension_loaded($this->reqExt))) {
+            var_dump('Skip: '.$this->reqExt);
             $this->markTestSkipped();
         }
         $db = DB::create($params, $this->adapter);
