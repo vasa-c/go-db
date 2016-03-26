@@ -53,6 +53,7 @@ install:
   - cp tests/Real/params.travis.php tests/Real/params.php
   - mysql -e "create database IF NOT EXISTS test;" -uroot
   - psql -c 'create database travis_ci_test;' -U postgres
+  - php -m | grep sql
   # Generate the coveralls config (not to keep it in the repo)
   - >
     if [ "$CHECKS" = "yes" ]; then

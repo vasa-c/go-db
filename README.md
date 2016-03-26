@@ -2,6 +2,8 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/go/db.svg?style=flat-square)](https://packagist.org/packages/go/db)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3-8892BF.svg?style=flat-square)](https://php.net/)
+[![Build Status](https://img.shields.io/travis/vasa-c/db/master.svg?style=flat-square)](https://travis-ci.org/axypro/errors)
+[![Coverage Status](https://coveralls.io/repos/vasa-c/db/badge.svg?branch=master&service=github)](https://coveralls.io/github/vasa-c/db?branch=master)
 [![License](https://poser.pugx.org/go/db/license)](LICENSE)
 
 ![logo](http://img-fotki.yandex.ru/get/5801/go-ns.0/0_500ae_e4ea1806_orig.png)
