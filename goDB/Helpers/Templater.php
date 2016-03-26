@@ -288,7 +288,7 @@ class Templater
                 );
             }
             if (isset($value['col'])) {
-                $chain = [$value['col']];
+                $chain = array($value['col']);
                 if (isset($value['table'])) {
                     $chain[] = $this->prefix.$value['table'];
                     if (isset($value['db'])) {

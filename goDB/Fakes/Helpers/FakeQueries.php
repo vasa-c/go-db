@@ -23,7 +23,7 @@ class FakeQueries
             }
             return $data;
         }
-        $result = [];
+        $result = array();
         foreach ($data as $k => $row) {
             if (self::rowWhere($row, $where)) {
                 $result[$k] = $row;
@@ -67,7 +67,7 @@ class FakeQueries
             return $data;
         }
         if (!is_array($order)) {
-            $order = [$order => true];
+            $order = array($order => true);
         }
         $sort = new Sort($order);
         return $sort->run($data);
@@ -84,7 +84,7 @@ class FakeQueries
             return $data;
         }
         if (!is_array($limit)) {
-            $limit = [0, $limit];
+            $limit = array(0, $limit);
         }
         return array_slice($data, $limit[0], $limit[1]);
     }

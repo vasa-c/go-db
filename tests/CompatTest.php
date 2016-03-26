@@ -9,7 +9,6 @@ namespace go\Tests\DB;
 use go\DB\Compat;
 use go\DB\DB;
 
-
 /**
  * coversDefaultClass go\DB\Compat
  * @author Oleg Grigoriev <go.vasac@gmail.com>

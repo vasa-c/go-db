@@ -24,7 +24,7 @@ class Sort
      */
     public function run(array $data)
     {
-        usort($data, [$this, 'compare']);
+        usort($data, array($this, 'compare'));
         return $data;
     }
 
