@@ -446,7 +446,7 @@ class Templater
     private function replacementO($value, array $modifiers)
     {
         if (!is_array($value)) {
-            return $this->replacementC($value, $modifiers);
+            return $this->replacementC($value, $modifiers).' ASC';
         }
         $stats = array();
         foreach ($value as $k => $v) {

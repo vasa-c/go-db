@@ -242,17 +242,8 @@ class Table
         }
         $pattern = 'SELECT ?cols FROM ?t WHERE ?w';
         $data = array($cols, $this->name, $where);
-        if (is_array($order)) {
-            if (!empty($order)) {
-                $ords = array();
-                foreach ($order as $k => $v) {
-                    $ords[] = '?c '.($v ? 'ASC' : 'DESC');
-                    $data[] = $k;
-                }
-                $pattern .= ' ORDER BY '.implode(',', $ords);
-            }
-        } elseif ($order !== null) {
-            $pattern .= ' ORDER BY ?c ASC';
+        if ($order !== null) {
+            $pattern .= ' ORDER BY ?o';
             $data[] = $order;
         }
         if ($limit !== null) {

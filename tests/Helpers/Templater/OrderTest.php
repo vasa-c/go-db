@@ -21,7 +21,7 @@ final class OrderTest extends Base
             'single' => [
                 'ORDER BY ?o',
                 ['id'],
-                'ORDER BY `id`',
+                'ORDER BY `id` ASC',
             ],
             'list' => [
                 'ORDER BY ?order;',
