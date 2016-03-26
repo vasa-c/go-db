@@ -4,6 +4,8 @@
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3-8892BF.svg?style=flat-square)](https://php.net/)
 [![License](https://poser.pugx.org/go/db/license)](LICENSE)
 
+![logo](http://img-fotki.yandex.ru/get/5801/go-ns.0/0_500ae_e4ea1806_orig.png)
+
  * Поддерживаемые адаптеры: MySQL, SQLite, PgSQL
  * Документация: https://github.com/vasa-c/go-db/wiki
  * Обсуждение на pyha.ru: http://pyha.ru/forum/topic/554.0
@@ -32,16 +34,16 @@
  * [Отложенное подключение и закрытие соединения](https://github.com/vasa-c/go-db/wiki/connect)
  * [Клонирование объекта базы](https://github.com/vasa-c/go-db/wiki/clone)
  * [Надстройка над таблицами](https://github.com/vasa-c/go-db/wiki/Table)
- 
-### Форматы данных 
+
+### Форматы данных
+
  * [Формат WHERE](https://github.com/vasa-c/go-db/wiki/where)
  * [Формат COLS](https://github.com/vasa-c/go-db/wiki/cols)
- 
+
 ### Дополнительно
- 
+
  * [Unit-тесты](https://github.com/vasa-c/go-db/wiki/tests)
  * [Написание адаптеров](https://github.com/vasa-c/go-db/wiki/Adapters)
- * [Расширение goDB](https://github.com/vasa-c/go-db/wiki/Extend)
  * [Compat: совместимость со старыми версиями](https://github.com/vasa-c/go-db/wiki/Compat)
 
 ### Поддерживаемые адаптеры

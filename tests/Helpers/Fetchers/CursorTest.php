@@ -83,6 +83,14 @@ class CursorTest extends \PHPUnit_Framework_TestCase
                     4 => 4,
                 ),
             ),
+            array(
+                'SELECT `b`,`null` FROM `table` LIMIT 1,3',
+                'vars',
+                array(
+                    3 => null,
+                    4 => null,
+                ),
+            ),
         );
     }
 
