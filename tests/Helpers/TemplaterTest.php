@@ -296,8 +296,8 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 'SELECT ?cols FROM ?t',
-                array(true, array('namespace', 'table')),
-                'SELECT * FROM `namespace`.`table`'
+                array(true, array('database', 'table')),
+                'SELECT * FROM `database`.`table`'
             ),
         );
     }
