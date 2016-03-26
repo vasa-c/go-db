@@ -75,6 +75,14 @@ class CursorTest extends \PHPUnit_Framework_TestCase
                     4 => 4,
                 ),
             ),
+            array(
+                'SELECT `b` FROM `table` LIMIT 1,3',
+                'vars',
+                array(
+                    3 => 3,
+                    4 => 4,
+                ),
+            ),
         );
     }
 
