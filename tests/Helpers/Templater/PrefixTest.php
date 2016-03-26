@@ -18,20 +18,20 @@ final class PrefixTest extends Base
     public function providerTemplater()
     {
         $pattern = 'SELECT * FROM {table} AS `t` LEFT JOIN ?t ON ?t.?c=?c WHERE `id`=?';
-        return array(
-            array(
+        return [
+            'no_prefix' => [
                 $pattern,
-                array('qwerty', 'qwerty', 'col', array('t', 'z'), 'value'),
+                ['qwerty', 'qwerty', 'col', ['t', 'z'], 'value'],
                 'SELECT * FROM `table` AS `t` LEFT JOIN `qwerty` ON `qwerty`.`col`=`t`.`z` WHERE `id`="value"',
                 '',
-            ),
-            array(
+            ],
+            'with_prefix' => [
                 $pattern,
-                array('qwerty', 'qwerty', 'col', array('t', 'z'), 'value'),
+                ['qwerty', 'qwerty', 'col', ['t', 'z'], 'value'],
                 'SELECT * FROM `prefix_table` AS `t` LEFT JOIN '.
                     '`prefix_qwerty` ON `prefix_qwerty`.`col`=`prefix_t`.`z` WHERE `id`="value"',
                 'prefix_',
-            ),
-        );
+            ],
+        ];
     }
 }

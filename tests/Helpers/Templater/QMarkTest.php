@@ -17,17 +17,17 @@ final class QMarkTest extends Base
      */
     public function providerTemplater()
     {
-        return array(
-            array(
+        return [
+            'q_mark' => [
                 'INSERT INTO `table` SET `a`="who??", `b`=?',
-                array('who?'),
+                ['who?'],
                 'INSERT INTO `table` SET `a`="who?", `b`="who?"',
-            ),
-            array(
+            ],
+            'q_mark_semicolon' => [
                 'INSERT INTO `table` SET `a`="who??;", `b`=?',
-                array('who?'),
+                ['who?'],
                 'INSERT INTO `table` SET `a`="who?", `b`="who?"',
-            ),
-        );
+            ],
+        ];
     }
 }

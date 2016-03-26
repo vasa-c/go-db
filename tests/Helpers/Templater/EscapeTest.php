@@ -17,12 +17,12 @@ final class EscapeTest extends Base
      */
     public function providerTemplater()
     {
-        return array(
-            array(
+        return [
+            'escape' => [
                 'SELECT * FROM `table` WHERE `name` LIKE "%?e%" AND `e`=?i',
-                array('qwe"rty', '2qwe"rty'),
-                'SELECT * FROM `table` WHERE `name` LIKE "%qwe\"rty%" AND `e`=2'
-            ),
-        );
+                ['qwe"rty', '2qwe"rty'],
+                'SELECT * FROM `table` WHERE `name` LIKE "%qwe\"rty%" AND `e`=2',
+            ],
+        ];
     }
 }

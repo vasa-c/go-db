@@ -17,25 +17,25 @@ final class NamedTest extends Base
      */
     public function providerTemplater()
     {
-        $user = array(
-            'userId'  => 7,
-            'name'    => 'Vasa',
+        $user = [
+            'userId' => 7,
+            'name' => 'Vasa',
             'surname' => 'Pe"ta',
-            'age'     => '35',
-            'active'  => true,
-        );
-        return array(
-            array(
+            'age' => '35',
+            'active' => true,
+        ];
+        return [
+            [
                 'INSERT INTO `users` SET `name`=?:name,`surname`=?:surname,`age`=?i:age,`active`=?b:active',
                 $user,
                 'INSERT INTO `users` SET `name`="Vasa",`surname`="Pe\"ta",`age`=35,`active`=1'
-            ),
-            array(
+            ],
+            [
                 'SELECT * FROM `users` WHERE (`name`=?:name AND `age`=35) OR (`name`=?:name AND `age`=7)',
                 $user,
                 'SELECT * FROM `users` WHERE (`name`="Vasa" AND `age`=35) OR (`name`="Vasa" AND `age`=7)'
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -64,11 +64,11 @@ final class NamedTest extends Base
      */
     public function providerNamedAndEmptyPattern()
     {
-        return array(
-            array(null, false),
-            array(array(), false),
-            array(array('id' => 1, 'x' => 2), false),
-            array(array(1, 2), true),
-        );
+        return [
+            [null, false],
+            [[], false],
+            [['id' => 1, 'x' => 2], false],
+            'regular' => [[1, 2], true],
+        ];
     }
 }

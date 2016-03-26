@@ -17,26 +17,31 @@ final class ValuesTest extends Base
      */
     public function providerTemplater()
     {
-        $values = array(
-            array(0, 1, 2),
-            array('one', null, 'three'),
-        );
-        return array(
-            array(
+        $values = [
+            [0, 1, 2],
+            ['one', null, 'three'],
+        ];
+        return [
+            'values' => [
                 'INSERT INTO `table` VALUES ?values;',
-                array($values),
+                [$values],
                 'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
-            ),
-            array(
+            ],
+            'null' => [
                 'INSERT INTO `table` VALUES ?vn',
-                array($values),
+                [$values],
                 'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
-            ),
-            array(
+            ],
+            'int' => [
+                'INSERT INTO `table` VALUES ?values-int',
+                [$values],
+                'INSERT INTO `table` VALUES (0, 1, 2), (0, NULL, 0)',
+            ],
+            'bool' => [
                 'INSERT INTO `table` VALUES ?values-bool-null',
-                array($values),
+                [$values],
                 'INSERT INTO `table` VALUES (0, 1, 1), (1, NULL, 1)',
-            ),
-        );
+            ],
+        ];
     }
 }

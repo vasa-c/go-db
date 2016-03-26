@@ -17,27 +17,27 @@ final class OrderTest extends Base
      */
     public function providerTemplater()
     {
-        return array(
-            array(
+        return [
+            'single' => [
                 'ORDER BY ?o',
-                array('id'),
+                ['id'],
                 'ORDER BY `id`',
-            ),
-            array(
+            ],
+            'list' => [
                 'ORDER BY ?order;',
-                array(array('a', 'b', 'c')),
+                [['a', 'b', 'c']],
                 'ORDER BY `a` ASC,`b` ASC,`c` ASC',
-            ),
-            array(
+            ],
+            'asc_desc' => [
                 'ORDER BY ?order',
-                array(array('a' => false, 'b' => true, 'c' => false)),
+                [['a' => false, 'b' => true, 'c' => false]],
                 'ORDER BY `a` DESC,`b` ASC,`c` DESC',
-            ),
-            array(
+            ],
+            'table' => [
                 'ORDER BY ?order',
-                array(array(array('t', 'a'), 'b' => false)),
+                [[['t', 'a'], 'b' => false]],
                 'ORDER BY `t`.`a` ASC,`b` DESC',
-            ),
-        );
+            ],
+        ];
     }
 }

@@ -30,24 +30,24 @@ final class ExceptionsTest extends BaseTemplater
      */
     public function providerExceptionUnknownPlaceholder()
     {
-        return array(
-            array(
+        return [
+            'ph' => [
                 'SELECT * FROM ?wtf;',
-                array(1)
-            ),
-            array(
+                [1]
+            ],
+            'modifier' => [
                 'SELECT * FROM ?lu',
-                array(1)
-            ),
-            array(
+                [1]
+            ],
+            'long_modifier' => [
                 'SELECT * FROM ?list-u',
-                array(1)
-            ),
-            array(
+                [1]
+            ],
+            'no-name' => [
                 'SELECT * FROM ?list:',
-                array(1)
-            ),
-        );
+                [1]
+            ],
+        ];
     }
 
     /**
@@ -67,12 +67,12 @@ final class ExceptionsTest extends BaseTemplater
      */
     public function providerExceptionDataNotEnough()
     {
-        return array(
-            array(
+        return [
+            [
                 'INSERT INTO `table` VALUES (?,?,?)',
-                array(1, 2)
-            ),
-        );
+                [1, 2]
+            ],
+        ];
     }
 
     /**
@@ -92,15 +92,13 @@ final class ExceptionsTest extends BaseTemplater
      */
     public function providerExceptionDataMuch()
     {
-        return array(
-            array(
+        return [
+            [
                 'INSERT INTO `table` VALUES (?,?,?)',
-                array(1, 2, 3, 4)
-            ),
-        );
+                [1, 2, 3, 4]
+            ],
+        ];
     }
-
-
 
     /**
      * @param string $pattern
@@ -119,12 +117,12 @@ final class ExceptionsTest extends BaseTemplater
      */
     public function providerExceptionDataNamed()
     {
-        return array(
-            array(
+        return [
+            [
                 'INSERT INTO `table` VALUES (?:a,?i:b,?:c)',
-                array('a' => 1, 'b' => 2)
-            ),
-        );
+                ['a' => 1, 'b' => 2]
+            ],
+        ];
     }
 
     /**
@@ -144,11 +142,11 @@ final class ExceptionsTest extends BaseTemplater
      */
     public function providerExceptionDataMixed()
     {
-        return array(
-            array(
+        return [
+            [
                 'INSERT INTO `table` VALUES (?:a,?i:b,?:c)',
-                array('a' => 1, 'b' => 2)
-            ),
-        );
+                ['a' => 1, 'b' => 2]
+            ],
+        ];
     }
 }

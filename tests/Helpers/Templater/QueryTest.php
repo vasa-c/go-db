@@ -17,12 +17,12 @@ final class QueryTest extends Base
      */
     public function providerTemplater()
     {
-        return array(
-            array(
+        return [
+            'query' => [
                 'SELECT * FROM ?t ?q ORDER BY ?c DESC',
-                array('table', 'WHERE `q`="?"', 'c'),
+                ['table', 'WHERE `q`="?"', 'c'],
                 'SELECT * FROM `table` WHERE `q`="?" ORDER BY `c` DESC',
-            ),
-        );
+            ],
+        ];
     }
 }

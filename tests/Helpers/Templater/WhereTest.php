@@ -17,62 +17,62 @@ final class WhereTest extends Base
      */
     public function providerTemplater()
     {
-        return array(
-            array(
+        return [
+            'plain' => [
                 'WHERE ?w',
-                array(array('x' => 1)),
+                [['x' => 1]],
                 'WHERE `x`=1',
-            ),
-            array(
+            ],
+            'escape' => [
                 'WHERE ?w',
-                array(array('x' => 1, 'y' => 'qu"ot')),
+                [['x' => 1, 'y' => 'qu"ot']],
                 'WHERE `x`=1 AND `y`="qu\"ot"',
-            ),
-            array(
+            ],
+            'list' => [
                 'WHERE ?where',
-                array(array('x' => null, 'y' => array(1, '2', 3))),
+                [['x' => null, 'y' => [1, '2', 3]]],
                 'WHERE `x` IS NULL AND `y` IN (1,"2",3)',
-            ),
-            array(
+            ],
+            'not_null' => [
                 'WHERE ?where',
-                array(array('one' => true, 'y' => '5', 'z' => 6)),
+                [['one' => true, 'y' => '5', 'z' => 6]],
                 'WHERE `one` IS NOT NULL AND `y`="5" AND `z`=6',
-            ),
-            array(
+            ],
+            'true' => [
                 'WHERE ?w',
-                array(true),
+                [true],
                 'WHERE 1=1',
-            ),
-            array(
+            ],
+            'empty' => [
                 'WHERE ?w',
-                array(array()),
+                [[]],
                 'WHERE 1=1',
-            ),
-            array(
+            ],
+            'false' => [
                 'WHERE ?w',
-                array(false),
+                [false],
                 'WHERE 1=0',
-            ),
-            array(
+            ],
+            'operation1' => [
                 'WHERE ?w',
-                array(array('x' => 1, 'y' => array('op' => '<>', 'value' => 'xx'))),
+                [['x' => 1, 'y' => ['op' => '<>', 'value' => 'xx']]],
                 'WHERE `x`=1 AND `y`<>"xx"',
-            ),
-            array(
+            ],
+            'operation2' => [
                 'WHERE ?w',
-                array(array('x' => 2, 'y' => array('op' => '<=', 'col' => 'x'))),
+                [['x' => 2, 'y' => ['op' => '<=', 'col' => 'x']]],
                 'WHERE `x`=2 AND `y`<=`x`',
-            ),
-            array(
+            ],
+            'col_value' => [
                 'WHERE ?w',
-                array(array('x' => 2, 'y' => array('op' => '=', 'col' => 'x', 'value' => 3))),
+                [['x' => 2, 'y' => ['op' => '=', 'col' => 'x', 'value' => 3]]],
                 'WHERE `x`=2 AND `y`=`x`+3',
-            ),
-            array(
+            ],
+            'col_minus' => [
                 'WHERE ?w',
-                array(array('x' => 2, 'y' => array('op' => '<>', 'col' => 'z', 'value' => -5))),
+                [['x' => 2, 'y' => ['op' => '<>', 'col' => 'z', 'value' => -5]]],
                 'WHERE `x`=2 AND `y`<>`z`-5',
-            ),
-        );
+            ],
+        ];
     }
 }

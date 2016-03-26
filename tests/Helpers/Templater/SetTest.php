@@ -17,43 +17,44 @@ final class SetTest extends Base
      */
     public function providerTemplater()
     {
-        $set = array(
+        $set = [
             's' => 'str"ing',
             'd' => '3.5',
             'n' => null,
-        );
-        return array(
-            array(
+        ];
+        return [
+            'escape' => [
                 'INSERT INTO `table` SET ?s',
-                array($set),
+                [$set],
                 'INSERT INTO `table` SET `s`="str\"ing", `d`="3.5", `n`=NULL',
-            ),
-            array(
+            ],
+            'null' => [
                 'INSERT INTO `table` SET ?set-null',
-                array($set),
+                [$set],
                 'INSERT INTO `table` SET `s`="str\"ing", `d`="3.5", `n`=NULL',
-            ),
-            array(
+            ],
+            'int-null' => [
                 'INSERT INTO `table` SET ?sin',
-                array($set),
+                [$set],
                 'INSERT INTO `table` SET `s`=0, `d`=3, `n`=NULL',
-            ),
-            array(
+            ],
+            'int' => [
                 'UPDATE ?t SET ?s WHERE `id`=?i',
-                array('test', array('x' => array('col' => 'x', 'value' => 1), 'y' => 2), 10),
+                ['test', ['x' => ['col' => 'x', 'value' => 1], 'y' => 2], 10],
                 'UPDATE `test` SET `x`=`x`+1, `y`="2" WHERE `id`=10',
-            ),
-            array(
-                'SET ?sn',
-                array(
-                    array(
-                        'a' => array(),
-                        'b' => array('col' => 'x'),
-                        'c' => array('col' => 'x', 'value' => -2),
-                        'd' => array('value' => -3)),
-                ),
+            ],
+            'extended' => [
+                'SET ?s',
+                [
+                    [
+                        'a' => [],
+                        'b' => ['col' => 'x'],
+                        'c' => ['col' => 'x', 'value' => -2],
+                        'd' => ['value' => -3]
+                    ],
+                ],
                 'SET `a`=NULL, `b`=`x`, `c`=`x`-2, `d`="-3"',
-            ),
-        );
+            ],
+        ];
     }
 }
