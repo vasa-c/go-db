@@ -45,9 +45,10 @@ install:
   - if [ "$PHPUNIT_BROKEN" = "yes" ]; then PU="php vendor/bin/phpunit"; else PU=phpunit; fi;
   - if [ "$CHECKS" = "yes" ]; then composer require squizlabs/php_codesniffer="~2.3" --prefer-source; fi;
   - if [ "$CHECKS" = "yes" ]; then composer require satooshi/php-coveralls --dev --prefer-source; fi;
+  - cp tests/Real/params.travis.php tests/Real/params.php
   # Generate the coveralls config (not to keep it in the repo)
   - >
-    if [ "$CHECKS" = "yes" ]; then 
+    if [ "$CHECKS" = "yes" ]; then
         echo "json_path: coveralls-upload.json" >> .coveralls.yml &&
         echo "coverage_clover: clover.xml" >> .coveralls.yml;
     fi;
