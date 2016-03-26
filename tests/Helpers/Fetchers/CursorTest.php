@@ -328,6 +328,16 @@ class CursorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * ?bool
+     */
+    public function testBoolNull()
+    {
+        $this->assertSame(true, $this->dbQuery('SELECT 10 FROM `table` LIMIT 1', 'bool'));
+        $this->assertSame(false, $this->dbQuery('SELECT 0 FROM `table` LIMIT 1', 'bool'));
+        $this->assertSame(false, $this->dbQuery('SELECT `null` FROM `table` LIMIT 1', 'bool'));
+    }
+
+    /**
      * num
      */
     public function testNum()

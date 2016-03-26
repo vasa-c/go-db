@@ -3,6 +3,7 @@
 ## Dev
 
 * #44: Extended ?col & ?cols format
+* Fixed ?order (if scalar it does not add "ASC")
 
 ## 2.2.6 (12.02.2016)
 
