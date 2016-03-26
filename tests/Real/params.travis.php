@@ -20,5 +20,10 @@ return array(
         'filename' => ':memory:',
     ),
 
-    'pgsql' => null,
+    'pgsql' => [
+        'host' => '127.0.0.1',
+        'username' => 'postgres',
+        'password' => '',
+        'dbname' => 'travis_ci_test',
+    ],
 );

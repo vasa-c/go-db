@@ -20,7 +20,8 @@ matrix:
     - php: hhvm
 
 services:
-  mysql
+  - mysql
+  - postgresql
 
 sudo: false
 
@@ -51,6 +52,7 @@ install:
   # Real databases up
   - cp tests/Real/params.travis.php tests/Real/params.php
   - mysql -e "create database IF NOT EXISTS test;" -uroot
+  - psql -c 'create database travis_ci_test;' -U postgres
   # Generate the coveralls config (not to keep it in the repo)
   - >
     if [ "$CHECKS" = "yes" ]; then
