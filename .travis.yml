@@ -1,0 +1,69 @@
+# Travis config for PHP library
+#
+# Normal build - only phpunit
+#
+# Build with checks:
+# - code sniffer
+# - phpunit with coverage
+# - sending coverage data to coveralls.io
+# Checks are used only for one version (PHP 5.4)
+
+language: php
+
+matrix:
+  include:
+    - php: 5.4
+      env: CHECKS=yes
+    - php: 5.5
+    - php: 5.6
+    - php: 7
+    - php: hhvm
+
+sudo: false
+
+before_install:
+  # Some versions (HHVM for example) may not support XDebug
+  - XDEBUG_INI=/home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+  - if [ -f $XDEBUG_INI ]; then XDEBUG_ENABLED="yes"; fi;
+  # Disable xdebug for composer (https://getcomposer.org/doc/articles/troubleshooting.md#xdebug-impact-on-composer)
+  # Do not use `phpenv config-rm` because we need xdebug.ini for enable it for phpunit coverage.
+  - if [ "$XDEBUG_ENABLED" = "yes" ]; then mv $XDEBUG_INI xdebug.ini; fi;
+  # Travis container may contain outdated version of composer
+  - composer self-update
+  # Checks if the system phpunit is broken (sometimes it happens). Then install phpunit from composer.
+  - phpunit --version || PHPUNIT_BROKEN="yes"
+  # Info
+  - if [ "$CHECKS" = "yes" ]; then echo "Checks mode"; else echo "Normal mode"; fi;
+  - if [ "$XDEBUG_ENABLED" = "yes" ]; then echo "XDebug is supported"; else echo "XDebug is not supported"; fi;
+  - if [ "$PHPUNIT_BROKEN" = "yes" ]; then echo "PHPUnit is broken"; else echo "PHPUnit is ok"; fi;
+
+install:
+  # Composer can not used dist (github required the auth token). Just specify prefer-source.
+  - composer install --prefer-source
+  # In order not to litter in the local dev-version specify checks-packages here instead composer.json
+  - if [ "$PHPUNIT_BROKEN" = "yes" ]; then composer require phpunit/phpunit --prefer-source; fi;
+  - if [ "$PHPUNIT_BROKEN" = "yes" ]; then PU="php vendor/bin/phpunit"; else PU=phpunit; fi;
+  - if [ "$CHECKS" = "yes" ]; then composer require squizlabs/php_codesniffer="~2.3" --prefer-source; fi;
+  - if [ "$CHECKS" = "yes" ]; then composer require satooshi/php-coveralls --dev --prefer-source; fi;
+  # Generate the coveralls config (not to keep it in the repo)
+  - >
+    if [ "$CHECKS" = "yes" ]; then 
+        echo "json_path: coveralls-upload.json" >> .coveralls.yml &&
+        echo "coverage_clover: clover.xml" >> .coveralls.yml;
+    fi;
+
+script:
+  # Normal run - only phpunit
+  - if [ ! "$CHECKS" = "yes" ]; then $PU; fi;
+  # Run with checks
+  - if [ "$CHECKS" = "yes" ]; then php vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 --ignore=vendor .; fi;
+  # Enable xdebug for coverage
+  - if [ "$CHECKS" = "yes" ] && [ "$XDEBUG_ENABLED" = "yes" ]; then phpenv config-add xdebug.ini; fi;
+  - if [ "$CHECKS" = "yes" ]; then $PU --coverage-clover clover.xml; fi;
+  # Coveralls in `script` section instead `after_succes` for build fail if when error
+  - if [ "$CHECKS" = "yes" ]; then php vendor/bin/coveralls -c .coveralls.yml; fi;
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
