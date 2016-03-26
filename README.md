@@ -1,15 +1,18 @@
-# go\DB 2.x: работа с различными БД из PHP
+# go\DB: работа с различными БД из PHP
 
- * Текущая версия: 2.2.x
- * Системные требования: PHP 5.3+
+[![Latest Stable Version](https://img.shields.io/packagist/v/go/db.svg?style=flat-square)](https://packagist.org/packages/go/db)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.3-8892BF.svg?style=flat-square)](https://php.net/)
+[![License](https://poser.pugx.org/go/db/license)](LICENSE)
+
  * Поддерживаемые адаптеры: MySQL, SQLite, PgSQL
  * Документация: https://github.com/vasa-c/go-db/wiki
  * Обсуждение на pyha.ru: http://pyha.ru/forum/topic/554.0
  * Версия 1.x: https://github.com/vasa-c/godb-old
- * Лицензия: MIT (http://www.opensource.org/licenses/mit-license.php)
+ * Лицензия: MIT (https://github.com/vasa-c/go-db/blob/master/LICENSE)
 
 ## Установка
 
+ * Composer: `go/db`
  * Релизы: https://github.com/vasa-c/go-db/tags
  * Репа: git@github.com:vasa-c/go-db.git
 
