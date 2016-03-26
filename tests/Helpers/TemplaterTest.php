@@ -294,6 +294,11 @@ final class TemplaterTest extends \PHPUnit_Framework_TestCase
                 ),
                 'SELECT `a`,COUNT(`d`.`t`.`c`) AS `zz`,`cc` AS `aa`,COUNT(3),"s\"s" FROM `t`',
             ),
+            array(
+                'SELECT ?cols FROM ?t',
+                array(true, array('database', 'table')),
+                'SELECT * FROM `database`.`table`'
+            ),
         );
     }
 

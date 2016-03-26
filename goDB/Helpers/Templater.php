@@ -247,7 +247,28 @@ class Templater
      */
     private function replacementT($value, array $modifiers)
     {
-        return $this->implementation->reprTable($this->connection, $this->prefix.$value);
+        if (!is_array($value)) {
+            return $this->implementation->reprTable($this->connection, $this->prefix.$value);
+        }
+
+        if (isset($value[0])) {
+            $value = array(
+                'db'    => $value[0],
+                'table' => $value[1],
+            );
+        }
+
+        if (!isset($value['table'])) {
+            throw new DataInvalidFormat('t', 'required `table` field');
+        }
+
+        $chain = array();
+        if (isset($value['db'])) {
+            $chain[] = $value['db'];
+        }
+        $chain[] = $value['table'];
+
+        return $this->implementation->reprChainFields($this->connection, $chain);
     }
 
     /**
