@@ -19,7 +19,7 @@
 ## Документация
 
  * [Идеология и основные принципы](https://github.com/vasa-c/go-db/wiki/intro)
- * [Установка библиотеки](https://github.com/vasa-c/go-db/wiki/install)
+ * [Установка и системные требования](https://github.com/vasa-c/go-db/wiki/install)
  * [Создание подключения к базе](https://github.com/vasa-c/go-db/wiki/create)
  * [Выполнение запроса](https://github.com/vasa-c/go-db/wiki/query)
  * [Шаблон запроса: плейсхолдеры](https://github.com/vasa-c/go-db/wiki/placeholders)
@@ -32,8 +32,13 @@
  * [Отложенное подключение и закрытие соединения](https://github.com/vasa-c/go-db/wiki/connect)
  * [Клонирование объекта базы](https://github.com/vasa-c/go-db/wiki/clone)
  * [Надстройка над таблицами](https://github.com/vasa-c/go-db/wiki/Table)
+ 
+### Форматы данных 
  * [Формат WHERE](https://github.com/vasa-c/go-db/wiki/where)
  * [Формат COLS](https://github.com/vasa-c/go-db/wiki/cols)
+ 
+### Дополнительно
+ 
  * [Unit-тесты](https://github.com/vasa-c/go-db/wiki/tests)
  * [Написание адаптеров](https://github.com/vasa-c/go-db/wiki/Adapters)
  * [Расширение goDB](https://github.com/vasa-c/go-db/wiki/Extend)
