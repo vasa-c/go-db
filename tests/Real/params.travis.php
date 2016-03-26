@@ -14,7 +14,12 @@ return array(
         'dbname' => 'test',
     ),
 
-    'mysqlold' => null,
+    'mysqlold' => array(
+        'host' => '127.0.0.1',
+        'username' => 'root',
+        'password' => '',
+        'dbname' => 'test',
+    ),
 
     'sqlite' => array(
         'filename' => ':memory:',
