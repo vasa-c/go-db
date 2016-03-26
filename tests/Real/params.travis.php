@@ -7,7 +7,12 @@
  */
 
 return array(
-    'mysql' => null,
+    'mysql' => array(
+        'host' => '127.0.0.1',
+        'username' => 'root',
+        'password' => '',
+        'dbname' => 'test',
+    ),
 
     'mysqlold' => null,
 

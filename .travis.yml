@@ -19,6 +19,9 @@ matrix:
     - php: 7
     - php: hhvm
 
+services:
+  mysql
+
 sudo: false
 
 before_install:
@@ -45,7 +48,9 @@ install:
   - if [ "$PHPUNIT_BROKEN" = "yes" ]; then PU="php vendor/bin/phpunit"; else PU=phpunit; fi;
   - if [ "$CHECKS" = "yes" ]; then composer require squizlabs/php_codesniffer="~2.3" --prefer-source; fi;
   - if [ "$CHECKS" = "yes" ]; then composer require satooshi/php-coveralls --dev --prefer-source; fi;
+  # Real databases up
   - cp tests/Real/params.travis.php tests/Real/params.php
+  - mysql -e "create database IF NOT EXISTS test;" -uroot
   # Generate the coveralls config (not to keep it in the repo)
   - >
     if [ "$CHECKS" = "yes" ]; then
