@@ -95,6 +95,34 @@ final class WhereTest extends Base
                 'WHERE `col`<FUNC(`d`.`p_t`.`c`)+3',
                 'p_',
             ],
+            'groups' => [
+                'WHERE ?w',
+                [
+                    [
+                        'group_or' => [
+                            'sep' => 'OR',
+                            'group' => [
+                                'x' => 1,
+                                'and' => [
+                                    'group' => [
+                                        'x' => 5,
+                                        'y' => [
+                                            'op' => '>',
+                                            'table' => 't',
+                                            'col' => 'col',
+                                            'value' => -4,
+                                        ],
+                                    ],
+                                ],
+                                'y' => [1, 2],
+                            ],
+                        ],
+                        'x' => 10,
+                    ],
+                ],
+                'WHERE (`x`=1 OR (`x`=5 AND `y`>`p_t`.`col`-4) OR `y` IN (1,2)) AND `x`=10',
+                'p_',
+            ],
         ];
     }
 }

@@ -379,45 +379,7 @@ class Templater
      */
     private function replacementW($value, array $modifiers)
     {
-        if (!is_array($value)) {
-            return ($value !== false) ? '1=1' : '1=0';
-        }
-        $stats = array();
-        foreach ($value as $k => $v) {
-            $col = $this->replacementC($k, $modifiers);
-            if (is_array($v)) {
-                if (empty($v)) {
-                    return '1=0';
-                }
-                if (isset($v[0])) {
-                    $opts = array();
-                    foreach ($v as $opt) {
-                        if (is_int($opt)) {
-                            $opts[] = $opt;
-                        } else {
-                            $opts[] = $this->replacement($opt, $modifiers);
-                        }
-                    }
-                    $stat = $col.' IN ('.implode(',', $opts).')';
-                } else {
-                    $op = isset($v['op']) ? $v['op'] : '=';
-                    $stat = $col.$op.$this->replacementC($v, $modifiers);
-                }
-            } elseif ($v === null) {
-                $stat = $col.' IS NULL';
-            } elseif ($v === true) {
-                $stat = $col.' IS NOT NULL';
-            } elseif (is_int($v)) {
-                $stat = $col.'='.$v;
-            } else {
-                $stat = $col.'='.$this->replacement($v, $modifiers);
-            }
-            $stats[] = $stat;
-        }
-        if (empty($stats)) {
-            return '1=1';
-        }
-        return implode(' AND ', $stats);
+        return $this->whereGroup($value, $modifiers);
     }
 
     /**
@@ -444,6 +406,58 @@ class Templater
             $stats[] = $this->replacementC($c, $modifiers).' '.$s;
         }
         return implode(',', $stats);
+    }
+
+    /**
+     * @param mixed $value
+     * @param array $modifiers
+     * @param string $sep [optional]
+     * @return string
+     */
+    private function whereGroup($value, array $modifiers, $sep = 'AND')
+    {
+        if (!is_array($value)) {
+            return ($value !== false) ? '1=1' : '1=0';
+        }
+        $stats = array();
+        foreach ($value as $k => $v) {
+            $col = $this->replacementC($k, $modifiers);
+            if (is_array($v)) {
+                if (empty($v)) {
+                    return '1=0';
+                }
+                if (isset($v[0])) {
+                    $opts = array();
+                    foreach ($v as $opt) {
+                        if (is_int($opt)) {
+                            $opts[] = $opt;
+                        } else {
+                            $opts[] = $this->replacement($opt, $modifiers);
+                        }
+                    }
+                    $stat = $col.' IN ('.implode(',', $opts).')';
+                } elseif (isset($v['group'])) {
+                    $sepG = isset($v['sep']) ? $v['sep'] : 'AND';
+                    $stat = '('.$this->whereGroup($v['group'], $modifiers, $sepG).')';
+                } else {
+                    $op = isset($v['op']) ? $v['op'] : '=';
+                    $stat = $col.$op.$this->replacementC($v, $modifiers);
+                }
+            } elseif ($v === null) {
+                $stat = $col.' IS NULL';
+            } elseif ($v === true) {
+                $stat = $col.' IS NOT NULL';
+            } elseif (is_int($v)) {
+                $stat = $col.'='.$v;
+            } else {
+                $stat = $col.'='.$this->replacement($v, $modifiers);
+            }
+            $stats[] = $stat;
+        }
+        if (empty($stats)) {
+            return '1=1';
+        }
+        return implode(' '.$sep.' ', $stats);
     }
 
     /**
