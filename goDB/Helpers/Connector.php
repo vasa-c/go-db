@@ -32,9 +32,9 @@ final class Connector
     public function __construct($adapter, array $params)
     {
         $this->implementation = BaseImp::getImplementationForAdapter($adapter);
-        $this->params = $this->implementation->checkParams($params);
+        $this->params = $this->implementation->checkParams($params, $error);
         if (!$this->params) {
-            throw new ConfigConnect();
+            throw new ConfigConnect($error);
         }
         $this->countLinks = 1;
         $this->countConnections = 0;
