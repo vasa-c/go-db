@@ -2,9 +2,10 @@
 
 ## Dev
 
-* #44: Extended ?col & ?cols format
-* #55: Extended ?table format
-* #46: Extended ?set format
+* #44: Extended ?col & ?cols format (https://github.com/vasa-c/go-db/wiki/cols)
+* #55: Extended ?table format (https://github.com/vasa-c/go-db/wiki/table-format)
+* #46: Extended ?set format (https://github.com/vasa-c/go-db/wiki/set)
+* #45: Extended ?where format (https://github.com/vasa-c/go-db/wiki/where)
 * Fixed ?order (if scalar it does not add "ASC")
 * Added to travis-ci.org
 * ConfigError: normal message

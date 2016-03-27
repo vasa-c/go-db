@@ -33,6 +33,11 @@ final class WhereTest extends Base
                 [['x' => null, 'y' => [1, '2', 3]]],
                 'WHERE `x` IS NULL AND `y` IN (1,"2",3)',
             ],
+            'empty_list' => [
+                'WHERE ?where',
+                [['x' => null, 'y' => []]],
+                'WHERE 1=0',
+            ],
             'not_null' => [
                 'WHERE ?where',
                 [['one' => true, 'y' => '5', 'z' => 6]],
@@ -72,6 +77,23 @@ final class WhereTest extends Base
                 'WHERE ?w',
                 [['x' => 2, 'y' => ['op' => '<>', 'col' => 'z', 'value' => -5]]],
                 'WHERE `x`=2 AND `y`<>`z`-5',
+            ],
+            'col_extended' => [
+                'WHERE ?w',
+                [
+                    [
+                        'col' => [
+                            'op' => '<',
+                            'db' => 'd',
+                            'table' => 't',
+                            'col' => 'c',
+                            'value' => 3,
+                            'func' => 'FUNC',
+                        ],
+                    ]
+                ],
+                'WHERE `col`<FUNC(`d`.`p_t`.`c`)+3',
+                'p_',
             ],
         ];
     }

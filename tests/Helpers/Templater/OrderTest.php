@@ -35,8 +35,15 @@ final class OrderTest extends Base
             ],
             'table' => [
                 'ORDER BY ?order',
-                [[['t', 'a'], 'b' => false]],
-                'ORDER BY `t`.`a` ASC,`b` DESC',
+                [[['d', 't', 'a'], 'b' => false]],
+                'ORDER BY `d`.`p_t`.`a` ASC,`b` DESC',
+                'p_',
+            ],
+            'col_extend' => [
+                'ORDER BY ?order',
+                [[['d', 't', 'a'], 'b' => false]],
+                'ORDER BY `d`.`p_t`.`a` ASC,`b` DESC',
+                'p_',
             ],
         ];
     }

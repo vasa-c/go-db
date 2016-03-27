@@ -387,31 +387,9 @@ class Templater
             $col = $this->replacementC($k, $modifiers);
             if (is_array($v)) {
                 if (empty($v)) {
-                    break;
+                    return '1=0';
                 }
-                if (isset($v['op'])) {
-                    $stat = $col.$v['op'];
-                    $oval = isset($v['value']) ? $v['value'] : null;
-                    if (isset($v['col'])) {
-                        $stat .= $this->replacementC($v['col'], $modifiers);
-                        if ($oval) {
-                            $oval = (int)$oval;
-                            if ($oval > 0) {
-                                $stat .= '+'.$oval;
-                            } else {
-                                $stat .= $oval;
-                            }
-                        }
-                    } else {
-                        if ($oval === null) {
-                            $stat .= 'NULL';
-                        } elseif (is_int($oval)) {
-                            $stat .= $oval;
-                        } else {
-                            $stat .= $this->replacement($oval, $modifiers);
-                        }
-                    }
-                } else {
+                if (isset($v[0])) {
                     $opts = array();
                     foreach ($v as $opt) {
                         if (is_int($opt)) {
@@ -421,6 +399,9 @@ class Templater
                         }
                     }
                     $stat = $col.' IN ('.implode(',', $opts).')';
+                } else {
+                    $op = isset($v['op']) ? $v['op'] : '=';
+                    $stat = $col.$op.$this->replacementC($v, $modifiers);
                 }
             } elseif ($v === null) {
                 $stat = $col.' IS NULL';
