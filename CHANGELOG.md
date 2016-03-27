@@ -3,10 +3,11 @@
 ## Dev
 
 * #44: Extended ?col & ?cols format
+* #55: Extended ?table format
+* #46: Extended ?set format
 * Fixed ?order (if scalar it does not add "ASC")
 * Added to travis-ci.org
 * ConfigError: normal message
-* #55: Extended ?table format
 
 ## 2.2.6 (12.02.2016)
 

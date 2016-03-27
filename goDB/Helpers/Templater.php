@@ -200,22 +200,17 @@ class Templater
         foreach ($value as $col => $element) {
             $key = $this->implementation->reprCol($this->connection, $col);
             if (is_array($element)) {
-                $oval = isset($element['value']) ? $element['value'] : null;
-                if (isset($element['col'])) {
-                    $element = $this->replacementC($element['col'], $modifiers);
-                    if ($oval !== null) {
-                        $oval = (int)$oval;
-                        if ($oval > 0) {
-                            $element .= '+'.$oval;
-                        } else {
-                            $element .= $oval;
-                        }
-                    }
+                if (empty($element)) {
+                    $element = 'NULL';
                 } else {
-                    $element = $this->valueModification($oval, $modifiers);
+                    $element = $this->replacementC($element, $modifiers);
                 }
             } else {
-                $element = $this->valueModification($element, $modifiers);
+                if (is_int($element)) {
+                    $element = $this->implementation->reprInt($this->connection, $element);
+                } else {
+                    $element = $this->valueModification($element, $modifiers);
+                }
             }
             $set[] = $key.'='.$element;
         }
@@ -318,7 +313,7 @@ class Templater
             $result = $value['func'].'('.$result.')';
         }
         if (isset($value['value'])) {
-            $result .= (($value['value'] > 0) ? '+' : '').$value['value'];
+            $result .= (($value['value'] > 0) ? '+' : '').(int)$value['value'];
         }
         if (isset($value['as'])) {
             $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);

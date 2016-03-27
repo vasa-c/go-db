@@ -49,7 +49,7 @@ final class CompatTest extends \PHPUnit_Framework_TestCase
         $table->update(['x' => null, 'y' => 5]);
         $logs = $imp->getLogs();
         $this->assertArrayHasKey(0, $logs);
-        $expected = 'query: UPDATE `t` SET `x`=NULL, `y`="5" WHERE 1=1';
+        $expected = 'query: UPDATE `t` SET `x`=NULL, `y`=5 WHERE 1=1';
         $this->assertSame($expected, $logs[0]);
         Compat::setOpt('null', true);
     }

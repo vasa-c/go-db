@@ -41,7 +41,7 @@ final class SetTest extends Base
             'int' => [
                 'UPDATE ?t SET ?s WHERE `id`=?i',
                 ['test', ['x' => ['col' => 'x', 'value' => 1], 'y' => 2], 10],
-                'UPDATE `test` SET `x`=`x`+1, `y`="2" WHERE `id`=10',
+                'UPDATE `test` SET `x`=`x`+1, `y`=2 WHERE `id`=10',
             ],
             'extended' => [
                 'SET ?s',
@@ -50,10 +50,38 @@ final class SetTest extends Base
                         'a' => [],
                         'b' => ['col' => 'x'],
                         'c' => ['col' => 'x', 'value' => -2],
-                        'd' => ['value' => -3]
+                        'd' => ['value' => -3],
                     ],
                 ],
-                'SET `a`=NULL, `b`=`x`, `c`=`x`-2, `d`="-3"',
+                'SET `a`=NULL, `b`=`x`, `c`=`x`-2, `d`=(-3)',
+            ],
+            'extended_ext_col' => [
+                'SET ?s',
+                [
+                    [
+                        'cc' => [
+                            'col' => ['a', 'b', 'c'],
+                            'value' => '2x',
+                            'func' => 'SUM'
+                        ],
+                        'cx' => [
+                            'value' => 5,
+                            'func' => 'SUM',
+                        ],
+                    ],
+                ],
+                'SET `cc`=SUM(`a`.`p_b`.`c`)+2, `cx`=SUM(5)',
+                'p_',
+            ],
+            'int-vs-string' => [
+                'SET ?set',
+                [
+                    [
+                        'x' => '2',
+                        'y' => 2,
+                    ],
+                ],
+                'SET `x`="2", `y`=2',
             ],
         ];
     }

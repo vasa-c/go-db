@@ -133,6 +133,26 @@ final class ColTest extends Base
                 'SELECT `d`.`b`.`prefix_c`.`a`',
                 'prefix_',
             ],
+            'int-string' => [
+                'SELECT ?c',
+                [
+                    [
+                        'col' => 'col',
+                        'value' => '1zz',
+                    ],
+                ],
+                'SELECT `col`+1',
+            ],
+            'int-only-value' => [
+                'SELECT ?c',
+                [
+                    [
+                        'value' => '1z"z',
+                        'as' => 'x',
+                    ],
+                ],
+                'SELECT "1z\"z" AS `x`',
+            ],
         ];
     }
 }
