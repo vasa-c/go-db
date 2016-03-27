@@ -2,6 +2,8 @@
 
 ## Dev
 
+## 2.2.7 (27.03.2016)
+
 * #44: Extended ?col & ?cols format (https://github.com/vasa-c/go-db/wiki/cols)
 * #55: Extended ?table format (https://github.com/vasa-c/go-db/wiki/table-format)
 * #46: Extended ?set format (https://github.com/vasa-c/go-db/wiki/set)
