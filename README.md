@@ -42,6 +42,7 @@
 
  * [Формат WHERE](https://github.com/vasa-c/go-db/wiki/where)
  * [Формат COLS](https://github.com/vasa-c/go-db/wiki/cols)
+ * [Формат TABLE](https://github.com/vasa-c/go-db/wiki/table-format)
 
 ### Дополнительно
 

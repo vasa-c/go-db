@@ -250,24 +250,18 @@ class Templater
         if (!is_array($value)) {
             return $this->implementation->reprTable($this->connection, $this->prefix.$value);
         }
-
         if (isset($value[0])) {
-            $value = array(
-                'db' => $value[0],
-                'table' => $value[1],
-            );
-        }
-
-        if (!isset($value['table'])) {
+            $chain = $value;
+            $t = count($chain) - 1;
+            $chain[$t] = $this->prefix.$chain[$t];
+        } elseif (isset($value['table'])) {
+            $chain = [$this->prefix.$value['table']];
+            if (isset($value['db'])) {
+                array_unshift($chain, $value['db']);
+            }
+        } elseif (!isset($value['table'])) {
             throw new DataInvalidFormat('t', 'required `table` field');
         }
-
-        $chain = array();
-        if (isset($value['db'])) {
-            $chain[] = $value['db'];
-        }
-        $chain[] = $value['table'];
-
         return $this->implementation->reprChainFields($this->connection, $chain);
     }
 

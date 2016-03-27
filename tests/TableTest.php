@@ -7,6 +7,7 @@
 namespace go\Tests\DB;
 
 use go\DB\DB;
+use go\DB\Exceptions\Query;
 use go\DB\Fakes\FakeTable;
 
 /**
@@ -350,7 +351,19 @@ class TableTest extends \PHPUnit_Framework_TestCase
         ];
         $fake = new FakeTable($data, null, 'b', 4);
         $db = $this->createDB(false);
-        $table = $db->getTable($fake);
+        $table = $db->getTable($fake); // @todo ???
         $this->assertEquals($data, $fake->getData());
+    }
+
+    public function testExtendedName()
+    {
+        $db = $this->createDB(false);
+        $table = $db->getTable(['a', 'b', 'test'], $this->map);
+        try {
+            $table->select();
+            $this->fail('not thrown');
+        } catch (Query $e) {
+            $this->assertStringStartsWith('SELECT * FROM "a"."b"."pr_test"', $e->getQuery());
+        }
     }
 }
