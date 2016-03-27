@@ -253,7 +253,7 @@ class Templater
 
         if (isset($value[0])) {
             $value = array(
-                'db'    => $value[0],
+                'db' => $value[0],
                 'table' => $value[1],
             );
         }
@@ -280,40 +280,54 @@ class Templater
      */
     private function replacementC($value, array $modifiers)
     {
-        if (is_array($value)) {
-            if (isset($value[0])) {
-                $value = array(
-                    'table' => $value[0],
-                    'col' => $value[1],
-                );
+        if (!is_array($value)) {
+            return $this->implementation->reprCol($this->connection, $value);
+        }
+        if (isset($value[0])) {
+            if ($this->prefix !== null) {
+                $t = count($value) - 2;
+                if (isset($value[$t])) {
+                    $value[$t] = $this->prefix . $value[$t];
+                }
             }
-            if (isset($value['col'])) {
-                $chain = array($value['col']);
-                if (isset($value['table'])) {
-                    $chain[] = $this->prefix.$value['table'];
-                    if (isset($value['db'])) {
-                        $chain[] = $value['db'];
+            return $this->implementation->reprChainFields($this->connection, $value);
+        }
+        if (isset($value['col'])) {
+            $chain = [];
+            foreach (['db', 'table', 'col'] as $f) {
+                if (isset($value[$f])) {
+                    if (is_array($value[$f])) {
+                        $chain = array_merge($chain, $value[$f]);
+                    } else {
+                        $chain[] = $value[$f];
                     }
                 }
-                $chain = array_reverse($chain);
-                $result = $this->implementation->reprChainFields($this->connection, $chain);
-            } elseif (isset($value['value'])) {
-                if (is_int($value['value'])) {
-                    $result = $this->implementation->reprInt($this->connection, $value['value']);
-                } else {
-                    $result = $this->implementation->reprString($this->connection, $value['value']);
+            }
+            if ($this->prefix !== null) {
+                $t = count($chain) - 2;
+                if (isset($chain[$t])) {
+                    $chain[$t] = $this->prefix . $chain[$t];
                 }
+            }
+            $result = $this->implementation->reprChainFields($this->connection, $chain);
+        } elseif (isset($value['value'])) {
+            if (is_int($value['value'])) {
+                $result = $this->implementation->reprInt($this->connection, $value['value']);
             } else {
-                throw new DataInvalidFormat('col', 'required `col` or `value` field');
+                $result = $this->implementation->reprString($this->connection, $value['value']);
             }
-            if (isset($value['func'])) {
-                $result = $value['func'].'('.$result.')';
-            }
-            if (isset($value['as'])) {
-                $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);
-            }
+            $value['value'] = null;
         } else {
-            $result = $this->implementation->reprCol($this->connection, $value);
+            throw new DataInvalidFormat('col', 'required `col` or `value` field');
+        }
+        if (isset($value['func'])) {
+            $result = $value['func'].'('.$result.')';
+        }
+        if (isset($value['value'])) {
+            $result .= (($value['value'] > 0) ? '+' : '').$value['value'];
+        }
+        if (isset($value['as'])) {
+            $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);
         }
         return $result;
     }
