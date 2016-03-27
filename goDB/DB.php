@@ -362,7 +362,7 @@ abstract class DB
      */
     public function getTable($tableName, array $map = null)
     {
-        if (($map === null) && (!is_object($tableName))) {
+        if (($map === null) && (is_string($tableName))) {
             if (isset($this->cacheTables[$tableName])) {
                 $table = $this->cacheTables[$tableName];
             } else {

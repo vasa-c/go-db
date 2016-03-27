@@ -358,7 +358,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testExtendedName()
     {
         $db = $this->createDB(false);
-        $table = $db->getTable(['a', 'b', 'test'], $this->map);
+        $table = $db->getTable(['a', 'b', 'test']);
         try {
             $table->select();
             $this->fail('not thrown');
