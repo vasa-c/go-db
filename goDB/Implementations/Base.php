@@ -344,7 +344,11 @@ abstract class Base
     {
         $result = array();
         foreach ($fields as $field) {
-            $result[] = $this->reprField($connection, $field);
+            if ($field === true) {
+                $result[] = '*';
+            } else {
+                $result[] = $this->reprField($connection, $field);
+            }
         }
         return implode('.', $result);
     }

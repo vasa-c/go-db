@@ -2,6 +2,8 @@
 
 ## Dev
 
+* Extended ?col and `NOW()` (a function without arguments)
+
 ## 2.2.7 (27.03.2016)
 
 * #44: Extended ?col & ?cols format (https://github.com/vasa-c/go-db/wiki/cols)

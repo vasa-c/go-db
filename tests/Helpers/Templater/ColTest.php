@@ -153,6 +153,62 @@ final class ColTest extends Base
                 ],
                 'SELECT "1z\"z" AS `x`',
             ],
+            'func-only' => [
+                'UPDATE `t` SET `x`=?col',
+                [
+                    [
+                        'func' => 'NOW',
+                    ],
+                ],
+                'UPDATE `t` SET `x`=NOW()',
+            ],
+            'func-value' => [
+                'SELECT ?c FROM `t`',
+                [
+                    [
+                        'func' => 'COUNT',
+                        'value' => 2,
+                        'as' => 'c',
+                    ],
+                ],
+                'SELECT COUNT(2) AS `c` FROM `t`',
+            ],
+            'func-col-value' => [
+                'SELECT ?c FROM `t`',
+                [
+                    [
+                        'func' => 'COUNT',
+                        'col' => 'id',
+                        'value' => -2,
+                        'as' => 'c',
+                    ],
+                ],
+                'SELECT COUNT(`id`)-2 AS `c` FROM `t`',
+            ],
+            'func-no-args-value' => [
+                'SELECT ?c FROM `t`',
+                [
+                    [
+                        'func' => 'NOW',
+                        'value' => 2,
+                        'col' => null,
+                        'as' => 'c',
+                    ],
+                ],
+                'SELECT NOW()+2 AS `c` FROM `t`',
+            ],
+            'all' => [
+                'SELECT ?c FROM `t`',
+                [
+                    [
+                        'func' => 'COUNT',
+                        'value' => 2,
+                        'col' => true,
+                        'as' => 'c',
+                    ],
+                ],
+                'SELECT COUNT(*)+2 AS `c` FROM `t`',
+            ],
         ];
     }
 }

@@ -295,7 +295,7 @@ class Templater
             if ($this->prefix !== null) {
                 $t = count($chain) - 2;
                 if (isset($chain[$t])) {
-                    $chain[$t] = $this->prefix . $chain[$t];
+                    $chain[$t ] = $this->prefix.$chain[$t];
                 }
             }
             $result = $this->implementation->reprChainFields($this->connection, $chain);
@@ -305,7 +305,13 @@ class Templater
             } else {
                 $result = $this->implementation->reprString($this->connection, $value['value']);
             }
-            $value['value'] = null;
+            if (array_key_exists('col', $value) && isset($value['func'])) {
+                $result = '';
+            } else {
+                $value['value'] = null;
+            }
+        } elseif (isset($value['func'])) {
+            $result = '';
         } else {
             throw new DataInvalidFormat('col', 'required `col` or `value` field');
         }
