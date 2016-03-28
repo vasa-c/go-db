@@ -93,7 +93,7 @@ class Templater
      * @return string
      * @throws \go\DB\Exceptions\Templater
      */
-    private function placeholderClb($matches)
+    protected function placeholderClb($matches)
     {
         $placeholder = isset($matches[1]) ? $matches[1] : '';
         if (isset($matches[3])) {
@@ -166,8 +166,11 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacement($value, array $modifiers)
+    protected function replacement($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('', 'required scalar given');
+        }
         return $this->valueModification($value, $modifiers);
     }
 
@@ -178,10 +181,16 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementL(array $value, array $modifiers)
+    protected function replacementL($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('list', 'required array (list of values)');
+        }
         $values = array();
-        foreach ($value as $element) {
+        foreach ($value as $k => $element) {
+            if (is_array($element)) {
+                throw new DataInvalidFormat('list', 'required scalar in item #'.$k);
+            }
             $values[] = $this->valueModification($element, $modifiers);
         }
         return implode(', ', $values);
@@ -194,8 +203,11 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementS(array $value, array $modifiers)
+    protected function replacementS($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('set', 'required array (column => value)');
+        }
         $set = array();
         foreach ($value as $col => $element) {
             $key = $this->implementation->reprCol($this->connection, $col);
@@ -224,8 +236,11 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementV(array $value, array $modifiers)
+    private function replacementV($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('values', 'required array of arrays');
+        }
         $values = array();
         foreach ($value as $v) {
             $values[] = '('.$this->replacementL($v, $modifiers).')';
@@ -313,7 +328,7 @@ class Templater
         } elseif (isset($value['func'])) {
             $result = '';
         } else {
-            throw new DataInvalidFormat('col', 'required `col` or `value` field');
+            throw new DataInvalidFormat('col', 'required `col`, `value` or `func` field');
         }
         if (isset($value['func'])) {
             $result = $value['func'].'('.$result.')';
@@ -361,6 +376,9 @@ class Templater
      */
     private function replacementE($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('escape', 'required string');
+        }
         return $this->implementation->escapeString($this->connection, $value);
     }
 
@@ -373,6 +391,9 @@ class Templater
      */
     private function replacementQ($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('query', 'required string');
+        }
         return $value;
     }
 

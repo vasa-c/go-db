@@ -149,4 +149,91 @@ final class ExceptionsTest extends BaseTemplater
             ],
         ];
     }
+
+    /**
+     * @dataProvider providerExceptionDataInvalidFormat
+     * @param string $placeholder
+     * @param mixed $data
+     * @param string $message
+     */
+    public function testExceptionDataInvalidFormat($placeholder, $data, $message)
+    {
+        $pattern = '?'.$placeholder;
+        $data = [$data];
+        $templater = $this->createTemplater($pattern, $data);
+        $this->setExpectedException('go\DB\Exceptions\DataInvalidFormat', $message);
+        $templater->parse();
+    }
+
+    public function providerExceptionDataInvalidFormat()
+    {
+        return [
+            'col' => [
+                'col',
+                [
+                    'as' => 'z',
+                ],
+                'required `col`, `value` or `func` field',
+            ],
+            'string' => [
+                'scalar',
+                [1, 2],
+                'required scalar',
+            ],
+            'int' => [
+                'i',
+                [1, 2],
+                'required scalar',
+            ],
+            'list' => [
+                'l',
+                5,
+                'required array (list of values)',
+            ],
+            'list-in' => [
+                'l',
+                [1, [2, 3], 4],
+                'required scalar in item #1',
+            ],
+            'set' => [
+                's',
+                5,
+                'required array (column => value)',
+            ],
+            'set-col' => [
+                's',
+                [
+                    'x' => [
+                        'as' => 5,
+                    ],
+                ],
+                'required `col`, `value` or `func` field',
+            ],
+            'values' => [
+                'v',
+                'string',
+                'required array of arrays'
+            ],
+            'values-in' => [
+                'v',
+                [[1, 2], [3, 4], 5, [6, 7]],
+                'required array (list of values)',
+            ],
+            'table' => [
+                't',
+                [],
+                'required `table` field',
+            ],
+            'escape' => [
+                'e',
+                [],
+                'required string',
+            ],
+            'query' => [
+                'q',
+                [],
+                'required string',
+            ],
+        ];
+    }
 }

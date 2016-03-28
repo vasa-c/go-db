@@ -2,7 +2,10 @@
 
 ## Dev
 
+## 2.2.8 (28.03.2016)
+
 * Extended ?col and `NOW()` (a function without arguments)
+* #54: Use `DataInvalidFormat`
 
 ## 2.2.7 (27.03.2016)
 
