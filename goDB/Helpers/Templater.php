@@ -263,7 +263,7 @@ class Templater
         if (isset($value[0])) {
             $chain = $value;
         } elseif (isset($value['table'])) {
-            if (is_array($value['table'])){
+            if (is_array($value['table'])) {
                 $chain = $value['table'];
             } else {
                 $chain = array($value['table']);
