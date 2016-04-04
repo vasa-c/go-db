@@ -265,7 +265,7 @@ class Templater
             $t = count($chain) - 1;
             $chain[$t] = $this->prefix.$chain[$t];
         } elseif (isset($value['table'])) {
-            $chain = [$this->prefix.$value['table']];
+            $chain = array($this->prefix.$value['table']);
             if (isset($value['db'])) {
                 array_unshift($chain, $value['db']);
             }
@@ -297,8 +297,8 @@ class Templater
             return $this->implementation->reprChainFields($this->connection, $value);
         }
         if (isset($value['col'])) {
-            $chain = [];
-            foreach (['db', 'table', 'col'] as $f) {
+            $chain = array();
+            foreach (array('db', 'table', 'col') as $f) {
                 if (isset($value[$f])) {
                     if (is_array($value[$f])) {
                         $chain = array_merge($chain, $value[$f]);
