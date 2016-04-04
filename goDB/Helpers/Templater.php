@@ -262,17 +262,25 @@ class Templater
         }
         if (isset($value[0])) {
             $chain = $value;
-            $t = count($chain) - 1;
-            $chain[$t] = $this->prefix.$chain[$t];
         } elseif (isset($value['table'])) {
-            $chain = array($this->prefix.$value['table']);
+            if (is_array($value['table'])){
+                $chain = $value['table'];
+            } else {
+                $chain = array($value['table']);
+            }
             if (isset($value['db'])) {
                 array_unshift($chain, $value['db']);
             }
         } elseif (!isset($value['table'])) {
             throw new DataInvalidFormat('t', 'required `table` field');
         }
-        return $this->implementation->reprChainFields($this->connection, $chain);
+        $lastIdx = count($chain) - 1;
+        $chain[$lastIdx] = $this->prefix.$chain[$lastIdx];
+        $result = $this->implementation->reprChainFields($this->connection, $chain);
+        if (isset($value['as'])) {
+            $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);
+        }
+        return $result;
     }
 
     /**
