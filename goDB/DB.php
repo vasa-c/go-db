@@ -353,24 +353,24 @@ abstract class DB
     /**
      * Returns an object for a table access
      *
-     * @param string $tablename
+     * @param string $tableName
      *        a table name
      * @param array $map [optional]
      *        a map (a key => a real table column)
      * @return \go\DB\Table
      *         a "table" instance
      */
-    public function getTable($tablename, array $map = null)
+    public function getTable($tableName, array $map = null)
     {
-        if ($map === null) {
-            if (isset($this->cacheTables[$tablename])) {
-                $table = $this->cacheTables[$tablename];
+        if (($map === null) && (is_string($tableName))) {
+            if (isset($this->cacheTables[$tableName])) {
+                $table = $this->cacheTables[$tableName];
             } else {
-                $table = new Table($this, $tablename);
-                $this->cacheTables[$tablename] = $table;
+                $table = new Table($this, $tableName);
+                $this->cacheTables[$tableName] = $table;
             }
         } else {
-            $table = new Table($this, $tablename, $map);
+            $table = new Table($this, $tableName, $map);
         }
         return $table;
     }
@@ -574,7 +574,7 @@ abstract class DB
     /**
      * @var array
      */
-    private $cacheTables = array();
+    protected $cacheTables = array();
 }
 
 /**

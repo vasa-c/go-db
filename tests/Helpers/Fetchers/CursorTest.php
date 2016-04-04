@@ -75,6 +75,22 @@ class CursorTest extends \PHPUnit_Framework_TestCase
                     4 => 4,
                 ),
             ),
+            array(
+                'SELECT `b` FROM `table` LIMIT 1,3',
+                'vars',
+                array(
+                    3 => 3,
+                    4 => 4,
+                ),
+            ),
+            array(
+                'SELECT `b`,`null` FROM `table` LIMIT 1,3',
+                'vars',
+                array(
+                    3 => null,
+                    4 => null,
+                ),
+            ),
         );
     }
 
@@ -325,6 +341,16 @@ class CursorTest extends \PHPUnit_Framework_TestCase
                 true
             ),
         );
+    }
+
+    /**
+     * ?bool
+     */
+    public function testBoolNull()
+    {
+        $this->assertSame(true, $this->dbQuery('SELECT 10 FROM `table` LIMIT 1', 'bool'));
+        $this->assertSame(false, $this->dbQuery('SELECT 0 FROM `table` LIMIT 1', 'bool'));
+        $this->assertSame(false, $this->dbQuery('SELECT `null` FROM `table` LIMIT 1', 'bool'));
     }
 
     /**

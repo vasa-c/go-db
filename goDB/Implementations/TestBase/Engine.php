@@ -167,6 +167,8 @@ final class Engine
                         $res[$col] = $row[$col];
                     } elseif ($col == 'null') {
                         $res['null'] = null;
+                    } elseif (preg_match('~^[0-9]+$~s', $col)) {
+                        $res[$col] = $col;
                     } else {
                         $this->errorInfo = 'Unknown column "'.$col.'"';
                         $this->errorCode = self::ERROR_COL;

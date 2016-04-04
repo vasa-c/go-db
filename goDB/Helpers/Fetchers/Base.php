@@ -17,7 +17,7 @@ use go\DB\Exceptions\UnknownFetch;
 abstract class Base implements Result
 {
     /**
-     * Desctuctor
+     * Destructor
      */
     public function __destruct()
     {
@@ -29,13 +29,12 @@ abstract class Base implements Result
      */
     public function fetch($fetch)
     {
-        $fetch = explode(':', $fetch, 2);
-        $param = isset($fetch[1]) ? strtolower($fetch[1]) : null;
-        $fetch = $fetch[0];
+        $params = explode(':', $fetch);
+        $method = array_shift($params);
         $fetches = Config::get('fetch');
-        if (!isset($fetches[$fetch])) {
-            throw new UnknownFetch($fetch);
+        if (!isset($fetches[$method])) {
+            throw new UnknownFetch($method);
         }
-        return $this->$fetch($param);
+        return call_user_func_array(array($this, $method), $params);
     }
 }

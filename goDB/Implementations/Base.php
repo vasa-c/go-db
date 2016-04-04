@@ -100,14 +100,16 @@ abstract class Base
      * Validates and normalizes connection parameters
      *
      * @param array $params
+     * @param string $error
      * @return array
      *         normalized parameters or FALSE if parameters is invalid
      */
-    public function checkParams(array $params)
+    public function checkParams(array $params, &$error = null)
     {
         $result = array();
         foreach ($this->paramsReq as $param) {
             if (!array_key_exists($param, $params)) {
+                $error = 'required '.$param;
                 return false;
             }
             $result[$param] = $params[$param];
@@ -342,7 +344,11 @@ abstract class Base
     {
         $result = array();
         foreach ($fields as $field) {
-            $result[] = $this->reprField($connection, $field);
+            if ($field === true) {
+                $result[] = '*';
+            } else {
+                $result[] = $this->reprField($connection, $field);
+            }
         }
         return implode('.', $result);
     }

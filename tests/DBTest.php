@@ -108,6 +108,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     /**
      * covers go\DB\DB::create
      * @expectedException \go\DB\Exceptions\ConfigSys
+     * @expectedExceptionMessage Unknown system param "unknown"
      */
     public function testExceptionConfigSys()
     {
@@ -122,6 +123,7 @@ final class DBTest extends \PHPUnit_Framework_TestCase
     /**
      * covers ::create
      * @expectedException \go\DB\Exceptions\ConfigConnect
+     * @expectedExceptionMessage required host
      */
     public function testExceptionConfigConnect()
     {

@@ -7,6 +7,8 @@
 namespace go\Tests\DB;
 
 use go\DB\DB;
+use go\DB\Exceptions\Query;
+use go\DB\Fakes\FakeTable;
 
 /**
  * coversDefaultClass go\DB\Table
@@ -300,5 +302,68 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->map, $map->getMap());
         $table = $db->getTable('test');
         $this->assertNull($table->getMap());
+    }
+
+    public function testFake()
+    {
+        $data = [
+            ['a' => 1, 'b' => 2],
+            ['a' => 3, 'b' => 4],
+        ];
+        $fake = new FakeTable($data, null, 'b', 4);
+        $db = $this->createDB(false);
+        $table = $db->getTable($fake, ['one' => 'a']);
+        $this->assertSame(5, $table->insert(['one' => 11]));
+        $this->assertSame(25, $table->insert(['one' => 12, 'b' => 25]));
+        $expected = [
+            ['a' => 1, 'b' => 2],
+            ['a' => 3, 'b' => 4],
+            ['a' => 11, 'b' => 5],
+            ['a' => 12, 'b' => 25],
+        ];
+        $this->assertEquals($expected, $fake->getData());
+        $this->assertEquals(25, $fake->getLastIncrement());
+        $actual = $table->select(['b', 'one'], null, ['b' => false])->assoc();
+        $expected = [
+            ['b' => 25, 'one' => 12],
+            ['b' => 5, 'one' => 11],
+            ['b' => 4, 'one' => 3],
+            ['b' => 2, 'one' => 1],
+        ];
+        $this->assertSame($expected, $actual);
+        $table->replace(['b' => 4, 'a' => 5]);
+        $table->update(['b' => 11], ['a' => 5]);
+        $this->assertSame(1, $table->delete(['a' => 11]));
+        $expected = [
+            ['a' => 1, 'b' => 2],
+            ['a' => 5, 'b' => 11],
+            ['a' => 12, 'b' => 25],
+        ];
+        $this->assertEquals($expected, $fake->getData());
+        $this->assertSame(2, $fake->getCount(true, ['a' => [1, 5, 11]]));
+    }
+
+    public function testFakeCache()
+    {
+        $data = [
+            ['a' => 1, 'b' => 2],
+            ['a' => 3, 'b' => 4],
+        ];
+        $fake = new FakeTable($data, null, 'b', 4);
+        $db = $this->createDB(false);
+        $table = $db->getTable($fake); // @todo ???
+        $this->assertEquals($data, $fake->getData());
+    }
+
+    public function testExtendedName()
+    {
+        $db = $this->createDB(false);
+        $table = $db->getTable(['a', 'b', 'test']);
+        try {
+            $table->select();
+            $this->fail('not thrown');
+        } catch (Query $e) {
+            $this->assertStringStartsWith('SELECT * FROM "a"."b"."pr_test"', $e->getQuery());
+        }
     }
 }

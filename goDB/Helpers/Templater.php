@@ -8,6 +8,7 @@ namespace go\DB\Helpers;
 use go\DB\Exceptions\DataMuch;
 use go\DB\Exceptions\DataNotEnough;
 use go\DB\Exceptions\DataNamed;
+use go\DB\Exceptions\DataInvalidFormat;
 use go\DB\Exceptions\UnknownPlaceholder;
 use go\DB\Exceptions\MixedPlaceholder;
 
@@ -92,7 +93,7 @@ class Templater
      * @return string
      * @throws \go\DB\Exceptions\Templater
      */
-    private function placeholderClb($matches)
+    protected function placeholderClb($matches)
     {
         $placeholder = isset($matches[1]) ? $matches[1] : '';
         if (isset($matches[3])) {
@@ -165,8 +166,11 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacement($value, array $modifiers)
+    protected function replacement($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('', 'required scalar given');
+        }
         return $this->valueModification($value, $modifiers);
     }
 
@@ -177,10 +181,16 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementL(array $value, array $modifiers)
+    protected function replacementL($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('list', 'required array (list of values)');
+        }
         $values = array();
-        foreach ($value as $element) {
+        foreach ($value as $k => $element) {
+            if (is_array($element)) {
+                throw new DataInvalidFormat('list', 'required scalar in item #'.$k);
+            }
             $values[] = $this->valueModification($element, $modifiers);
         }
         return implode(', ', $values);
@@ -193,28 +203,26 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementS(array $value, array $modifiers)
+    protected function replacementS($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('set', 'required array (column => value)');
+        }
         $set = array();
         foreach ($value as $col => $element) {
             $key = $this->implementation->reprCol($this->connection, $col);
             if (is_array($element)) {
-                $oval = isset($element['value']) ? $element['value'] : null;
-                if (isset($element['col'])) {
-                    $element = $this->replacementC($element['col'], $modifiers);
-                    if ($oval !== null) {
-                        $oval = (int)$oval;
-                        if ($oval > 0) {
-                            $element .= '+'.$oval;
-                        } else {
-                            $element .= $oval;
-                        }
-                    }
+                if (empty($element)) {
+                    $element = 'NULL';
                 } else {
-                    $element = $this->valueModification($oval, $modifiers);
+                    $element = $this->replacementC($element, $modifiers);
                 }
             } else {
-                $element = $this->valueModification($element, $modifiers);
+                if (is_int($element)) {
+                    $element = $this->implementation->reprInt($this->connection, $element);
+                } else {
+                    $element = $this->valueModification($element, $modifiers);
+                }
             }
             $set[] = $key.'='.$element;
         }
@@ -228,8 +236,11 @@ class Templater
      * @param array $modifiers
      * @return string
      */
-    private function replacementV(array $value, array $modifiers)
+    private function replacementV($value, array $modifiers)
     {
+        if (!is_array($value)) {
+            throw new DataInvalidFormat('values', 'required array of arrays');
+        }
         $values = array();
         foreach ($value as $v) {
             $values[] = '('.$this->replacementL($v, $modifiers).')';
@@ -246,7 +257,22 @@ class Templater
      */
     private function replacementT($value, array $modifiers)
     {
-        return $this->implementation->reprTable($this->connection, $this->prefix.$value);
+        if (!is_array($value)) {
+            return $this->implementation->reprTable($this->connection, $this->prefix.$value);
+        }
+        if (isset($value[0])) {
+            $chain = $value;
+            $t = count($chain) - 1;
+            $chain[$t] = $this->prefix.$chain[$t];
+        } elseif (isset($value['table'])) {
+            $chain = [$this->prefix.$value['table']];
+            if (isset($value['db'])) {
+                array_unshift($chain, $value['db']);
+            }
+        } elseif (!isset($value['table'])) {
+            throw new DataInvalidFormat('t', 'required `table` field');
+        }
+        return $this->implementation->reprChainFields($this->connection, $chain);
     }
 
     /**
@@ -258,11 +284,60 @@ class Templater
      */
     private function replacementC($value, array $modifiers)
     {
-        if (is_array($value)) {
-            $chain = array($this->prefix.$value[0], $value[1]);
+        if (!is_array($value)) {
+            return $this->implementation->reprCol($this->connection, $value);
+        }
+        if (isset($value[0])) {
+            if ($this->prefix !== null) {
+                $t = count($value) - 2;
+                if (isset($value[$t])) {
+                    $value[$t] = $this->prefix . $value[$t];
+                }
+            }
+            return $this->implementation->reprChainFields($this->connection, $value);
+        }
+        if (isset($value['col'])) {
+            $chain = [];
+            foreach (['db', 'table', 'col'] as $f) {
+                if (isset($value[$f])) {
+                    if (is_array($value[$f])) {
+                        $chain = array_merge($chain, $value[$f]);
+                    } else {
+                        $chain[] = $value[$f];
+                    }
+                }
+            }
+            if ($this->prefix !== null) {
+                $t = count($chain) - 2;
+                if (isset($chain[$t])) {
+                    $chain[$t ] = $this->prefix.$chain[$t];
+                }
+            }
             $result = $this->implementation->reprChainFields($this->connection, $chain);
+        } elseif (isset($value['value'])) {
+            if (is_int($value['value'])) {
+                $result = $this->implementation->reprInt($this->connection, $value['value']);
+            } else {
+                $result = $this->implementation->reprString($this->connection, $value['value']);
+            }
+            if (array_key_exists('col', $value) && isset($value['func'])) {
+                $result = '';
+            } else {
+                $value['value'] = null;
+            }
+        } elseif (isset($value['func'])) {
+            $result = '';
         } else {
-            $result = $this->implementation->reprCol($this->connection, $value);
+            throw new DataInvalidFormat('col', 'required `col`, `value` or `func` field');
+        }
+        if (isset($value['func'])) {
+            $result = $value['func'].'('.$result.')';
+        }
+        if (isset($value['value'])) {
+            $result .= (($value['value'] > 0) ? '+' : '').(int)$value['value'];
+        }
+        if (isset($value['as'])) {
+            $result .= ' AS '.$this->implementation->reprCol($this->connection, $value['as']);
         }
         return $result;
     }
@@ -301,6 +376,9 @@ class Templater
      */
     private function replacementE($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('escape', 'required string');
+        }
         return $this->implementation->escapeString($this->connection, $value);
     }
 
@@ -313,6 +391,9 @@ class Templater
      */
     private function replacementQ($value, array $modifiers)
     {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('query', 'required string');
+        }
         return $value;
     }
 
@@ -325,6 +406,43 @@ class Templater
      */
     private function replacementW($value, array $modifiers)
     {
+        return $this->whereGroup($value, $modifiers);
+    }
+
+    /**
+     * ?o, ?order
+     *
+     * @param mixed $value
+     * @param array $modifiers
+     * @return string
+     */
+    private function replacementO($value, array $modifiers)
+    {
+        if (!is_array($value)) {
+            return $this->replacementC($value, $modifiers).' ASC';
+        }
+        $stats = array();
+        foreach ($value as $k => $v) {
+            if (is_int($k)) {
+                $c = $v;
+                $s = 'ASC';
+            } else {
+                $c = $k;
+                $s = $v ? 'ASC' : 'DESC';
+            }
+            $stats[] = $this->replacementC($c, $modifiers).' '.$s;
+        }
+        return implode(',', $stats);
+    }
+
+    /**
+     * @param mixed $value
+     * @param array $modifiers
+     * @param string $sep [optional]
+     * @return string
+     */
+    private function whereGroup($value, array $modifiers, $sep = 'AND')
+    {
         if (!is_array($value)) {
             return ($value !== false) ? '1=1' : '1=0';
         }
@@ -333,31 +451,9 @@ class Templater
             $col = $this->replacementC($k, $modifiers);
             if (is_array($v)) {
                 if (empty($v)) {
-                    break;
+                    return '1=0';
                 }
-                if (isset($v['op'])) {
-                    $stat = $col.$v['op'];
-                    $oval = isset($v['value']) ? $v['value'] : null;
-                    if (isset($v['col'])) {
-                        $stat .= $this->replacementC($v['col'], $modifiers);
-                        if ($oval) {
-                            $oval = (int)$oval;
-                            if ($oval > 0) {
-                                $stat .= '+'.$oval;
-                            } else {
-                                $stat .= $oval;
-                            }
-                        }
-                    } else {
-                        if ($oval === null) {
-                            $stat .= 'NULL';
-                        } elseif (is_int($oval)) {
-                            $stat .= $oval;
-                        } else {
-                            $stat .= $this->replacement($oval, $modifiers);
-                        }
-                    }
-                } else {
+                if (isset($v[0])) {
                     $opts = array();
                     foreach ($v as $opt) {
                         if (is_int($opt)) {
@@ -367,6 +463,12 @@ class Templater
                         }
                     }
                     $stat = $col.' IN ('.implode(',', $opts).')';
+                } elseif (isset($v['group'])) {
+                    $sepG = isset($v['sep']) ? $v['sep'] : 'AND';
+                    $stat = '('.$this->whereGroup($v['group'], $modifiers, $sepG).')';
+                } else {
+                    $op = isset($v['op']) ? $v['op'] : '=';
+                    $stat = $col.$op.$this->replacementC($v, $modifiers);
                 }
             } elseif ($v === null) {
                 $stat = $col.' IS NULL';
@@ -382,33 +484,7 @@ class Templater
         if (empty($stats)) {
             return '1=1';
         }
-        return implode(' AND ', $stats);
-    }
-
-    /**
-     * ?o, ?order
-     *
-     * @param mixed $value
-     * @param array $modifiers
-     * @return string
-     */
-    private function replacementO($value, array $modifiers)
-    {
-        if (!is_array($value)) {
-            return $this->replacementC($value, $modifiers);
-        }
-        $stats = array();
-        foreach ($value as $k => $v) {
-            if (is_int($k)) {
-                $c = $v;
-                $s = 'ASC';
-            } else {
-                $c = $k;
-                $s = $v ? 'ASC' : 'DESC';
-            }
-            $stats[] = $this->replacementC($c, $modifiers).' '.$s;
-        }
-        return implode(',', $stats);
+        return implode(' '.$sep.' ', $stats);
     }
 
     /**

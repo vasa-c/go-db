@@ -7,6 +7,7 @@ namespace go\DB;
 
 use go\DB\Helpers\MapFields;
 use go\DB\Helpers\Fetchers\Arr as ArrFetcher;
+use go\DB\Fakes\IFakeTable;
 
 /**
  * Access to a specified table
@@ -20,15 +21,19 @@ class Table
      *
      * @param \go\DB\DB $db
      *        the database of the table
-     * @param string $tablename
+     * @param string $tableName
      *        the table name
      * @param array $map [optional]
      *        a field map (a field => a real column name)
      */
-    public function __construct(DB $db, $tablename, array $map = null)
+    public function __construct(DB $db, $tableName, array $map = null)
     {
         $this->db = $db;
-        $this->name = $tablename;
+        if ($tableName instanceof IFakeTable) {
+            $this->fake = $tableName;
+        } else {
+            $this->name = $tableName;
+        }
         if (!empty($map)) {
             $this->map = new MapFields($map);
         }
@@ -79,6 +84,9 @@ class Table
         if ($this->map) {
             $set = $this->map->set($set);
         }
+        if ($this->fake) {
+            return $this->fake->insert($set);
+        }
         $pattern = 'INSERT INTO ?t (?cols) VALUES (?ln)';
         $data = array($this->name, array_keys($set), array_values($set));
         return $this->db->query($pattern, $data)->id();
@@ -109,6 +117,9 @@ class Table
             }
             unset($set);
         }
+        if ($this->fake) {
+            return $this->fake->multiInsert($sets);
+        }
         if (isset($sets[0])) {
             $first = $sets[0];
         } else {
@@ -132,6 +143,9 @@ class Table
         }
         if ($this->map) {
             $set = $this->map->set($set);
+        }
+        if ($this->fake) {
+            return $this->fake->replace($set);
         }
         $pattern = 'REPLACE INTO ?t (?cols) VALUES (?ln)';
         $data = array($this->name, array_keys($set), array_values($set));
@@ -162,6 +176,9 @@ class Table
             }
             unset($set);
         }
+        if ($this->fake) {
+            return $this->fake->multiReplace($sets);
+        }
         if (isset($sets[0])) {
             $first = $sets[0];
         } else {
@@ -189,6 +206,9 @@ class Table
             $set = $this->map->set($set);
             $where = $this->map->where($where);
         }
+        if ($this->fake) {
+            return $this->fake->update($set, $where);
+        }
         $pattern = 'UPDATE ?t SET ?sn WHERE ?w';
         $data = array($this->name, $set, $where);
         return $this->db->query($pattern, $data)->ar();
@@ -213,19 +233,17 @@ class Table
         if ($cols === null) {
             $cols = true;
         }
+        if ($this->fake) {
+            $result = $this->fake->select($cols, $where, $order, $limit);
+            if ($this->map) {
+                return new ArrFetcher($this->map->assoc($result));
+            }
+            return $result;
+        }
         $pattern = 'SELECT ?cols FROM ?t WHERE ?w';
         $data = array($cols, $this->name, $where);
-        if (is_array($order)) {
-            if (!empty($order)) {
-                $ords = array();
-                foreach ($order as $k => $v) {
-                    $ords[] = '?c '.($v ? 'ASC' : 'DESC');
-                    $data[] = $k;
-                }
-                $pattern .= ' ORDER BY '.implode(',', $ords);
-            }
-        } elseif ($order !== null) {
-            $pattern .= ' ORDER BY ?c ASC';
+        if ($order !== null) {
+            $pattern .= ' ORDER BY ?o';
             $data[] = $order;
         }
         if ($limit !== null) {
@@ -257,10 +275,13 @@ class Table
      */
     public function delete($where = null)
     {
-        $pattern = 'DELETE FROM ?t WHERE ?w';
         if ($this->map) {
             $where = $this->map->where($where);
         }
+        if ($this->fake) {
+            return $this->fake->delete($where);
+        }
+        $pattern = 'DELETE FROM ?t WHERE ?w';
         $data = array($this->name, $where);
         return $this->db->query($pattern, $data)->ar();
     }
@@ -270,6 +291,9 @@ class Table
      */
     public function truncate()
     {
+        if ($this->fake) {
+            return $this->fake->truncate();
+        }
         $pattern = 'TRUNCATE TABLE ?t';
         $data = array($this->name);
         $this->db->query($pattern, $data);
@@ -284,6 +308,12 @@ class Table
      */
     public function getCount($col = null, $where = true)
     {
+        if ($this->map) {
+            $where = $this->map->where($where);
+        }
+        if ($this->fake) {
+            return $this->fake->getCount($col, $where);
+        }
         if ($col !== null) {
             $p = '?c';
             if ($this->map) {
@@ -292,9 +322,6 @@ class Table
         } else {
             $p = '?q';
             $col = 1;
-        }
-        if ($this->map) {
-            $where = $this->map->where($where);
         }
         $pattern = 'SELECT COUNT('.$p.') FROM ?t WHERE ?w';
         $data = array($col, $this->name, $where);
@@ -384,4 +411,9 @@ class Table
      * @var int
      */
     private $sizeAccum;
+
+    /**
+     * @var \go\DB\Fakes\FakeTable
+     */
+    private $fake;
 }

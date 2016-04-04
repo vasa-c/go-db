@@ -257,10 +257,10 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     public function testId()
     {
         $this->assertNull($this->fetcher->id());
-        $idfetcher = new Arr(null, 10);
-        $this->assertEmpty($idfetcher->assoc());
-        $this->assertSame(0, $idfetcher->num());
-        $this->assertSame(10, $idfetcher->id());
+        $idFetcher = new Arr(null, 10);
+        $this->assertEmpty($idFetcher->assoc());
+        $this->assertSame(0, $idFetcher->num());
+        $this->assertSame(10, $idFetcher->id());
     }
 
     /**
@@ -269,6 +269,11 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     public function testAr()
     {
         $this->assertEquals(0, $this->fetcher->ar());
+        $arFetcher = new Arr(null, null, 3);
+        $this->assertEmpty($arFetcher->assoc());
+        $this->assertSame(0, $arFetcher->num());
+        $this->assertSame(null, $arFetcher->id());
+        $this->assertSame(3, $arFetcher->ar());
     }
 
     /**

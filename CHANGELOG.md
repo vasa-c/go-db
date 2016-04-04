@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## Dev
+
+## 2.2.8 (28.03.2016)
+
+* Extended ?col and `NOW()` (a function without arguments)
+* #54: Use `DataInvalidFormat`
+
+## 2.2.7 (27.03.2016)
+
+* #44: Extended ?col & ?cols format (https://github.com/vasa-c/go-db/wiki/cols)
+* #55: Extended ?table format (https://github.com/vasa-c/go-db/wiki/table-format)
+* #46: Extended ?set format (https://github.com/vasa-c/go-db/wiki/set)
+* #45: Extended ?where format (https://github.com/vasa-c/go-db/wiki/where)
+* Fixed ?order (if scalar it does not add "ASC")
+* Added to travis-ci.org
+* ConfigError: normal message
+
+## 2.2.6 (12.02.2016)
+
+* FakeTable: some fixes and refactoring.
+
+## 2.2.5 (11.02.2016)
+
+* FakeDB
+* FakeTable transactions
+* FakeTable log
+* Some fixes
+
+## 2.2.4 (10.02.2016)
+
+* FakeTable for tests
+
 ## 2.2.3 (18.02.2015)
 
 * Some refactoring and phpdoc fixes

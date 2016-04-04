@@ -66,7 +66,7 @@ class PgsqlTest extends Base
         try {
             $db->query("SELECT 'abc'::int");
             $this->fail();
-        } catch (\go\DB\Exceptions\Query $q){
+        } catch (\go\DB\Exceptions\Query $q) {
             $this->assertNotNull($q->getError());
             $this->assertEquals("22P02", $q->getErrorCode());
         }
