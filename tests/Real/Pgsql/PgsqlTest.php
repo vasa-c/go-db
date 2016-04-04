@@ -70,6 +70,8 @@ class PgsqlTest extends Base
             $this->assertNotNull($q->getError());
             $this->assertEquals("22P02", $q->getErrorCode());
         }
-       
+        
+        $trickyName = 'qu`ote"d na\'me';
+        $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
     }
 }

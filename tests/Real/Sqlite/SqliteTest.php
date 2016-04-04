@@ -59,5 +59,8 @@ class SqliteTest extends Base
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
+        
+        $trickyName = 'qu`ote"d na\'me';
+        $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
     }
 }
