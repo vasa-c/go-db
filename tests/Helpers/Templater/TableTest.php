@@ -55,6 +55,27 @@ final class TableTest extends Base
                 'TRUNCATE TABLE `p_test`',
                 'p_',
             ],
+            'chain' => [
+                'SELECT * FROM ?t',
+                [
+                    [
+                        'table' => ['public','test'],
+                    ],
+                ],
+                'SELECT * FROM `public`.`p_test`',
+                'p_'
+            ],
+            'as' => [
+                'SELECT * FROM ?t',
+                [
+                    [
+                        'table' => 'test',
+                        'as' => 't1'
+                    ],
+                ],
+                'SELECT * FROM `p_test` AS `t1`',
+                'p_'
+            ]
         ];
     }
 }

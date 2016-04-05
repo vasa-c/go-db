@@ -156,7 +156,7 @@ final class Pgsql extends Base
      */
     protected function reprField($connection, $value)
     {
-        return '"' . $value . '"';
+        return '"' . str_replace('"', '""', $value) . '"';
     }
 
     /**
