@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## Dev
+## 2.2.9 (25.04.2016)
+
+* Fix escape identifier names
+* Add support for chain and alias 'as' in ?t placeholder
 
 ## 2.2.8 (28.03.2016)
 
