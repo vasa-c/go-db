@@ -32,8 +32,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
      * @var array
      */
     private $rows = array(
-        array(1, 1, 2),
         array(2, 1, 4),
+        array(1, 1, 2),
         array(3, 1, 6),
         array(4, 2, 8),
         array(5, 2, 10),
@@ -46,6 +46,67 @@ class TableTest extends \PHPUnit_Framework_TestCase
         'id' => 'id_s',
         'b' => 'b_s',
     );
+
+    public function testHighSelect()
+    {
+        $db = $this->createDB(true);
+        $last = null;
+        $debug = function ($query) use (&$last) {
+            $last = $query;
+        };
+        $db->setDebug($debug);
+        $table = $db->getTable('test', $this->map);
+
+        $res = array(
+            'group_or' => array(
+                'sep' => 'OR',
+                'group' => array(
+                    'id' => 1,
+                    'b' => 10
+                )
+            )
+        );
+
+        $table->select(array('id', 'b'), $res)->assoc();
+
+        $this->assertSame(15, $table->select(array(array('col' => 'id', 'func' => 'sum')))->el());
+        $this->assertSame(2, $table->getCount(null, array('id' => ['op' => '>', 'value' => 3,])));
+        $this->assertSame(3, $table->getCount(null, array('id' => ['op' => '>=', 'value' => 3])));
+        $this->assertSame(2, $table->getCount(null, array('id' => ['op' => '<', 'value' => 3])));
+        $this->assertSame(3, $table->getCount(null, array('id' => ['op' => '<=', 'value' => 3])));
+        try {
+            $cols = array(
+                array(
+                    'col' => array(
+                            'db' => 'x',
+                            'table' => 'test',
+                            'col' => 'id_s'
+                        ),
+                        'func' => 'sum'
+                    )
+            );
+            $table->select($cols)->el();
+        } catch (\go\DB\Exceptions\Query $e) {
+            $this->assertSame('SELECT sum("x"."test"."id_s") FROM "pr_test" WHERE 1=1', $e->getQuery());
+        }
+        $set = array(
+            0 => array(
+                'i' => 2,
+                'a' => 1
+            )
+        );
+        $this->assertEquals($set, $table->select(array(array('col' => 'id', 'as' => 'i'), 'a'), array('id' => 2))->assoc());
+
+        $col = array(
+            'col' => 'id',
+            'value' => 1
+        );
+
+        $table->update(array('id' => $col), array('id'=>5));
+        $this->assertSame(1, $table->getCount(null, array('id' => 6)));
+
+
+    }
 
     /**
      * @param boolean $fill [optional]

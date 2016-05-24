@@ -42,8 +42,14 @@ class MapFields
     {
         if (is_array($cols)) {
             foreach ($cols as &$col) {
-                if (is_string($col) && (isset($this->map[$col]))) {
-                    $col = $this->map[$col];
+                if (is_string($col)) {
+                    if (isset($this->map[$col])) {
+                        $col = $this->map[$col];
+                    }
+                } elseif (is_array($col) && isset($col['col'])) {
+                    if (is_string($col['col']) && isset($this->map[$col['col']])) {
+                        $col['col'] = $this->map[$col['col']];
+                    }
                 }
             }
             unset($col);
