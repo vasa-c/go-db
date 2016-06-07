@@ -89,13 +89,13 @@ class TableTest extends \PHPUnit_Framework_TestCase
         } catch (\go\DB\Exceptions\Query $e) {
             $this->assertSame('SELECT sum("x"."test"."id_s") FROM "pr_test" WHERE 1=1', $e->getQuery());
         }
-        $set = array(
-            0 => array(
+        $set = [
+            [
                 'i' => 2,
-                'a' => 1
-            )
-        );
-        $this->assertEquals($set, $table->select(array(array('col' => 'id', 'as' => 'i'), 'a'), array('id' => 2))->assoc());
+                'a' => 1,
+            ],
+        ];
+        $this->assertEquals($set, $table->select([['col' => 'id', 'as' => 'i'], 'a'], ['id' => 2])->assoc());
 
         $col = array(
             'col' => 'id',
