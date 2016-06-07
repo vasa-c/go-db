@@ -69,6 +69,9 @@ class SqliteTest extends Base
     public function testErrorConnect()
     {
         $this->loadConnectionParams();
+        if (defined('HHVM_VERSION')) {
+            $this->markTestIncomplete('HHVM doesn\'t throw an exception');
+        }
         $params = [
             'filename' => __DIR__.'/1.txt',
             'flags' => 1, // SQLITE3_OPEN_READONLY,
