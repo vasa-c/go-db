@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.10 (7.06.2016)
+
+* #59: Fixed: not specified message and code for the Connect exception
+
 ## 2.2.9 (25.04.2016)
 
 * Fix escape identifier names

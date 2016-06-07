@@ -30,14 +30,14 @@ final class Mysql extends Base
         $socket = $params['socket'];
         $connection = @(new \mysqli($host, $user, $password, $dbname, $port, $socket));
         if ($connection->connect_error) {
-            $this->errorInfo = $connection->connect_error;
-            $this->errorCode = $connection->connect_errno;
+            $errorInfo = $connection->connect_error;
+            $errorCode = $connection->connect_errno;
             return false;
         }
         if ($params['charset']) {
             if (!$connection->set_charset($params['charset'])) {
-                $this->errorInfo = $connection->error;
-                $this->errorCode = $connection->errno;
+                $errorInfo = $connection->error;
+                $errorCode = $connection->errno;
                 $connection->close();
                 return false;
             }

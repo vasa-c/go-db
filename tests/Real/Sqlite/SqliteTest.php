@@ -6,6 +6,8 @@
 namespace go\Tests\DB\Real\Sqlite;
 
 use go\Tests\DB\Real\Base;
+use go\DB\DB;
+use go\DB\Exceptions\Connect;
 
 class SqliteTest extends Base
 {
@@ -59,8 +61,24 @@ class SqliteTest extends Base
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
-        
+
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
+    }
+
+    public function testErrorConnect()
+    {
+        $this->loadConnectionParams();
+        $params = [
+            'filename' => __DIR__.'/1.txt',
+            'flags' => 1, // SQLITE3_OPEN_READONLY,
+            '_lazy' => false,
+        ];
+        try {
+            DB::create($params, 'sqlite');
+            $this->fail('not thrown');
+        } catch (Connect $e) {
+            $this->assertNotEmpty($e->getMessage());
+        }
     }
 }

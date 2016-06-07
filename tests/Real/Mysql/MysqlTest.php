@@ -6,6 +6,8 @@
 namespace go\Tests\DB\Real\Mysql;
 
 use go\Tests\DB\Real\Base;
+use go\DB\DB;
+use go\DB\Exceptions\Connect;
 
 class MysqlTest extends Base
 {
@@ -57,7 +59,7 @@ class MysqlTest extends Base
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
-        
+
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
     }
@@ -102,5 +104,23 @@ class MysqlTest extends Base
         $this->assertFalse($db->isConnected());
         $this->assertSame('q', $db->query('SELECT @a')->el());
         $this->assertTrue($db->isConnected());
+    }
+
+    public function testErrorConnect()
+    {
+        $this->loadConnectionParams();
+        $params = [
+            'host' => 'localhost',
+            'username' => 'non-exists-user',
+            'password' => 'qqq',
+            '_lazy' => false,
+        ];
+        try {
+            DB::create($params, 'mysql');
+            $this->fail('not thrown');
+        } catch (Connect $e) {
+            $this->assertNotEmpty($e->getMessage());
+            $this->assertNotEmpty($e->getCode());
+        }
     }
 }

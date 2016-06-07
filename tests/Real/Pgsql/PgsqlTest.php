@@ -6,6 +6,8 @@
 namespace go\Tests\DB\Real\Pgsql;
 
 use go\Tests\DB\Real\Base;
+use go\DB\DB;
+use go\DB\Exceptions\Connect;
 
 class PgsqlTest extends Base
 {
@@ -55,14 +57,14 @@ class PgsqlTest extends Base
         $this->assertEquals($expected, $actual);
         $this->assertNull($actual[1][3]);
         $this->assertNull($actual[3][3]);
-        
+
         $sql = 'SELECT COUNT(*) FROM "godbtest" WHERE ?w';
         $this->assertTrue($db->query($sql, array(array()))->el() > 0);
         $this->assertTrue($db->query($sql, array(null))->el() > 0);
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
-        
+
         try {
             $db->query("SELECT 'abc'::int");
             $this->fail();
@@ -70,8 +72,26 @@ class PgsqlTest extends Base
             $this->assertNotNull($q->getError());
             $this->assertEquals("22P02", $q->getErrorCode());
         }
-        
+
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
+    }
+
+    public function testErrorConnect()
+    {
+        $this->loadConnectionParams();
+        $params = [
+            'host' => '127.0.0.1',
+            'username' => 'postgres-no',
+            'password' => '',
+            'dbname' => 'travis_ci_test',
+            '_lazy' => false,
+        ];
+        try {
+            DB::create($params, 'pgsql');
+            $this->fail('not thrown');
+        } catch (Connect $e) {
+            $this->assertNotEmpty($e->getMessage());
+        }
     }
 }

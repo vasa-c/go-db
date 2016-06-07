@@ -21,8 +21,8 @@ final class Sqlite extends Base
         try {
             $connection = new \SQLite3($params['filename'], $flags, $params['encryption_key']);
         } catch (\Exception $e) {
-            $this->errorInfo = $e->getMessage();
-            $this->errorCode = $e->getCode();
+            $errorInfo = $e->getMessage();
+            $errorCode = $e->getCode();
             return false;
         }
         return $connection;

@@ -6,6 +6,8 @@
 namespace go\Tests\DB\Real\Mysql;
 
 use go\Tests\DB\Real\Base;
+use go\DB\DB;
+use go\DB\Exceptions\Connect;
 
 class MysqloldTest extends Base
 {
@@ -50,15 +52,33 @@ class MysqloldTest extends Base
         $this->assertEquals($expected, $actual);
         $this->assertNull($actual[1][3]);
         $this->assertNull($actual[3][3]);
-        
+
         $sql = 'SELECT COUNT(*) FROM `godbtest` WHERE ?w';
         $this->assertTrue($db->query($sql, array(array()))->el() > 0);
         $this->assertTrue($db->query($sql, array(null))->el() > 0);
         $this->assertTrue($db->query($sql, array(true))->el() > 0);
 
         $this->assertTrue($db->query($sql, array(false))->el() == 0);
-        
+
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
+    }
+
+    public function testErrorConnect()
+    {
+        $this->loadConnectionParams();
+        $params = [
+            'host' => 'localhost',
+            'username' => 'non-exists-user',
+            'password' => 'qqq',
+            '_lazy' => false,
+        ];
+        try {
+            DB::create($params, 'mysqlold');
+            $this->fail('not thrown');
+        } catch (Connect $e) {
+            $this->assertNotEmpty($e->getMessage());
+            $this->assertNotEmpty($e->getCode());
+        }
     }
 }

@@ -63,15 +63,7 @@ abstract class Base extends \PHPUnit_Framework_TestCase
      */
     protected function createDB($dumpfile = null, $params = null)
     {
-        if ($params === null) {
-            $params = $this->getConnectionParams();
-        }
-        if ($params === null) {
-            $this->markTestSkipped();
-        }
-        if ($this->reqExt && (!extension_loaded($this->reqExt))) {
-            $this->markTestSkipped();
-        }
+        $params = $this->loadConnectionParams($params);
         $db = DB::create($params, $this->adapter);
         if ($dumpfile) {
             foreach (explode(';', file_get_contents($dumpfile)) as $query) {
@@ -82,6 +74,20 @@ abstract class Base extends \PHPUnit_Framework_TestCase
             }
         }
         return $db;
+    }
+
+    protected function loadConnectionParams($params = null)
+    {
+        if ($params === null) {
+            $params = $this->getConnectionParams();
+        }
+        if ($params === null) {
+            $this->markTestSkipped();
+        }
+        if ($this->reqExt && (!extension_loaded($this->reqExt))) {
+            $this->markTestSkipped();
+        }
+        return $params;
     }
 
     /**
