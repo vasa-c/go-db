@@ -70,7 +70,7 @@ class SqliteTest extends Base
     {
         $this->loadConnectionParams();
         if (defined('HHVM_VERSION')) {
-            $this->markTestIncomplete('HHVM doesn\'t throw an exception');
+            $this->markTestSkipped('HHVM doesn\'t throw an exception');
         }
         $params = [
             'filename' => __DIR__.'/1.txt',
