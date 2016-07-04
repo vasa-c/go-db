@@ -23,7 +23,7 @@ final class Fake extends DB
         if (is_object($tableName)) {
             $fake = $tableName;
         } else {
-            $fake = $this->getImplementationConnection()->getTable($tableName);
+            $fake = $this->getImplementationConnection()->getTable($this->prefix.$tableName);
         }
         return new Table($this, $fake, $map);
     }

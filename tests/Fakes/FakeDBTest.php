@@ -68,4 +68,26 @@ class FakesDBTest extends \PHPUnit_Framework_TestCase
         $table = $db->getTable($fakeTable);
         $this->assertSame([['x' => 1]], $table->select()->assoc());
     }
+
+    public function testPrefix()
+    {
+        $params = [
+            '_adapter' => 'fake',
+            'tables' => [
+                'one' => [
+                    'data' => [
+                        ['a' => 1],
+                    ],
+                ],
+                'pr_one' => [
+                    'data' => [
+                        ['a' => 2],
+                    ],
+                ],
+            ],
+            '_prefix' => 'pr_',
+        ];
+        $db = DB::create($params);
+        $this->assertSame(2, $db->getTable('one')->select('a')->el());
+    }
 }

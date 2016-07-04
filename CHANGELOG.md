@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.11 (4.07.2016)
+
+* #60: Use prefix for fake db 
+
 ## 2.2.10 (7.06.2016)
 
 * #59: Fixed: not specified message and code for the Connect exception
