@@ -91,7 +91,6 @@ class ArrTest extends \PHPUnit_Framework_TestCase
             25 => (object)array('id' => 3, 'a' => 25, 'b' => null),
         );
         $this->assertEquals($expected, $this->fetcher->objects('a'));
-
     }
 
     /**
