@@ -22,19 +22,28 @@ final class CompatTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         Compat::setOpt('null', true);
+        Compat::setOpt('types', true);
     }
 
     public function testSetOpt()
     {
         $db = DB::create(['host' => 'localhost'], 'test');
-        $pattern = 'INSERT ?, ?i, ?n, ?in, ?s, ?sn';
-        $data = [null, null, null, null, ['x' => null], ['y' => null]];
-        $expectedDef = 'INSERT NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL';
+        $pattern = 'INSERT ?, ?, ?i, ?n, ?in, ?s, ?sn';
+        $data = [2, null, null, null, null, ['x' => null], ['y' => null]];
+        $expectedDef = 'INSERT 2, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL';
         $this->assertSame($expectedDef, $db->makeQuery($pattern, $data));
         Compat::setOpt('null', false);
-        $expectedOld = 'INSERT "", 0, NULL, NULL, `x`="", `y`=NULL';
+        Compat::setOpt('types', false);
+        $expectedOld = 'INSERT "2", "", 0, NULL, NULL, `x`="", `y`=NULL';
         $this->assertSame($expectedOld, $db->makeQuery($pattern, $data));
         Compat::setOpt('null', true);
+        Compat::setOpt('types', false);
+        $this->assertSame('INSERT "2", NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL', $db->makeQuery($pattern, $data));
+        Compat::setOpt('null', false);
+        Compat::setOpt('types', true);
+        $this->assertSame('INSERT 2, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL', $db->makeQuery($pattern, $data));
+        Compat::setOpt('null', true);
+        Compat::setOpt('types', true);
         $this->assertSame($expectedDef, $db->makeQuery($pattern, $data));
     }
 
@@ -57,13 +66,15 @@ final class CompatTest extends \PHPUnit_Framework_TestCase
     public function testSysParamCompat()
     {
         $db = DB::create(['host' => 'localhost'], 'test');
-        $dbO = DB::create(['host' => 'localhost', '_compat' => ['null' => false]], 'test');
+        $dbO = DB::create(['host' => 'localhost', '_compat' => ['null' => false, 'types' => false]], 'test');
         $this->assertSame('NULL', $db->makeQuery('?', [null]));
         $this->assertSame('""', $dbO->makeQuery('?', [null]));
         Compat::setOpt('null', false);
+        Compat::setOpt('types', false);
         $this->assertSame('""', $db->makeQuery('?', [null]));
         $this->assertSame('""', $dbO->makeQuery('?', [null]));
         Compat::setOpt('null', true);
+        Compat::setOpt('types', true);
         $this->assertSame('NULL', $db->makeQuery('?', [null]));
         $this->assertSame('""', $dbO->makeQuery('?', [null]));
     }

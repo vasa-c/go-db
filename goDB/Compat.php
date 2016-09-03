@@ -56,6 +56,7 @@ class Compat
      */
     private static $opts = array(
         'null' => true,
+        'types' => true,
     );
 
     /**

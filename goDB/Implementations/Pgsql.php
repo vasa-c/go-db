@@ -154,6 +154,14 @@ final class Pgsql extends Base
     /**
      * {@inheritdoc}
      */
+    public function reprBool($connection, $value)
+    {
+        return $value ? 'true' : 'false';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function reprField($connection, $value)
     {
         return '"' . str_replace('"', '""', $value) . '"';

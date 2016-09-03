@@ -22,12 +22,12 @@ final class ScalarTest extends Base
             'escape' => [
                 'INSERT INTO `table` VALUES (?, ?scalar, ?, ?string)',
                 $data,
-                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, "3.5")',
             ],
             'null' => [
                 'INSERT INTO `table` VALUES (?null, ?null, ?null, ?null)',
                 $data,
-                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, "3.5")',
             ],
             'int' => [
                 'INSERT INTO `table` VALUES (?i, ?i, ?i, ?i)',

@@ -5,6 +5,7 @@
 
 namespace go\DB\Helpers;
 
+use go\DB\Compat;
 use go\DB\Exceptions\DataMuch;
 use go\DB\Exceptions\DataNotEnough;
 use go\DB\Exceptions\DataNamed;
@@ -146,8 +147,10 @@ class Templater
      */
     private function valueModification($value, array $modifiers)
     {
-        if ($modifiers['n'] && is_null($value)) {
-            return $this->implementation->reprNULL($this->connection);
+        if (is_null($value)) {
+            if ($modifiers['n'] || Compat::getOpt('types')) {
+                return $this->implementation->reprNULL($this->connection);
+            }
         }
         if ($modifiers['i']) {
             return $this->implementation->reprInt($this->connection, $value);
@@ -155,6 +158,18 @@ class Templater
             return $this->implementation->reprFloat($this->connection, $value);
         } elseif ($modifiers['b']) {
             return $this->implementation->reprBool($this->connection, $value);
+        }
+        if (Compat::getOpt('types')) {
+            $type = gettype($value);
+            if ($type === 'integer') {
+                return $this->implementation->reprInt($this->connection, $value);
+            } elseif ($type === 'double') {
+                return $this->implementation->reprFloat($this->connection, $value);
+            } elseif ($type === 'boolean') {
+                return $this->implementation->reprBool($this->connection, $value);
+            } elseif ($type === 'NULL') {
+                return $this->implementation->reprNULL($this->connection);
+            }
         }
         return $this->implementation->reprString($this->connection, $value);
     }

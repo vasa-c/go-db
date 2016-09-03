@@ -62,6 +62,9 @@ class MysqloldTest extends Base
 
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
+        
+        $this->assertEquals('1', $db->makeQuery('?', array(true)));
+        $this->assertEquals('0', $db->makeQuery('?', array(false)));
     }
 
     public function testErrorConnect()
