@@ -167,8 +167,6 @@ class Templater
                 return $this->implementation->reprFloat($this->connection, $value);
             } elseif ($type === 'boolean') {
                 return $this->implementation->reprBool($this->connection, $value);
-            } elseif ($type === 'NULL') {
-                return $this->implementation->reprNULL($this->connection);
             }
         }
         return $this->implementation->reprString($this->connection, $value);
