@@ -28,20 +28,26 @@ final class CompatTest extends \PHPUnit_Framework_TestCase
     public function testSetOpt()
     {
         $db = DB::create(['host' => 'localhost'], 'test');
-        $pattern = 'INSERT ?, ?, ?i, ?n, ?in, ?s, ?sn';
-        $data = [2, null, null, null, null, ['x' => null], ['y' => null]];
-        $expectedDef = 'INSERT 2, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL';
+        $pattern = 'INSERT ?, ?string, ?, ?i, ?n, ?in, ?s, ?sn';
+        $data = [2, null, null, null, null, null, ['x' => null], ['y' => null]];
+        $expectedDef = 'INSERT 2, NULL, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL';
         $this->assertSame($expectedDef, $db->makeQuery($pattern, $data));
         Compat::setOpt('null', false);
         Compat::setOpt('types', false);
-        $expectedOld = 'INSERT "2", "", 0, NULL, NULL, `x`="", `y`=NULL';
+        $expectedOld = 'INSERT "2", "", "", 0, NULL, NULL, `x`="", `y`=NULL';
         $this->assertSame($expectedOld, $db->makeQuery($pattern, $data));
         Compat::setOpt('null', true);
         Compat::setOpt('types', false);
-        $this->assertSame('INSERT "2", NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL', $db->makeQuery($pattern, $data));
+        $this->assertSame(
+            'INSERT "2", NULL, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL',
+            $db->makeQuery($pattern, $data)
+        );
         Compat::setOpt('null', false);
         Compat::setOpt('types', true);
-        $this->assertSame('INSERT 2, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL', $db->makeQuery($pattern, $data));
+        $this->assertSame(
+            'INSERT 2, NULL, NULL, NULL, NULL, NULL, `x`=NULL, `y`=NULL',
+            $db->makeQuery($pattern, $data)
+        );
         Compat::setOpt('null', true);
         Compat::setOpt('types', true);
         $this->assertSame($expectedDef, $db->makeQuery($pattern, $data));

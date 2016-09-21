@@ -173,7 +173,7 @@ class Templater
     }
 
     /**
-     * ?, ?string, ?scalar
+     * ?, ?scalar
      *
      * @param mixed $value
      * @param array $modifiers
@@ -185,6 +185,24 @@ class Templater
             throw new DataInvalidFormat('', 'required scalar given');
         }
         return $this->valueModification($value, $modifiers);
+    }
+    
+    /**
+     * ?string
+     * @param mixed $value
+     * @param array $modifiers
+     * @throws DataInvalidFormat
+     * @return string
+     */
+    protected function replacementSTRING($value, array $modifiers)
+    {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('', 'required scalar given');
+        }
+        if (($modifiers['n'] || Compat::getOpt('types')) && is_null($value)) {
+            return $this->implementation->reprNULL($this->connection);
+        }
+        return $this->implementation->reprString($this->connection, $value);
     }
 
     /**
