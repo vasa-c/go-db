@@ -95,6 +95,15 @@ class MysqlTest extends Base
             array(5, 7, 14),
         );
         $this->assertEquals($expected, $actual);
+        $actual = $table->select(null, [])->assoc();
+        $expected = array(
+            array('id' => 1, 'a' => 3, 'b' => 6),
+            array('id' => 2, 'a' => 4, 'b' => 8),
+            array('id' => 3, 'a' => 5, 'b' => 10),
+            array('id' => 4, 'a' => 6, 'b' => 12),
+            array('id' => 5, 'a' => 7, 'b' => 14),
+        );
+        $this->assertEquals($expected, $actual);
     }
 
     public function testPreQuery()
