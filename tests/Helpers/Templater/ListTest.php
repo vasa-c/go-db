@@ -22,17 +22,17 @@ final class ListTest extends Base
             'short' => [
                 'INSERT INTO `table` VALUES (?l)',
                 [$list],
-                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, "3.5")',
             ],
             'full' => [
                 'INSERT INTO `table` VALUES (?list)',
                 [$list],
-                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, "3.5")',
             ],
             'null' => [
                 'INSERT INTO `table` VALUES (?ln)',
                 [$list],
-                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+                'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, "3.5")',
             ],
             'int' => [
                 'INSERT INTO `table` VALUES (?li)',

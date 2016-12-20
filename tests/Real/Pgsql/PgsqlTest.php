@@ -75,6 +75,9 @@ class PgsqlTest extends Base
 
         $trickyName = 'qu`ote"d na\'me';
         $this->assertEquals('str', $db->query("SELECT 'str' as ?c", array($trickyName))->el($trickyName));
+        
+        $this->assertEquals('true', $db->makeQuery('?', array(true)));
+        $this->assertEquals('false', $db->makeQuery('?', array(false)));
     }
 
     public function testErrorConnect()

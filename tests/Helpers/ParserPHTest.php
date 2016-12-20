@@ -47,7 +47,7 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
             array('c', 'c', 'n'),
             array('e', 'e', 'n'),
             array('q', 'q', 'n'),
-            array('string', '', 'n'),
+            array('string', 'string', 'n'),
             array('scalar', '', 'n'),
             array('list', 'l', 'n'),
             array('set', 's', 'n'),

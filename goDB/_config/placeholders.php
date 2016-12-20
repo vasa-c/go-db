@@ -14,7 +14,7 @@ return array(
 
     /* The list of long synonyms */
     'longs' => array(
-        'string' => '',
+        'string' => 'string',
         'scalar' => '',
         'list'   => 'l',
         'set'    => 's',
