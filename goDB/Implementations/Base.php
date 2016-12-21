@@ -281,8 +281,8 @@ abstract class Base
      * @return string
      */
     public function reprFloat($connection, $value)
-    {
-        return (0 + $value);
+    {   
+        return (float)$value;
     }
 
     /**
