@@ -5,6 +5,7 @@
 
 namespace go\DB\Helpers;
 
+use go\DB\Compat;
 use go\DB\Exceptions\DataMuch;
 use go\DB\Exceptions\DataNotEnough;
 use go\DB\Exceptions\DataNamed;
@@ -146,8 +147,10 @@ class Templater
      */
     private function valueModification($value, array $modifiers)
     {
-        if ($modifiers['n'] && is_null($value)) {
-            return $this->implementation->reprNULL($this->connection);
+        if (is_null($value)) {
+            if ($modifiers['n'] || Compat::getOpt('types')) {
+                return $this->implementation->reprNULL($this->connection);
+            }
         }
         if ($modifiers['i']) {
             return $this->implementation->reprInt($this->connection, $value);
@@ -156,11 +159,21 @@ class Templater
         } elseif ($modifiers['b']) {
             return $this->implementation->reprBool($this->connection, $value);
         }
+        if (Compat::getOpt('types')) {
+            $type = gettype($value);
+            if ($type === 'integer') {
+                return $this->implementation->reprInt($this->connection, $value);
+            } elseif ($type === 'double') {
+                return $this->implementation->reprFloat($this->connection, $value);
+            } elseif ($type === 'boolean') {
+                return $this->implementation->reprBool($this->connection, $value);
+            }
+        }
         return $this->implementation->reprString($this->connection, $value);
     }
 
     /**
-     * ?, ?string, ?scalar
+     * ?, ?scalar
      *
      * @param mixed $value
      * @param array $modifiers
@@ -172,6 +185,24 @@ class Templater
             throw new DataInvalidFormat('', 'required scalar given');
         }
         return $this->valueModification($value, $modifiers);
+    }
+    
+    /**
+     * ?string
+     * @param mixed $value
+     * @param array $modifiers
+     * @throws DataInvalidFormat
+     * @return string
+     */
+    protected function replacementSTRING($value, array $modifiers)
+    {
+        if (is_array($value)) {
+            throw new DataInvalidFormat('', 'required scalar given');
+        }
+        if (($modifiers['n'] || Compat::getOpt('types')) && is_null($value)) {
+            return $this->implementation->reprNULL($this->connection);
+        }
+        return $this->implementation->reprString($this->connection, $value);
     }
 
     /**

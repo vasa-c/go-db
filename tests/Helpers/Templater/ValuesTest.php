@@ -25,12 +25,12 @@ final class ValuesTest extends Base
             'values' => [
                 'INSERT INTO `table` VALUES ?values;',
                 [$values],
-                'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
+                'INSERT INTO `table` VALUES (0, 1, 2), ("one", NULL, "three")',
             ],
             'null' => [
                 'INSERT INTO `table` VALUES ?vn',
                 [$values],
-                'INSERT INTO `table` VALUES ("0", "1", "2"), ("one", NULL, "three")',
+                'INSERT INTO `table` VALUES (0, 1, 2), ("one", NULL, "three")',
             ],
             'int' => [
                 'INSERT INTO `table` VALUES ?values-int',

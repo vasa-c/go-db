@@ -104,8 +104,6 @@ class TableTest extends \PHPUnit_Framework_TestCase
 
         $table->update(array('id' => $col), array('id'=>5));
         $this->assertSame(1, $table->getCount(null, array('id' => 6)));
-
-
     }
 
     /**
