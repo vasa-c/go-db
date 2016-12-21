@@ -95,13 +95,15 @@ class MysqlTest extends Base
             array(5, 7, 14),
         );
         $this->assertEquals($expected, $actual);
-        $actual = $table->select(null, [])->assoc();
+        $actual = $table->select(null, [], 'id')->numerics();
+        $this->assertEquals($expected, $actual);
+        $expected = [];
+        $actual = $table->select(null, ['a' => '4', 'b' => [], 'id' => 5])->assoc();
+        $this->assertEquals($expected, $actual);
+        $table->getDB()->setDebug(true);
+        $actual = $table->select(null, ['group_or' => ['sep' => 'OR', 'group' => ['a' => '6', 'b' => []]]])->assoc();
         $expected = array(
-            array('id' => 1, 'a' => 3, 'b' => 6),
-            array('id' => 2, 'a' => 4, 'b' => 8),
-            array('id' => 3, 'a' => 5, 'b' => 10),
-            array('id' => 4, 'a' => 6, 'b' => 12),
-            array('id' => 5, 'a' => 7, 'b' => 14),
+            array('id' => '4', 'a' => '6', 'b' => '12'),
         );
         $this->assertEquals($expected, $actual);
     }

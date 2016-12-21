@@ -36,7 +36,7 @@ final class WhereTest extends Base
             'empty_list' => [
                 'WHERE ?where',
                 [['x' => null, 'y' => []]],
-                'WHERE 1=0',
+                'WHERE `x` IS NULL AND 1=0',
             ],
             'not_null' => [
                 'WHERE ?where',

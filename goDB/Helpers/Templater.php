@@ -459,7 +459,8 @@ class Templater
             $col = $this->replacementC($k, $modifiers);
             if (is_array($v)) {
                 if (empty($v)) {
-                    return '1=0';
+                    $stats[] = '1=0';
+                    continue;
                 }
                 if (isset($v[0])) {
                     $opts = array();
