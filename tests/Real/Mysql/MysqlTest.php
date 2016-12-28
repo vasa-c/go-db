@@ -103,7 +103,6 @@ class MysqlTest extends Base
         $expected = [];
         $actual = $table->select(null, ['a' => '4', 'b' => [], 'id' => 5])->assoc();
         $this->assertEquals($expected, $actual);
-        $table->getDB()->setDebug(true);
         $actual = $table->select(null, ['group_or' => ['sep' => 'OR', 'group' => ['a' => '6', 'b' => []]]])->assoc();
         $expected = array(
             array('id' => '4', 'a' => '6', 'b' => '12'),
