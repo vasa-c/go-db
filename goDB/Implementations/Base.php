@@ -282,7 +282,7 @@ abstract class Base
      */
     public function reprFloat($connection, $value)
     {
-        return (0 + $value);
+        return (float)$value;
     }
 
     /**
