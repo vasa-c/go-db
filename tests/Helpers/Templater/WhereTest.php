@@ -123,6 +123,16 @@ final class WhereTest extends Base
                 'WHERE (`x`=1 OR (`x`=5 AND `y`>`p_t`.`col`-4) OR `y` IN (1,2)) AND `x`=10',
                 'p_',
             ],
+            'withNull' => [
+                'WHERE ?w',
+                [
+                    [
+                        'x' => [1, 2],
+                        'y' => [1, 2, null, 3],
+                    ],
+                ],
+                'WHERE `x` IN (1,2) AND (`y` IN (1,2,3) OR `y` IS NULL)',
+            ],
         ];
     }
 }

@@ -495,14 +495,20 @@ class Templater
                 }
                 if (isset($v[0])) {
                     $opts = array();
+                    $hasNull = false;
                     foreach ($v as $opt) {
                         if (is_int($opt)) {
                             $opts[] = $opt;
+                        } elseif (is_null($opt)) {
+                            $hasNull = true;
                         } else {
                             $opts[] = $this->replacement($opt, $modifiers);
                         }
                     }
                     $stat = $col.' IN ('.implode(',', $opts).')';
+                    if ($hasNull) {
+                        $stat = '('.$stat.' OR '.$col.' IS NULL)';
+                    }
                 } elseif (isset($v['group'])) {
                     $sepG = isset($v['sep']) ? $v['sep'] : 'AND';
                     $stat = '('.$this->whereGroup($v['group'], $modifiers, $sepG).')';
