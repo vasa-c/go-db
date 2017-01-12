@@ -1,5 +1,7 @@
 # CHANGELOG
 
+* #63: WHERE list and NULL
+
 ## 2.2.11 (4.07.2016)
 
 * #60: Use prefix for fake db 
