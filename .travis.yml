@@ -14,7 +14,9 @@ matrix:
   include:
     - php: 5.4
       env: CHECKS=yes
+      env: PU4 = "yes"
     - php: 5.5
+      env: PU4 = "yes"
     - php: 5.6
     - php: 7.0
     - php: 7.1
@@ -45,7 +47,8 @@ install:
   # Composer can not used dist (github required the auth token). Just specify prefer-source.
   - composer install --prefer-source
   # In order not to litter in the local dev-version specify checks-packages here instead composer.json
-  - composer require phpunit/phpunit=5.x --prefer-source
+  - if [ "$PU4" = "yes" ]; then PU_VER="^4"; else PU_VER="^5"; fi;
+  - composer require phpunit/phpunit=$PU_VER --prefer-source
   - PU="php vendor/bin/phpunit"
   - if [ "$CHECKS" = "yes" ]; then composer require squizlabs/php_codesniffer="~2.3" --prefer-source; fi;
   - if [ "$CHECKS" = "yes" ]; then composer require satooshi/php-coveralls --dev --prefer-source; fi;
