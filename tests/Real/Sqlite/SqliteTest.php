@@ -52,8 +52,8 @@ class SqliteTest extends Base
         $sql = 'SELECT `id`,`desc`,`num`,`val` FROM `godbtest` ORDER BY `desc` ASC, `id` ASC';
         $actual = $db->query($sql)->numerics();
         $this->assertEquals($expected, $actual);
-        $this->assertNull($actual[1][3]);
-        $this->assertNull($actual[3][3]);
+        $this->assertFalse(isset($actual[1][3]));
+        $this->assertFalse(isset($actual[3][3]));
 
         $sql = 'SELECT COUNT(*) FROM `godbtest` WHERE ?w';
         $this->assertTrue($db->query($sql, array(array()))->el() > 0);
