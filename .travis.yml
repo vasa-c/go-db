@@ -13,8 +13,7 @@ language: php
 matrix:
   include:
     - php: 5.4
-      env: CHECKS=yes
-      env: PU4 = "yes"
+      env: CHECKS=yes PU4=yes
     - php: 5.5
       env: PU4 = "yes"
     - php: 5.6
