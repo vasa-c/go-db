@@ -15,7 +15,7 @@ matrix:
     - php: 5.4
       env: CHECKS=yes PU4=yes
     - php: 5.5
-      env: PU4 = "yes"
+      env: PU4=yes
     - php: 5.6
     - php: 7.0
     - php: 7.1
