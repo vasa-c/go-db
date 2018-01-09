@@ -14,7 +14,6 @@ return array(
 
     /* The list of long synonyms */
     'longs' => array(
-        'string' => 'string',
         'scalar' => '',
         'list'   => 'l',
         'set'    => 's',
@@ -30,7 +29,7 @@ return array(
 
     /* The list of modifiers (the main short form) */
     'modifiers' => array(
-        'n', 'i', 'f', 'b',
+        'n', 'i', 'f', 'b', 'h', 'r'
     ),
 
     /* The list of long synonyms of modifiers */
@@ -39,5 +38,7 @@ return array(
         'int'   => 'i',
         'float' => 'f',
         'bool'  => 'b',
+        'hex'   => 'h',
+        'string' => 'r',
     ),
 );

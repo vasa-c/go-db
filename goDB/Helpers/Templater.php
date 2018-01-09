@@ -152,6 +152,12 @@ class Templater
                 return $this->implementation->reprNULL($this->connection);
             }
         }
+        if ($modifiers['h']) {
+            return $this->implementation->reprHexadecimal($this->connection, $value);
+        }
+        if ($modifiers['r']) {
+            return $this->implementation->reprString($this->connection, $value);
+        }
         if ($modifiers['i']) {
             return $this->implementation->reprInt($this->connection, $value);
         } elseif ($modifiers['f']) {
@@ -185,24 +191,6 @@ class Templater
             throw new DataInvalidFormat('', 'required scalar given');
         }
         return $this->valueModification($value, $modifiers);
-    }
-    
-    /**
-     * ?string
-     * @param mixed $value
-     * @param array $modifiers
-     * @throws DataInvalidFormat
-     * @return string
-     */
-    protected function replacementSTRING($value, array $modifiers)
-    {
-        if (is_array($value)) {
-            throw new DataInvalidFormat('', 'required scalar given');
-        }
-        if (($modifiers['n'] || Compat::getOpt('types')) && is_null($value)) {
-            return $this->implementation->reprNULL($this->connection);
-        }
-        return $this->implementation->reprString($this->connection, $value);
     }
 
     /**

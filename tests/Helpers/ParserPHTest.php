@@ -40,6 +40,7 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('', '', 'n'),
+            array('h', '', 'hn'),
             array('l', 'l', 'n'),
             array('s', 's', 'n'),
             array('v', 'v', 'n'),
@@ -47,8 +48,9 @@ class ParserPHTest extends \PHPUnit_Framework_TestCase
             array('c', 'c', 'n'),
             array('e', 'e', 'n'),
             array('q', 'q', 'n'),
-            array('string', 'string', 'n'),
+            array('string', '', 'rn'),
             array('scalar', '', 'n'),
+            array('hex', '', 'hn'),
             array('list', 'l', 'n'),
             array('set', 's', 'n'),
             array('values', 'v', 'n'),
