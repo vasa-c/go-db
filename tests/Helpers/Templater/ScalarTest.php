@@ -50,12 +50,14 @@ final class ScalarTest extends Base
                 'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5", "2.5", "28f7dc7206a1")',
             ],
             'string-null' => [
-                'INSERT INTO `table` VALUES (?string-null, ?string-null, ?string-null, ?string-null, ?string-null, ?string-null)',
+                'INSERT INTO `table`'
+                    . ' VALUES (?string-null, ?string-null, ?string-null, ?string-null, ?string-null, ?string-null)',
                 $data,
                 'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5", "2.5", "28f7dc7206a1")',
             ],
             'full' => [
-                'INSERT INTO `table` VALUES (?string, ?scalar-int, ?scalar-null, ?scalar-int, ?scalar-float, ?scalar-hex)',
+                'INSERT INTO `table`'
+                    . ' VALUES (?string, ?scalar-int, ?scalar-null, ?scalar-int, ?scalar-float, ?scalar-hex)',
                 $data,
                 'INSERT INTO `table` VALUES ("str\"ing", 1, NULL, 3, 2.5, x\'28f7dc7206a1\')',
             ],
