@@ -258,6 +258,18 @@ abstract class Base
     }
 
     /**
+     * Represents a string as a hexadecimal literal
+     *
+     * @param $connection
+     * @param $value
+     * @return string
+     */
+    public function reprHexadecimal($connection, $value)
+    {
+        return 'x\''.$this->escapeString($connection, $value).'\'';
+    }
+
+    /**
      * Represents a integer number as a data
      *
      * @param mixed $connection

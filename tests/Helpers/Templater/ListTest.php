@@ -39,6 +39,11 @@ final class ListTest extends Base
                 [$list],
                 'INSERT INTO `table` VALUES (0, 1, NULL, 3)',
             ],
+            'string' => [
+                'INSERT INTO `table` VALUES (?list-string)',
+                [$list],
+                'INSERT INTO `table` VALUES ("str\"ing", "1", NULL, "3.5")',
+            ],
             'mixed' => [
                 'INSERT INTO `table` VALUES (?lin)',
                 [$list],
