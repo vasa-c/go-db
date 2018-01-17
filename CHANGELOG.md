@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## 2.2.12 (17.01.2018)
+
 * PR#66: ?hex for hexadecimal string
 * PR#66: ?string now modifier
 * #63: WHERE list and NULL
