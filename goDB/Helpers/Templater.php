@@ -264,7 +264,7 @@ class Templater
             }
             if (!empty($elementModifiers)) {
                 if (!isset($elementModifiers[$k])) {
-                    throw new DataInvalidFormat('set', 'No modifier for key: ' . $k);
+                    throw new DataInvalidFormat('list', 'No modifier for key: ' . $k);
                 }
                 $elementMod = $elementModifiers[$k];
             } else {
@@ -298,18 +298,17 @@ class Templater
                     $element = $this->replacementC($element, $modifiers);
                 }
             } else {
-                if (is_int($element) && !isset($elementModifiers[$col])) {
-                    $element = $this->implementation->reprInt($this->connection, $element);
-                } else {
-                    if (!empty($elementModifiers)) {
-                        if (!isset($elementModifiers[$col])) {
-                            throw new DataInvalidFormat('set', 'No modifier for col: ' . $col);
-                        }
-                        $elementMod = $elementModifiers[$col];
-                    } else {
-                        $elementMod = $modifiers;
+                if (!empty($elementModifiers)) {
+                    if (!isset($elementModifiers[$col])) {
+                        throw new DataInvalidFormat('set', 'No modifier for col: ' . $col);
                     }
-                    $element = $this->valueModification($element, $elementMod);
+                    $element = $this->valueModification($element, $elementModifiers[$col]);
+                } else {
+                    if (is_int($element)) {
+                        $element = $this->implementation->reprInt($this->connection, $element);
+                    } else {
+                        $element = $this->valueModification($element, $modifiers);
+                    }
                 }
             }
             $set[] = $key.'='.$element;

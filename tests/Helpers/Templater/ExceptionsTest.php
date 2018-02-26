@@ -236,4 +236,62 @@ final class ExceptionsTest extends BaseTemplater
             ],
         ];
     }
+
+    /**
+     * @dataProvider providerExceptionSubDataInvalidFormat
+     * @param string $placeholder
+     * @param mixed $data
+     * @param string $exceptionClass
+     * @param string $message
+     */
+    public function testExceptionSubDataInvalidFormat($placeholder, $data, $exceptionClass, $message)
+    {
+        $pattern = '?'.$placeholder;
+        $data = [$data];
+        $templater = $this->createTemplater($pattern, $data);
+        $this->setExpectedException($exceptionClass, $message);
+        $templater->parse();
+    }
+
+    public function providerExceptionSubDataInvalidFormat()
+    {
+        return [
+            'type' => [
+                'v[?i, ?set-int]',
+                [1, 2],
+                'go\DB\Exceptions\SubDataInvalidFormat',
+                'Only modifiers can be used. Found type: s',
+            ],
+            'internal' => [
+                'l[?i, ?wtf]',
+                [1, 2],
+                'go\DB\Exceptions\SubDataInvalidFormat',
+                'Invalid sub data for ?l: Unknown placeholder "wtf"',
+            ],
+            'mixedSubPlaceholder' => [
+                'l[?i, ?i:foo]',
+                [1, 2],
+                'go\DB\Exceptions\SubDataInvalidFormat',
+                'Invalid sub data for ?l: Mixed placeholder "?i:foo"',
+            ],
+            'mixedSubPlaceholder2' => [
+                'v[?i:bar, ?i]',
+                [1, 2],
+                'go\DB\Exceptions\SubDataInvalidFormat',
+                'Invalid sub data for ?v: Mixed placeholder "?i"',
+            ],
+            'listElementModifierNotSet' => [
+                'l[?i, ?i]',
+                [1, 2, 3],
+                'go\DB\Exceptions\DataInvalidFormat',
+                'Data for ?list has invalid format: "No modifier for key: 2"',
+            ],
+            'setElementModifierNotSet' => [
+                's[?i:foo, ?i:baZ]',
+                ['foo' => 1, 'bar' => 2],
+                'go\DB\Exceptions\DataInvalidFormat',
+                'Data for ?set has invalid format: "No modifier for col: bar"',
+            ],
+        ];
+    }
 }
