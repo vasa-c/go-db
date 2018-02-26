@@ -104,43 +104,52 @@ class Templater
         }
 
         $parser = $this->getParser($matches);
-
-        $key = $this->currentName;
-        if (!array_key_exists($key, $this->data)) {
+        $dataKey = $this->currentName;
+        if (!array_key_exists($dataKey, $this->data)) {
             if ($this->named) {
-                throw new DataNamed($key);
+                throw new DataNamed($dataKey);
             } else {
-                throw new DataNotEnough(count($this->data), $key);
+                throw new DataNotEnough(count($this->data), $dataKey);
             }
         }
-        $value = $this->data[$key];
+        $value = $this->data[$dataKey];
 
-        $elementModifiers = [];
         if (isset($matches[4])) {
-            if (!is_array($value)) {
-                throw new DataInvalidFormat($matches[1], 'required array');
-            }
-            $subTemplate = clone $this;
-            $subTemplate->named = false;
-            $subTemplate->counter = 0;
-            $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
-            preg_match_all($pattern, $matches[4], $subMatches, PREG_SET_ORDER);
-            foreach ($subMatches as $match) {
-                try {
-                    $subParser = $subTemplate->getParser($match);
-                } catch (Logic $ex) {
-                    throw new SubDataInvalidFormat($placeholder, $ex->getMessage(), $ex);
-                }
-                if ($subType = $subParser->getType()) {
-                    throw new SubDataInvalidFormat($placeholder, 'Only modifiers can be used. Found type: ' . $subType);
-                }
-                $elementModifiers[$subTemplate->currentName] = $subParser->getModifiers();
-            }
+            $elementModifiers = $this->getElementModifiers($placeholder, $matches[4]);
+        } else {
+            $elementModifiers = [];
         }
-        $modifiers = $parser->getModifiers();
         $method = 'replacement' . strtoupper($parser->getType());
 
-        return $this->$method($value, $modifiers, $elementModifiers);
+        return $this->$method($value, $parser->getModifiers(), $elementModifiers);
+    }
+
+    /**
+     * @param string $placeholder
+     * @param string $subPattern
+     * @return array
+     */
+    protected function getElementModifiers($placeholder, $subPattern)
+    {
+        $subTemplate = clone $this;
+        $subTemplate->named = false;
+        $subTemplate->counter = 0;
+        $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
+        $elementModifiers = [];
+        preg_match_all($pattern, $subPattern, $subMatches, PREG_SET_ORDER);
+        foreach ($subMatches as $match) {
+            try {
+                $subParser = $subTemplate->getParser($match);
+            } catch (Logic $ex) {
+                throw new SubDataInvalidFormat($placeholder, $ex->getMessage(), $ex);
+            }
+            if ($subType = $subParser->getType()) {
+                throw new SubDataInvalidFormat($placeholder, 'Only modifiers can be used. Found type: ' . $subType);
+            }
+            $elementModifiers[$subTemplate->currentName] = $subParser->getModifiers();
+        }
+
+        return $elementModifiers;
     }
 
     /**
