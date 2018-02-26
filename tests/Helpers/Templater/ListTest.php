@@ -49,6 +49,11 @@ final class ListTest extends Base
                 [$list],
                 'INSERT INTO `table` VALUES (0, 1, NULL, 3)',
             ],
+            'subtype' => [
+                'INSERT INTO `table` VALUES (?l[?int, ?string, ?n, ?int])',
+                [$list],
+                'INSERT INTO `table` VALUES (0, "1", NULL, 3)',
+            ],
         ];
     }
 }

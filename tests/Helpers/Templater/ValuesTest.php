@@ -27,6 +27,11 @@ final class ValuesTest extends Base
                 [$values],
                 'INSERT INTO `table` VALUES (0, 1, 2), ("one", NULL, "three")',
             ],
+            'subset' => [
+                'INSERT INTO `table` VALUES ?values[?string, ?int-null, ?i]',
+                [$values],
+                'INSERT INTO `table` VALUES ("0", 1, 2), ("one", NULL, 0)',
+            ],
             'null' => [
                 'INSERT INTO `table` VALUES ?vn',
                 [$values],
