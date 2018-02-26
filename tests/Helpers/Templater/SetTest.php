@@ -28,6 +28,11 @@ final class SetTest extends Base
                 [$set],
                 'INSERT INTO `table` SET `s`="str\"ing", `d`="3.5", `n`=NULL',
             ],
+            'subset' => [
+                'INSERT INTO `table` SET ?s[?string:s, ?int:d, ?null:n]',
+                [$set],
+                'INSERT INTO `table` SET `s`="str\"ing", `d`=3, `n`=NULL',
+            ],
             'null' => [
                 'INSERT INTO `table` SET ?set-null',
                 [$set],

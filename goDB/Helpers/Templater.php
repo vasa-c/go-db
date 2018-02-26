@@ -10,6 +10,8 @@ use go\DB\Exceptions\DataMuch;
 use go\DB\Exceptions\DataNotEnough;
 use go\DB\Exceptions\DataNamed;
 use go\DB\Exceptions\DataInvalidFormat;
+use go\DB\Exceptions\Logic;
+use go\DB\Exceptions\SubDataInvalidFormat;
 use go\DB\Exceptions\UnknownPlaceholder;
 use go\DB\Exceptions\MixedPlaceholder;
 
@@ -54,7 +56,7 @@ class Templater
             return $this->query;
         }
         $query = preg_replace_callback('~{(.*?)}~', array($this, 'tableClb'), $this->pattern);
-        $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
+        $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?(\[[?:\s\w,-]+\])?;?~i';
         $callback = array($this, 'placeholderClb');
         $query = preg_replace_callback($pattern, $callback, $query);
         if ((!$this->named) && (count($this->data) > $this->counter)) {
@@ -97,17 +99,67 @@ class Templater
     protected function placeholderClb($matches)
     {
         $placeholder = isset($matches[1]) ? $matches[1] : '';
+        if ($placeholder == '?') { // "??" for question mark
+            return '?';
+        }
+
+        $parser = $this->getParser($matches);
+
+        $key = $this->currentName;
+        if (!array_key_exists($key, $this->data)) {
+            if ($this->named) {
+                throw new DataNamed($key);
+            } else {
+                throw new DataNotEnough(count($this->data), $key);
+            }
+        }
+        $value = $this->data[$key];
+
+        $elementModifiers = [];
+        if (isset($matches[4])) {
+            if (!is_array($value)) {
+                throw new DataInvalidFormat($matches[1], 'required array');
+            }
+            $subTemplate = clone $this;
+            $subTemplate->named = false;
+            $subTemplate->counter = 0;
+            $pattern = '~\?([a-z\?-]+)?(:([a-z0-9_-]*))?;?~i';
+            preg_match_all($pattern, $matches[4], $subMatches, PREG_SET_ORDER);
+            foreach ($subMatches as $match) {
+                try {
+                    $subParser = $subTemplate->getParser($match);
+                } catch (Logic $ex) {
+                    throw new SubDataInvalidFormat($placeholder, $ex->getMessage(), $ex);
+                }
+                if ($subType = $subParser->getType()) {
+                    throw new SubDataInvalidFormat($placeholder, 'Only modifiers can be used. Found type: ' . $subType);
+                }
+                $elementModifiers[$subTemplate->currentName] = $subParser->getModifiers();
+            }
+        }
+        $modifiers = $parser->getModifiers();
+        $method = 'replacement' . strtoupper($parser->getType());
+
+        return $this->$method($value, $modifiers, $elementModifiers);
+    }
+
+    /**
+     * Get parser object
+     *
+     * @param array $matches
+     * @return ParserPH
+     * @throws \go\DB\Exceptions\Templater
+     */
+    protected function getParser($matches)
+    {
         if (isset($matches[3])) {
             $name = $matches[3];
-            if (empty($name)) {
+            if (empty($name) && $matches[2] == ':') {
                 /* There is a named placeholder without name ("?set:") */
                 throw new UnknownPlaceholder($matches[0]);
             }
         } else {
             $name = null;
-            if ($placeholder == '?') { // "??" for question mark
-                return '?';
-            }
         }
         if ($name) {
             if ($this->counter == 0) {
@@ -116,26 +168,16 @@ class Templater
                 /* There is a named placeholder although already used regular */
                 throw new MixedPlaceholder($matches[0]);
             }
-            if (!array_key_exists($name, $this->data)) {
-                throw new DataNamed($name);
-            }
-            $value = $this->data[$name];
+            $this->currentName = $name;
         } elseif ($this->named) {
             /* There is a regular placeholder although already used named */
             throw new MixedPlaceholder($matches[0]);
         } else {
-            if (!array_key_exists($this->counter, $this->data)) {
-                /* Data for regular placeholders is ended */
-                throw new DataNotEnough(count($this->data), $this->counter);
-            }
-            $value = $this->data[$this->counter];
+            $this->currentName = $this->counter;
         }
         $this->counter++;
-        $parser = new ParserPH($placeholder);
-        $type = $parser->getType();
-        $modifiers = $parser->getModifiers();
-        $method = 'replacement'.strtoupper($type);
-        return $this->$method($value, $modifiers);
+
+        return new ParserPH(isset($matches[1]) ? $matches[1] : '');
     }
 
     /**
@@ -198,9 +240,10 @@ class Templater
      *
      * @param array $value
      * @param array $modifiers
+     * @param array $elementModifiers
      * @return string
      */
-    protected function replacementL($value, array $modifiers)
+    protected function replacementL($value, array $modifiers, array $elementModifiers = [])
     {
         if (!is_array($value)) {
             throw new DataInvalidFormat('list', 'required array (list of values)');
@@ -210,7 +253,15 @@ class Templater
             if (is_array($element)) {
                 throw new DataInvalidFormat('list', 'required scalar in item #'.$k);
             }
-            $values[] = $this->valueModification($element, $modifiers);
+            if (!empty($elementModifiers)) {
+                if (!isset($elementModifiers[$k])) {
+                    throw new DataInvalidFormat('set', 'No modifier for key: ' . $k);
+                }
+                $elementMod = $elementModifiers[$k];
+            } else {
+                $elementMod = $modifiers;
+            }
+            $values[] = $this->valueModification($element, $elementMod);
         }
         return implode(', ', $values);
     }
@@ -220,9 +271,10 @@ class Templater
      *
      * @param array $value
      * @param array $modifiers
+     * @param array $elementModifiers
      * @return string
      */
-    protected function replacementS($value, array $modifiers)
+    protected function replacementS($value, array $modifiers, array $elementModifiers = [])
     {
         if (!is_array($value)) {
             throw new DataInvalidFormat('set', 'required array (column => value)');
@@ -237,14 +289,23 @@ class Templater
                     $element = $this->replacementC($element, $modifiers);
                 }
             } else {
-                if (is_int($element)) {
+                if (is_int($element) && !isset($elementModifiers[$col])) {
                     $element = $this->implementation->reprInt($this->connection, $element);
                 } else {
-                    $element = $this->valueModification($element, $modifiers);
+                    if (!empty($elementModifiers)) {
+                        if (!isset($elementModifiers[$col])) {
+                            throw new DataInvalidFormat('set', 'No modifier for col: ' . $col);
+                        }
+                        $elementMod = $elementModifiers[$col];
+                    } else {
+                        $elementMod = $modifiers;
+                    }
+                    $element = $this->valueModification($element, $elementMod);
                 }
             }
             $set[] = $key.'='.$element;
         }
+
         return implode(', ', $set);
     }
 
@@ -253,16 +314,17 @@ class Templater
      *
      * @param array $value
      * @param array $modifiers
+     * @param array $elementModifiers
      * @return string
      */
-    private function replacementV($value, array $modifiers)
+    private function replacementV($value, array $modifiers, array $elementModifiers = [])
     {
         if (!is_array($value)) {
             throw new DataInvalidFormat('values', 'required array of arrays');
         }
         $values = array();
         foreach ($value as $v) {
-            $values[] = '('.$this->replacementL($v, $modifiers).')';
+            $values[] = '('.$this->replacementL($v, $modifiers, $elementModifiers).')';
         }
         return implode(', ', $values);
     }
@@ -540,6 +602,11 @@ class Templater
      * @var array
      */
     protected $data;
+
+    /**
+     * @var string
+     */
+    protected $currentName = '';
 
     /**
      * @var string
