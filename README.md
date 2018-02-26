@@ -13,7 +13,7 @@
  * Обсуждение на pyha.ru: http://pyha.ru/forum/topic/554.0
  * Версия 1.x: https://github.com/vasa-c/godb-old
  * Лицензия: MIT (https://github.com/vasa-c/go-db/blob/master/LICENSE)
- * Тестировано под Debian для PHP 5.(3,4,5,6), PHP 7, HHVM
+ * Тестировано под Debian для PHP 5.(3,4,5,6), PHP 7.(0.1.2), HHVM
 
 ## Установка
 
